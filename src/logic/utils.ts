@@ -5,15 +5,13 @@ export const normalizedArithmetic = (color: PlayerColor, op: OperationType, valu
   if(color === 'b') {
       if(op === 'sum') {
         return value1 - value2;
-      }
-      else {
+      } else {
         return value1 + value2;
       }
   } else {
     if(op === 'sum') {
       return value1 + value2;
-    }
-    else {
+    } else {
       return value1 - value2;
     }
   }

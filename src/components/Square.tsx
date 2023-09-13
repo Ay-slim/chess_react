@@ -4,8 +4,8 @@ import { drop } from "../logic/handlers";
 import '../App.css';
 
 const Square = (props: SquareProps) => {
-  const {id, onDragOver, pieceId, currentColor, setColor, currentBoard, setBoardState} = props
-  const handleDrop = drop(currentColor, setColor, currentBoard, setBoardState)
+  const {id, onDragOver, pieceId, currentColor, setColor, currentBoard, setBoardState, setAlertMessage} = props
+  const handleDrop = drop(currentColor, setColor, currentBoard, setBoardState, setAlertMessage)
   return (
     <th id={id} className={id} onDrop={handleDrop} onDragOver={onDragOver}>
       {pieceId ? <Piece id={pieceId} currentColor={currentColor} squareId={id}/>: ''}

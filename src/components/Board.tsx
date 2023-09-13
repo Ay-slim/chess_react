@@ -72,14 +72,15 @@ const Board = () => {
     h8: { loc: [7, 7], piece: 'br1' },
   })
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w');
+  const [alertMessage, setAlertMessage] = useState('');
 
   return (
     <div className="container">
       <div className="turn">
-        <p><strong>{`Current player turn: ${currentPlayerColor === 'w' ? 'White' : 'Black'}`}</strong></p>
+        <p>Current player turn: <strong>{`${currentPlayerColor === 'w' ? 'White' : 'Black'}`}</strong></p>
       </div>
       <div className="alert">
-        <p><strong>{`Message: `}</strong></p>
+        <p>Message: <strong style={{ color: 'red' }}>{alertMessage}</strong></p>
       </div>
       <table className="board">
         {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
@@ -96,6 +97,7 @@ const Board = () => {
                   setColor={setCurrentPlayerColor}
                   currentBoard={boardState}
                   setBoardState={setBoardState}
+                  setAlertMessage={setAlertMessage}
                 />
               );
             })}
