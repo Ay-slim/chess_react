@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Square from './Square'
 import { allowDrop, drop } from '../logic/utils';
-import { BoardState } from '../types';
+import { BoardState, PlayerColor } from '../types';
 import '../App.css';
 
 const Board = () => {
@@ -70,7 +70,8 @@ const Board = () => {
     f8: { loc: [5, 7], piece: 'bb1' },
     g8: { loc: [6, 7], piece: 'bn1' },
     h8: { loc: [7, 7], piece: 'br1' },
-  }) 
+  })
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w')
 
   return (
     <div className="container">
@@ -86,6 +87,7 @@ const Board = () => {
                   onDrop={drop}
                   onDragOver={allowDrop}
                   pieceId={state[id].piece}
+                  currentColor={currentPlayerColor}
                 />
               );
             })}
