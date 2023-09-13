@@ -4,5 +4,5 @@ At core, it relies on Williams Nimi's coordinate representation of squares using
 
 ## Local setup
 - Clone the repo
-- Run <npm i> to install packages
-- Run <npm start> to start the app in your local browser
+- Run `npm i` to install packages
+- Run `npm start` to start the app in your local browser
