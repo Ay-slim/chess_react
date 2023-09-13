@@ -1,6 +1,6 @@
 import { SquareProps } from "../types";
 import Piece from "./Piece";
-import { drop } from "../logic/utils";
+import { drop } from "../logic/handlers";
 import '../App.css';
 
 const Square = (props: SquareProps) => {

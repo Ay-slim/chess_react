@@ -1,6 +1,6 @@
 import { PieceProps } from '../types';
 import '../App.css';
-import { drag } from '../logic/utils';
+import { drag } from '../logic/handlers';
 
 const Piece = (props: PieceProps) => {
   const {id, squareId, currentColor} = props;
