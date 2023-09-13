@@ -2,29 +2,36 @@ import React from 'react';
 
 type DropEventHandler = (ev: React.DragEvent<HTMLTableDataCellElement>) => void;
 type DragOverEventHandler = (ev: React.DragEvent<HTMLTableDataCellElement>) => void;
-type DragStartEventHandler = (ev: React.DragEvent<HTMLImageElement>) => void;
+export type SetColorStateType = React.Dispatch<React.SetStateAction<PlayerColor>>;
+export type SetBoardStateType = React.Dispatch<React.SetStateAction<BoardState>>;
+
 
 export type PlayerColor = 'w' | 'b';
 
 export type SquareProps = {
   id: string;
-  onDrop: DropEventHandler;
   onDragOver: DragOverEventHandler;
   pieceId?: string;
   currentColor: PlayerColor;
+  setColor: SetColorStateType;
+  currentBoard: BoardState;
+  setBoardState: SetBoardStateType;
 }
 
 export type PieceProps = {
   id: string;
-  onDragStart: DragStartEventHandler;
   currentColor: PlayerColor;
+  squareId: string;
+}
+
+export type SquareInfoType = {
+  loc: [number, number];
+  piece: string;
 }
 
 export type BoardState = {
-  [key: string]: {
-    loc: [number, number];
-    piece: string;
-  }
+  [key: string]: SquareInfoType;
 }
 
-export type SetColorStateProp = React.Dispatch<React.SetStateAction<PlayerColor>>;
+
+export type DropEventWrapper = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType) => DropEventHandler

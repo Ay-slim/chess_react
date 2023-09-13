@@ -5,7 +5,7 @@ import { BoardState, PlayerColor } from '../types';
 import '../App.css';
 
 const Board = () => {
-  const [state, setState] = useState<BoardState>({
+  const [boardState, setBoardState] = useState<BoardState>({
     a1: { loc: [0, 0], piece: 'wr2' },
     b1: { loc: [1, 0], piece: 'wn2' },
     c1: { loc: [2, 0], piece: 'wb2' },
@@ -71,7 +71,7 @@ const Board = () => {
     g8: { loc: [6, 7], piece: 'bn1' },
     h8: { loc: [7, 7], piece: 'br1' },
   })
-  const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w')
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w');
 
   return (
     <div className="container">
@@ -84,10 +84,12 @@ const Board = () => {
                 <Square
                   key={id}
                   id={id}
-                  onDrop={drop}
                   onDragOver={allowDrop}
-                  pieceId={state[id].piece}
+                  pieceId={boardState[id].piece}
                   currentColor={currentPlayerColor}
+                  setColor={setCurrentPlayerColor}
+                  currentBoard={boardState}
+                  setBoardState={setBoardState}
                 />
               );
             })}
