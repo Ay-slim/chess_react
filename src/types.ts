@@ -8,6 +8,8 @@ export type SetBoardStateType = React.Dispatch<React.SetStateAction<BoardState>>
 
 export type PlayerColor = 'w' | 'b';
 
+export type OperationType = 'sum' | 'diff';
+
 export type SquareProps = {
   id: string;
   onDragOver: DragOverEventHandler;
