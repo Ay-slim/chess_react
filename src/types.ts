@@ -17,5 +17,8 @@ export type PieceProps = {
 }
 
 export type BoardState = {
-  [key: string]: [number, number, string]
+  [key: string]: {
+    loc: [number, number];
+    piece: string;
+  }
 }
