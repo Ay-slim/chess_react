@@ -10,6 +10,14 @@
   margin:auto;
   width: 25%;
 }
+.turn{
+  margin: auto;
+  width: 31%;
+}
+.alert{
+  margin: auto;
+  width: 31%;
+}
 th{
   width: 40px;
   height: 40px;

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Square from './Square'
-import { allowDrop, drop } from '../logic/utils';
+import { allowDrop } from '../logic/handlers';
 import { BoardState, PlayerColor } from '../types';
 import '../App.css';
 
@@ -75,6 +75,12 @@ const Board = () => {
 
   return (
     <div className="container">
+      <div className="turn">
+        <p><strong>{`Current player turn: ${currentPlayerColor === 'w' ? 'White' : 'Black'}`}</strong></p>
+      </div>
+      <div className="alert">
+        <p><strong>{`Message: `}</strong></p>
+      </div>
       <table className="board">
         {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
           <tr key={`row-${row}`}>
