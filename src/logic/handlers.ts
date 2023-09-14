@@ -1,6 +1,7 @@
 import React from 'react';
 import { BoardState, CapturedPiecesType, GenericStringSetStateType, MoveHistoryType, PieceTypes, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetMoveHistoryType, SquareInfoType } from '../types';
 import { moveValidity } from './moveValidity';
+import { isValidEnpassantMove } from './enpassant';
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault();
@@ -17,23 +18,31 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
   ev.preventDefault();
   const { srcSquareId, pieceId }: {srcSquareId: string, pieceId: string} = JSON.parse(ev.dataTransfer.getData('drag_info'));
   const targetSquareId = ev.currentTarget.id;
+  const lastGameMove = movesHistory[movesHistory.length - 1];
 
-  if (moveValidity[pieceId[1] as PieceTypes](srcSquareId, targetSquareId,colorState, currentBoard )) {
+  if (moveValidity[pieceId[1] as PieceTypes](srcSquareId, targetSquareId, colorState, currentBoard, lastGameMove )) {
     //Execute valid moves and update color state
+    const isValidEnpassant = pieceId[1] === 'p' && isValidEnpassantMove(srcSquareId, targetSquareId, currentBoard, lastGameMove, colorState);
     const srcSquareUpdated: SquareInfoType = {...currentBoard[srcSquareId], piece: ''}
-    const targetSquareUpdated: SquareInfoType = {...currentBoard[targetSquareId], piece: pieceId}
+    const targetSquareUpdated: SquareInfoType =  {...currentBoard[targetSquareId], piece: pieceId}
     const move: MoveHistoryType = {
       srcSquare: srcSquareId,
       destSquare: targetSquareId,
       piece: pieceId,
       boardBefore: currentBoard
     }
-    setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated})
-    setMoveHistory(movesHistory.concat([move]));
-    const destPiece = currentBoard[targetSquareId]['piece'];
-    if (destPiece) {
-      setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([destPiece])})
+    if (isValidEnpassant) {
+      const enpassantVictimUpdated = {...currentBoard[lastGameMove['destSquare']], piece: ''}
+      setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [lastGameMove['destSquare']]: enpassantVictimUpdated})
+      setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([lastGameMove['piece']])})
+    } else {
+      setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated})
+      const destPiece = currentBoard[targetSquareId]['piece'];
+      if (destPiece) {
+        setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([destPiece])})
+      }
     }
+    setMoveHistory(movesHistory.concat([move]));
     setColorState(colorState === 'w' ? 'b' : 'w');
     //This is going to be the fallback message if there are no other messages such as "Check!" etc
     setAlertMessage('')

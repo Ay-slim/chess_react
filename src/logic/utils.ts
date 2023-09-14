@@ -25,3 +25,5 @@ export const INVERTED_SQUARES = {'0,0': 'a1', '1,0': 'b1', '2,0': 'c1', '3,0': '
 export const VALID_PROMOTION_OFFICIALS = ['q', 'r', 'b', 'n'];
 export const CASTLING_ROOKS_MAP = {"w+ve": ["wr1", "h1", "f1"], "w-ve": ["wr2", "a1", "d1"], "b+ve": ["br1", "h8", "f8"], "b-ve": ["br2", "a8", "d8"]};
 export const CASTLING_SQUARES_TO_CHECK = {"w+ve": ["f1", "g1"], "w-ve": ["c1", "d1", "b1"], "b+ve": ["f8", "g8"], "b-ve": ["c8", "d8", "b8"]};
+export const ENPASSANT_ATTACKING_COLUMNS = {w: 4, b: 3};
+export const ENPASSANT_PAWN_MOVE_DIFF = {w: 2, b: -2};
