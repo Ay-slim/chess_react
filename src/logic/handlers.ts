@@ -1,6 +1,6 @@
 import React from 'react';
-import { BoardState, CapturedPiecesType, GenericStringSetStateType, MoveHistoryType, PieceTypes, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetMoveHistoryType, SquareInfoType } from '../types';
-import { moveValidity } from './moveValidity';
+import { BoardState, CapturedPiecesType, GenericStringSetStateType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetMoveHistoryType, SquareInfoType } from '../types';
+import { moveValidityCheck } from './moveValidity';
 import { isValidEnpassantMove } from './enpassant';
 
 export const allowDrop = (ev: React.DragEvent) => {
@@ -20,7 +20,7 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
   const targetSquareId = ev.currentTarget.id;
   const lastGameMove = movesHistory[movesHistory.length - 1];
 
-  if (moveValidity[pieceId[1] as PieceTypes](srcSquareId, targetSquareId, colorState, currentBoard, lastGameMove )) {
+  if (moveValidityCheck(srcSquareId, targetSquareId, colorState, currentBoard, lastGameMove, pieceId[1] )) {
     //Execute valid moves and update color state
     const isValidEnpassant = pieceId[1] === 'p' && isValidEnpassantMove(srcSquareId, targetSquareId, currentBoard, lastGameMove, colorState);
     const srcSquareUpdated: SquareInfoType = {...currentBoard[srcSquareId], piece: ''}
