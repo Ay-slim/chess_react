@@ -1,9 +1,9 @@
 import React from 'react';
 
-type DropEventHandler = (ev: React.DragEvent<HTMLTableDataCellElement>) => void;
 type DragOverEventHandler = (ev: React.DragEvent<HTMLTableDataCellElement>) => void;
 export type SetColorStateType = React.Dispatch<React.SetStateAction<PlayerColor>>;
 export type SetBoardStateType = React.Dispatch<React.SetStateAction<BoardState>>;
+export type SetMoveHistoryType = React.Dispatch<React.SetStateAction<MoveHistoryType[]>>;
 export type GenericStringSetStateType = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -21,6 +21,8 @@ export type SquareProps = {
   currentBoard: BoardState;
   setBoardState: SetBoardStateType;
   setAlertMessage: GenericStringSetStateType
+  movesHistory: MoveHistoryType[];
+  setMoveHistory: SetMoveHistoryType;
 }
 
 export type PieceProps = {
@@ -38,5 +40,9 @@ export type BoardState = {
   [key: string]: SquareInfoType;
 }
 
-
-export type DropEventWrapper = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType) => DropEventHandler
+export type MoveHistoryType = {
+  srcSquare: string;
+  destSquare: string;
+  piece: string;
+  boardBefore: BoardState;
+}
