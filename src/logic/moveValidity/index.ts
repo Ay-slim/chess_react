@@ -5,12 +5,14 @@ import { default as knightValidity } from './knight'
 import { default as rookValidity } from './rook'
 import { default as bishopValidity } from './bishop'
 import { default as queenValidity } from './queen'
+import { default as kingValidity } from './king'
 
 const validityMap = {
   n: knightValidity,
   r: rookValidity,
   b: bishopValidity,
   q: queenValidity,
+  k: kingValidity,
 }
 
 export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, lastGameMove: MoveHistoryType, pieceName: string) => {
