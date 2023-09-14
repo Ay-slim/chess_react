@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Square from './Square'
 import { allowDrop } from '../logic/handlers';
-import { BoardState, MoveHistoryType, PlayerColor } from '../types';
+import { BoardState, CapturedPiecesType, MoveHistoryType, PlayerColor } from '../types';
 import '../App.css';
 
 const Board = () => {
@@ -74,6 +74,7 @@ const Board = () => {
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w');
   const [alertMessage, setAlertMessage] = useState('');
   const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([]);
+  const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({w: [], b: []});
 
   return (
     <div className="container">
@@ -101,6 +102,8 @@ const Board = () => {
                   setAlertMessage={setAlertMessage}
                   movesHistory={movesHistory}
                   setMoveHistory={setMovesHistory}
+                  capturedPieces={capturedPieces}
+                  setCapturedPiece={setCapturedPiece}
                 />
               );
             })}

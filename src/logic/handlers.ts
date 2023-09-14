@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoardState, GenericStringSetStateType, MoveHistoryType, PieceTypes, PlayerColor, SetBoardStateType, SetColorStateType, SetMoveHistoryType, SquareInfoType } from '../types';
+import { BoardState, CapturedPiecesType, GenericStringSetStateType, MoveHistoryType, PieceTypes, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetMoveHistoryType, SquareInfoType } from '../types';
 import { moveValidity } from './moveValidity';
 
 export const allowDrop = (ev: React.DragEvent) => {
@@ -13,7 +13,7 @@ export const drag = (squareId: string) => (ev: React.DragEvent) => {
   }));
 };
 
-export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType) => (ev: React.DragEvent) => {
+export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType) => (ev: React.DragEvent) => {
   ev.preventDefault();
   const { srcSquareId, pieceId }: {srcSquareId: string, pieceId: string} = JSON.parse(ev.dataTransfer.getData('drag_info'));
   const targetSquareId = ev.currentTarget.id;
@@ -30,6 +30,10 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
     }
     setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated})
     setMoveHistory(movesHistory.concat([move]));
+    const destPiece = currentBoard[targetSquareId]['piece'];
+    if (destPiece) {
+      setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([destPiece])})
+    }
     setColorState(colorState === 'w' ? 'b' : 'w');
     //This is going to be the fallback message if there are no other messages such as "Check!" etc
     setAlertMessage('')

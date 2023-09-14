@@ -4,6 +4,7 @@ type DragOverEventHandler = (ev: React.DragEvent<HTMLTableDataCellElement>) => v
 export type SetColorStateType = React.Dispatch<React.SetStateAction<PlayerColor>>;
 export type SetBoardStateType = React.Dispatch<React.SetStateAction<BoardState>>;
 export type SetMoveHistoryType = React.Dispatch<React.SetStateAction<MoveHistoryType[]>>;
+export type SetCapturedPieceType = React.Dispatch<React.SetStateAction<CapturedPiecesType>>;
 export type GenericStringSetStateType = React.Dispatch<React.SetStateAction<string>>;
 
 
@@ -23,6 +24,8 @@ export type SquareProps = {
   setAlertMessage: GenericStringSetStateType
   movesHistory: MoveHistoryType[];
   setMoveHistory: SetMoveHistoryType;
+  capturedPieces: CapturedPiecesType;
+  setCapturedPiece: SetCapturedPieceType;
 }
 
 export type PieceProps = {
@@ -45,4 +48,9 @@ export type MoveHistoryType = {
   destSquare: string;
   piece: string;
   boardBefore: BoardState;
+}
+
+export type CapturedPiecesType = {
+  w: string[];
+  b: string[];
 }
