@@ -9,7 +9,7 @@ export type GenericStringSetStateType = React.Dispatch<React.SetStateAction<stri
 
 
 export type PlayerColor = 'w' | 'b';
-export type PieceValidityTypes = 'n'; //Will ultimately extend this for all pieces (queen, knight etc etc)
+export type PieceValidityTypes = 'n' | 'r'; //Will ultimately extend this for all pieces (queen, knight etc etc)
 export type BoardNumbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type OperationType = 'sum' | 'diff';
 
