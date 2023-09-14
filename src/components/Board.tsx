@@ -63,7 +63,7 @@ const Board = () => {
     g7: { loc: [6, 6], piece: 'bp2' },
     h7: { loc: [7, 6], piece: 'bp1' },
     a8: { loc: [0, 7], piece: 'br2' },
-    b8: { loc: [1, 7], piece: 'bb2' },
+    b8: { loc: [1, 7], piece: 'bn2' },
     c8: { loc: [2, 7], piece: 'bb2' },
     d8: { loc: [3, 7], piece: 'bq1' },
     e8: { loc: [4, 7], piece: 'bk' },
