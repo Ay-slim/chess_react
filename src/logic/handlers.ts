@@ -2,6 +2,7 @@ import React from 'react';
 import { BoardState, CapturedPiecesType, GenericStringSetStateType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetMoveHistoryType, SquareInfoType } from '../types';
 import { moveValidityCheck } from './moveValidity';
 import { isValidEnpassantMove } from './enpassant';
+import { grabCastlingRookAndSquares } from './castling';
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault();
@@ -20,9 +21,10 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
   const targetSquareId = ev.currentTarget.id;
   const lastGameMove = movesHistory[movesHistory.length - 1];
 
-  if (moveValidityCheck(srcSquareId, targetSquareId, colorState, currentBoard, lastGameMove, pieceId[1] )) {
+  if (moveValidityCheck(srcSquareId, targetSquareId, colorState, currentBoard, movesHistory, pieceId[1] )) {
     //Execute valid moves and update color state
     const isValidEnpassant = pieceId[1] === 'p' && isValidEnpassantMove(srcSquareId, targetSquareId, currentBoard, lastGameMove, colorState);
+    const castlingRookInfo = grabCastlingRookAndSquares(srcSquareId, targetSquareId, pieceId, currentBoard);
     const srcSquareUpdated: SquareInfoType = {...currentBoard[srcSquareId], piece: ''}
     const targetSquareUpdated: SquareInfoType =  {...currentBoard[targetSquareId], piece: pieceId}
     const move: MoveHistoryType = {
@@ -35,7 +37,11 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       const enpassantVictimUpdated = {...currentBoard[lastGameMove['destSquare']], piece: ''}
       setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [lastGameMove['destSquare']]: enpassantVictimUpdated})
       setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([lastGameMove['piece']])})
-    } else {
+    } else if (castlingRookInfo) {
+      const castlingRookSrcUpdated = { ...currentBoard[castlingRookInfo.rookSrc], piece: '' };
+      const castlingRookDestUpdated = { ...currentBoard[castlingRookInfo.rookDest], piece: castlingRookInfo.rookId }
+      setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [castlingRookInfo.rookSrc]: castlingRookSrcUpdated, [castlingRookInfo.rookDest]: castlingRookDestUpdated})
+    }else {
       setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated})
       const destPiece = currentBoard[targetSquareId]['piece'];
       if (destPiece) {

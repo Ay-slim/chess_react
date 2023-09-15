@@ -5,19 +5,20 @@ import { default as knightValidity } from './knight'
 import { default as rookValidity } from './rook'
 import { default as bishopValidity } from './bishop'
 import { default as queenValidity } from './queen'
-import { default as kingValidity } from './king'
+import { default as kingValidity } from './kingAug'
 
 const validityMap = {
   n: knightValidity,
   r: rookValidity,
   b: bishopValidity,
   q: queenValidity,
-  k: kingValidity,
 }
 
-export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, lastGameMove: MoveHistoryType, pieceName: string) => {
+export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], pieceName: string) => {
   if (pieceName === 'p') {
-    return pawnValidity(srcSquareId, color, boardState, lastGameMove).includes(destSquareId);
+    return pawnValidity(srcSquareId, color, boardState, gameMoves).includes(destSquareId);
+  } else if (pieceName === 'k') {
+    return kingValidity(srcSquareId, color, boardState, destSquareId, gameMoves).includes(destSquareId);
   } else {
     return validityMap[pieceName as PieceValidityTypes](srcSquareId, color, boardState).includes(destSquareId);
   }
