@@ -1,7 +1,7 @@
 import { BoardNumbers, BoardState, PlayerColor } from "../../types"
 import { INVERTED_SQUARES, isValidBoardCoordinates, normalizedArithmetic } from "../utils";
 
-const validSquares = (squareId: string, color: PlayerColor, boardState: BoardState): string[] => {
+const validSquares = (squareId: string, color: PlayerColor, boardState: BoardState, allThreatenedSquares: boolean = false): string[] => {
   const rookThreats: string[] = [];
   const [xCoord, yCoord] = boardState[squareId].loc;
 
@@ -22,6 +22,10 @@ const validSquares = (squareId: string, color: PlayerColor, boardState: BoardSta
     }
     if (targetPiece[0] === color) {
       //Same color piece, can't move there, also no need to continue down this path. Our watch is ended
+      if (allThreatenedSquares) {
+        //We are interested in getting all the squares this piece attacks or protects, so color doesn't matter here. All lives matter, or so they say
+        rookThreats.push(targetSquare)
+      }
       break;
     }
     if (targetPiece[0] !== color) {
@@ -44,6 +48,10 @@ const validSquares = (squareId: string, color: PlayerColor, boardState: BoardSta
       continue;
     }
     if (targetPiece[0] === color) {
+      if (allThreatenedSquares) {
+        //We are interested in getting all the squares this piece attacks or protects, so color doesn't matter here. All lives matter, or so they say
+        rookThreats.push(targetSquare)
+      }
       break;
     }
     if (targetPiece[0] !== color) {
@@ -65,6 +73,10 @@ const validSquares = (squareId: string, color: PlayerColor, boardState: BoardSta
       continue;
     }
     if (targetPiece[0] === color) {
+      if (allThreatenedSquares) {
+        //We are interested in getting all the squares this piece attacks or protects, so color doesn't matter here. All lives matter, or so they say
+        rookThreats.push(targetSquare)
+      }
       break;
     }
     if (targetPiece[0] !== color) {
@@ -86,6 +98,10 @@ const validSquares = (squareId: string, color: PlayerColor, boardState: BoardSta
       continue;
     }
     if (targetPiece[0] === color) {
+      if (allThreatenedSquares) {
+        //We are interested in getting all the squares this piece attacks or protects, so color doesn't matter here. All lives matter, or so they say
+        rookThreats.push(targetSquare)
+      }
       break;
     }
     if (targetPiece[0] !== color) {

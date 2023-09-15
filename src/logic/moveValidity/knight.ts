@@ -1,7 +1,7 @@
 import { BoardNumbers, BoardState, PlayerColor } from "../../types"
 import { INVERTED_SQUARES, isValidBoardCoordinates, normalizedArithmetic } from "../utils";
 
-const validSquares = (squareId: string, color: PlayerColor, boardState: BoardState): string[] => {
+const validSquares = (squareId: string, color: PlayerColor, boardState: BoardState, allThreatenedSquares: boolean = false): string[] => {
   const knightThreats: string[] = [];
   const [xCoord, yCoord] = boardState[squareId].loc;
 
@@ -46,7 +46,7 @@ const validSquares = (squareId: string, color: PlayerColor, boardState: BoardSta
     if (isValidBoardCoordinates(targetXCoord, targetYCoord)) {
       const targetSquare = INVERTED_SQUARES[`${targetXCoord as BoardNumbers},${targetYCoord as BoardNumbers}`] //Safe to type cast here because we already confirmed they are valid coordinates above
       const targetPiece = boardState[targetSquare].piece;
-      if (!targetPiece || (targetPiece && (targetPiece[0] !== color))) {
+      if (!targetPiece || (targetPiece && (targetPiece[0] !== color)) || allThreatenedSquares) {
         knightThreats.push(targetSquare)
       }
     }

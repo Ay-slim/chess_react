@@ -2,7 +2,7 @@ import { BoardNumbers, BoardState, MoveHistoryType, PlayerColor } from "../../ty
 import { isValidEnpassantMove } from "../enpassant";
 import { INVERTED_SQUARES, isValidBoardCoordinates, normalizedArithmetic } from "../utils";
 
-const validSquares = (squareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[]): string[] => {
+const validSquares = (squareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], allThreatenedSquares: boolean = false): string[] => {
   const pawnThreats: string[] = [];
   const [x_coord, y_coord] = boardState[squareId].loc;
   const topRightXCoord = normalizedArithmetic(color, 'sum', x_coord, 1);
@@ -12,14 +12,14 @@ const validSquares = (squareId: string, color: PlayerColor, boardState: BoardSta
   if(isValidBoardCoordinates(topRightXCoord, topRightYCoord)) {
     const targetRightSquareId = INVERTED_SQUARES[`${topRightXCoord as BoardNumbers},${topRightYCoord as BoardNumbers}`];
     const targetRightPiece = boardState[targetRightSquareId]['piece'];
-    if ((targetRightPiece && targetRightPiece[0] !== color) || isValidEnpassantMove(squareId, targetRightSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
+    if ((targetRightPiece && targetRightPiece[0] !== color) || isValidEnpassantMove(squareId, targetRightSquareId, boardState, gameMoves[gameMoves.length - 1], color) || allThreatenedSquares) {
       pawnThreats.push(targetRightSquareId);
     }
   }
   if(isValidBoardCoordinates(topLeftXCoord, topLeftYCoord)) {
     const targetLeftSquareId = INVERTED_SQUARES[`${topLeftXCoord as BoardNumbers},${topLeftYCoord as BoardNumbers}`];
     const targetLeftPiece = boardState[targetLeftSquareId]['piece'];
-    if ((targetLeftPiece && targetLeftPiece[0] !== color)  || isValidEnpassantMove(squareId, targetLeftSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
+    if ((targetLeftPiece && targetLeftPiece[0] !== color)  || isValidEnpassantMove(squareId, targetLeftSquareId, boardState, gameMoves[gameMoves.length - 1], color) || allThreatenedSquares) {
       pawnThreats.push(targetLeftSquareId);
     }
   }
