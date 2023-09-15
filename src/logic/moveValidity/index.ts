@@ -1,6 +1,6 @@
 import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor } from "../../types";
 
-import { default as pawnValidity } from './pawn'
+import { default as pawnValidity } from './pawnAug'
 import { default as knightValidity } from './knight'
 import { default as rookValidity } from './rook'
 import { default as bishopValidity } from './bishop'
