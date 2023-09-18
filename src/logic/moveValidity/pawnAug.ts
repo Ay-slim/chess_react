@@ -30,19 +30,17 @@ const validPawnSquares = (squareId: string, color: PlayerColor, boardState: Boar
   const topLeftYCoord = normalizedArithmetic(color, 'sum', y_coord, 1);
   if(isValidBoardCoordinates(topRightXCoord, topRightYCoord)) {
     const targetRightSquareId = INVERTED_SQUARES[`${topRightXCoord as BoardNumbers},${topRightYCoord as BoardNumbers}`];
-    const targetRightPiece = boardState[targetRightSquareId]['piece'];
-    if ((targetRightPiece && targetRightPiece[0] !== color) || isValidEnpassantMove(squareId, targetRightSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
+    if (isValidEnpassantMove(squareId, targetRightSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
       pawnThreats.push(targetRightSquareId);
     }
   }
   if(isValidBoardCoordinates(topLeftXCoord, topLeftYCoord)) {
     const targetLeftSquareId = INVERTED_SQUARES[`${topLeftXCoord as BoardNumbers},${topLeftYCoord as BoardNumbers}`];
-    const targetLeftPiece = boardState[targetLeftSquareId]['piece'];
-    if ((targetLeftPiece && targetLeftPiece[0] !== color)  || isValidEnpassantMove(squareId, targetLeftSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
+    if (isValidEnpassantMove(squareId, targetLeftSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
       pawnThreats.push(targetLeftSquareId);
     }
   }
-  const corePawnSquares = corePawnValidity(squareId, color, boardState, gameMoves);
+  const corePawnSquares = corePawnValidity(squareId, color, boardState);
   return pawnThreats.concat(corePawnSquares);
 }
 
