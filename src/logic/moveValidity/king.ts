@@ -1,6 +1,6 @@
 import { BoardNumbers, BoardState, PlayerColor } from "../../types"
 import { INVERTED_SQUARES, isValidBoardCoordinates, normalizedArithmetic } from "../utils";
-//TO-DO: Pass down threatened squares and filter them out as well (check python implementation for reference)
+
 const validSquares = (squareId: string, color: PlayerColor, boardState: BoardState, allThreatenedSquares: boolean = false): string[] => {
   const kingThreats: string[] = [];
   const [xCoord, yCoord] = boardState[squareId].loc;

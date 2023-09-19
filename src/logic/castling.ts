@@ -1,13 +1,10 @@
 import { BoardState, PlayerColor } from "../types"
 import { CASTLING_ROOKS_MAP, CASTLING_SQUARES_TO_CHECK, VALID_CASTLING_SQUARES } from "./utils"
-//TO-DO: Another place to pass forbidden squares
-export const castlingCheck = (color: PlayerColor, direction: '+ve' | '-ve' | '+ve' | '-ve', boardState: BoardState) => {
+
+export const castlingCheck = (color: PlayerColor, direction: '+ve' | '-ve' | '+ve' | '-ve', boardState: BoardState, allSquaresUnderAttack: string[]) => {
   const squaresToCheck = CASTLING_SQUARES_TO_CHECK[`${color}${direction}`];
   for (let j of squaresToCheck) {
-    // if (forbiddenSquares.includes(j)) {
-    //   return '';
-    // }
-    if (boardState[j]['piece']) {
+    if (boardState[j]['piece'] || allSquaresUnderAttack.includes(j)) {
       return '';
     }
   }
