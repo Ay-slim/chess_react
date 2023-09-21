@@ -5,8 +5,8 @@ export type SetColorStateType = React.Dispatch<React.SetStateAction<PlayerColor>
 export type SetBoardStateType = React.Dispatch<React.SetStateAction<BoardState>>;
 export type SetMoveHistoryType = React.Dispatch<React.SetStateAction<MoveHistoryType[]>>;
 export type SetCapturedPieceType = React.Dispatch<React.SetStateAction<CapturedPiecesType>>;
+export type SetKingSquareType = React.Dispatch<React.SetStateAction<KingSquareType>>;
 export type GenericStringSetStateType = React.Dispatch<React.SetStateAction<string>>;
-
 
 export type PlayerColor = 'w' | 'b';
 export type PieceValidityTypes = 'n' | 'r' | 'b' | 'q'; //Will ultimately extend this for all pieces (queen, knight etc etc)
@@ -26,6 +26,8 @@ export type SquareProps = {
   setMoveHistory: SetMoveHistoryType;
   capturedPieces: CapturedPiecesType;
   setCapturedPiece: SetCapturedPieceType;
+  kingSquare: KingSquareType;
+  setKingSquare: SetKingSquareType;
 }
 
 export type PieceProps = {
@@ -53,4 +55,9 @@ export type MoveHistoryType = {
 export type CapturedPiecesType = {
   w: string[];
   b: string[];
+}
+
+export type KingSquareType = {
+  w: string;
+  b: string;
 }

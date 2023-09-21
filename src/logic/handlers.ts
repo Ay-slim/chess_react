@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoardState, CapturedPiecesType, GenericStringSetStateType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetMoveHistoryType, SquareInfoType } from '../types';
+import { BoardState, CapturedPiecesType, GenericStringSetStateType, KingSquareType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetKingSquareType, SetMoveHistoryType, SquareInfoType } from '../types';
 import { moveValidityCheck } from './moveValidity';
 import { isValidEnpassantMove } from './enpassant';
 import { grabCastlingRookAndSquares } from './castling';
@@ -15,7 +15,7 @@ export const drag = (squareId: string) => (ev: React.DragEvent) => {
   }));
 };
 
-export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType) => (ev: React.DragEvent) => {
+export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType, kingSquare: KingSquareType, setKingSquare: SetKingSquareType) => (ev: React.DragEvent) => {
   ev.preventDefault();
   const { srcSquareId, pieceId }: {srcSquareId: string, pieceId: string} = JSON.parse(ev.dataTransfer.getData('drag_info'));
   const targetSquareId = ev.currentTarget.id;
@@ -47,6 +47,10 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       if (destPiece) {
         setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([destPiece])})
       }
+    }
+    if (pieceId[1] === 'k') {
+      //When you move the king, update the king square state
+      setKingSquare({...kingSquare, [colorState]: targetSquareId})
     }
     setMoveHistory(movesHistory.concat([move]));
     setColorState(colorState === 'w' ? 'b' : 'w');
