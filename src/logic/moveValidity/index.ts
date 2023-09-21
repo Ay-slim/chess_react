@@ -8,8 +8,13 @@ import { default as bishopValidity } from './bishop'
 import { default as queenValidity } from './queen'
 import { default as kingValidity } from './kingAug'
 import { default as coreKingValidity } from './king'
+import { default as generatePinnedSquares } from "../pinnedSquares";
 
-export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], pieceName: string) => {
+export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], pieceName: string, kingSquare: string) => {
+  const pinnedSquares = generatePinnedSquares(kingSquare, boardState, color)
+  if (pinnedSquares.includes(srcSquareId)) {
+    return false
+  }
 
   const validityMap = {
     n: knightValidity,

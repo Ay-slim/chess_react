@@ -21,7 +21,7 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
   const targetSquareId = ev.currentTarget.id;
   const lastGameMove = movesHistory[movesHistory.length - 1];
 
-  if (moveValidityCheck(srcSquareId, targetSquareId, colorState, currentBoard, movesHistory, pieceId[1] )) {
+  if (moveValidityCheck(srcSquareId, targetSquareId, colorState, currentBoard, movesHistory, pieceId[1], kingSquare[colorState] )) {
     //Execute valid moves and update color state
     const isValidEnpassant = pieceId[1] === 'p' && isValidEnpassantMove(srcSquareId, targetSquareId, currentBoard, lastGameMove, colorState);
     const castlingRookInfo = grabCastlingRookAndSquares(srcSquareId, targetSquareId, pieceId, currentBoard);
