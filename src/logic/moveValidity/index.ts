@@ -1,4 +1,4 @@
-import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor } from "../../types";
+import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType } from "../../types";
 
 import { default as corePawnValidity } from './pawn'
 import { default as pawnValidity } from './pawnAug'
@@ -33,8 +33,6 @@ export const moveValidityCheck = (srcSquareId: string, destSquareId: string, col
 }
 
 export const allThreatenedSquares = (color: PlayerColor, boardState: BoardState) => {
-
-  type PieceNameType = 'p' | 'n' | 'b' | 'r' | 'q' | 'k'
   const threatenedSquaresFns = {
     p: corePawnValidity,
     n: knightValidity,
