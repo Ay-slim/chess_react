@@ -29,3 +29,4 @@ export const CASTLING_SQUARES_TO_CHECK = {"w+ve": ["f1", "g1"], "w-ve": ["c1", "
 export const VALID_CASTLING_SQUARES = {"w+ve": "g1", "w-ve": "c1", "b+ve": "g8", "b-ve": "c8"};
 export const ENPASSANT_ATTACKING_COLUMNS = {w: 4, b: 3};
 export const ENPASSANT_PAWN_MOVE_DIFF = {w: 2, b: -2};
+export const BASE_ROW_MAP = { w: 1, b: 6 };
