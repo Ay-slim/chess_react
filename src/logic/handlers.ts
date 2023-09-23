@@ -1,8 +1,9 @@
 import React from 'react';
-import { BoardState, CapturedPiecesType, GenericStringSetStateType, KingSquareType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetKingSquareType, SetMoveHistoryType, SquareInfoType } from '../types';
+import { BoardState, CapturedPiecesType, GenericStringSetStateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetColorStateType, SetKingInCheckType, SetKingSquareType, SetMoveHistoryType, SquareInfoType } from '../types';
 import { moveValidityCheck } from './moveValidity';
 import { isValidEnpassantMove } from './enpassant';
 import { grabCastlingRookAndSquares } from './castling';
+import { evaluateKingInCheck } from './check';
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault();
@@ -15,11 +16,12 @@ export const drag = (squareId: string) => (ev: React.DragEvent) => {
   }));
 };
 
-export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType, kingSquare: KingSquareType, setKingSquare: SetKingSquareType) => (ev: React.DragEvent) => {
+export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType, kingSquare: KingSquareType, setKingSquare: SetKingSquareType, kingInCheck: KingCheckType, setKingInCheck: SetKingInCheckType) => (ev: React.DragEvent) => {
   ev.preventDefault();
   const { srcSquareId, pieceId }: {srcSquareId: string, pieceId: string} = JSON.parse(ev.dataTransfer.getData('drag_info'));
   const targetSquareId = ev.currentTarget.id;
   const lastGameMove = movesHistory[movesHistory.length - 1];
+  let newBoardState: BoardState
 
   if (moveValidityCheck(srcSquareId, targetSquareId, colorState, currentBoard, movesHistory, pieceId[1], kingSquare[colorState] )) {
     //Execute valid moves and update color state
@@ -35,14 +37,17 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
     }
     if (isValidEnpassant) {
       const enpassantVictimUpdated = {...currentBoard[lastGameMove['destSquare']], piece: ''}
-      setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [lastGameMove['destSquare']]: enpassantVictimUpdated})
+      newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [lastGameMove['destSquare']]: enpassantVictimUpdated}
+      setBoardState(newBoardState)
       setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([lastGameMove['piece']])})
     } else if (castlingRookInfo) {
       const castlingRookSrcUpdated = { ...currentBoard[castlingRookInfo.rookSrc], piece: '' };
       const castlingRookDestUpdated = { ...currentBoard[castlingRookInfo.rookDest], piece: castlingRookInfo.rookId }
-      setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [castlingRookInfo.rookSrc]: castlingRookSrcUpdated, [castlingRookInfo.rookDest]: castlingRookDestUpdated})
-    }else {
-      setBoardState({...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated})
+      newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [castlingRookInfo.rookSrc]: castlingRookSrcUpdated, [castlingRookInfo.rookDest]: castlingRookDestUpdated}
+      setBoardState(newBoardState)
+    } else {
+      newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated}
+      setBoardState(newBoardState)
       const destPiece = currentBoard[targetSquareId]['piece'];
       if (destPiece) {
         setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([destPiece])})
@@ -51,6 +56,13 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
     if (pieceId[1] === 'k') {
       //When you move the king, update the king square state
       setKingSquare({...kingSquare, [colorState]: targetSquareId})
+    }
+    const opponentColor = colorState === 'w' ? 'b' : 'w'
+    const kingInCheckDetails = evaluateKingInCheck(kingSquare[opponentColor], newBoardState, opponentColor)
+    if (Object.keys(kingInCheckDetails).length) {
+      setKingInCheck({color: opponentColor, squaresInCheck: kingInCheckDetails})
+    } else {
+      setKingInCheck({color: null, squaresInCheck: {}})
     }
     setMoveHistory(movesHistory.concat([move]));
     setColorState(colorState === 'w' ? 'b' : 'w');
