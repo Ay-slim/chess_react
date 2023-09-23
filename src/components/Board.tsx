@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Square from './Square'
 import { allowDrop } from '../logic/handlers';
-import { BoardState, CapturedPiecesType, KingSquareType, MoveHistoryType, PlayerColor } from '../types';
+import { BoardState, CapturedPiecesType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor } from '../types';
 import '../App.css';
 
 const Board = () => {
@@ -76,14 +76,14 @@ const Board = () => {
   const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([]);
   const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({w: [], b: []});
   const [kingSquare, setKingSquare] = useState<KingSquareType>({w: 'e1', b: 'e8'})
+  const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, squaresInCheck: {}})
 
   return (
     <div className="container">
       <div className="turn">
         <p>Current player turn: <strong>{`${currentPlayerColor === 'w' ? 'White' : 'Black'}`}</strong></p>
-      </div>
-      <div className="alert">
-        <p>Message: <strong style={{ color: 'red' }}>{alertMessage}</strong></p>
+        <p style={{ color: 'red' }}>{kingInCheck?.color ? `Check! ${kingInCheck.color === 'w' ? 'White' : 'Black'} king is under attack!` : ''}</p>
+        <p><strong style={{ color: 'red' }}>{alertMessage}</strong></p>
       </div>
       <table className="board">
         {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
@@ -107,6 +107,8 @@ const Board = () => {
                   setCapturedPiece={setCapturedPiece}
                   kingSquare={kingSquare}
                   setKingSquare={setKingSquare}
+                  kingInCheck={kingInCheck}
+                  setKingInCheck={setKingInCheck}
                 />
               );
             })}
