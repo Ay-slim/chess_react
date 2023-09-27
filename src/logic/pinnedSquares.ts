@@ -13,6 +13,8 @@ const pinnedSquares = (kingSquare: string, boardState: BoardState, color: Player
     let kingDefenderEncountered = false
     let pinnedSquare = ''
     let pinnedPiece = ''
+    const ROOK_DIR = (dir[0] === 0 && [-1, 1].includes(dir[1])) || (dir[1] === 0 && [-1, 1].includes(dir[0]))
+    const BISHOP_DIR = (dir[0] === 1 && [-1, 1].includes(dir[1])) || (dir[1] === 1 && [-1, 1].includes(dir[0]))
     const restrictedValidMoveSquares = [] //Even when pinned, pieces like bishop, rook, queen, and pawn can still move along a restricted axis, this array holds those valid squares
     for (let i = 1; i < 8; i++) {
       const targXCoord = normalizedArithmetic(color, 'sum', xCoord, i * dir[0])
@@ -37,15 +39,17 @@ const pinnedSquares = (kingSquare: string, boardState: BoardState, color: Player
           break
         }
         if (currentPiece && currentPiece[0] !== color && kingDefenderEncountered) {
+          const pinnedPieceName = pinnedPiece[1]
+          const currentPieceName = currentPiece[1]
           if (['r', 'b', 'q'].includes(currentPiece[1])) {
             if (['b', 'r', 'q'].includes(pinnedPiece[1])) {
               restrictedValidMoveSquares.push(currentSquare)
             }
             let validMovesArr: string[] = []
-            if (['b', 'r', 'q'].includes(pinnedPiece[1])) {
+            if (['b', 'r', 'q'].includes(pinnedPieceName)) {
               validMovesArr = restrictedValidMoveSquares
             }
-            if (pinnedPiece[1] === 'p') {
+            if (pinnedPieceName === 'p') {
               if (dir[0] === 0 && dir[1] === 1) {
                 validMovesArr = pawnForwardSquares(boardState, pinnedSquare, color)
               }
@@ -53,7 +57,9 @@ const pinnedSquares = (kingSquare: string, boardState: BoardState, color: Player
                 validMovesArr = [currentSquare]
               }
             }
-            pinnedSquaresAndMoves[pinnedSquare] = { piece: pinnedPiece, validSquares: validMovesArr }
+            if ((['b', 'q'].includes(currentPieceName) && BISHOP_DIR) || (['r', 'q'].includes(currentPieceName) && ROOK_DIR)) {
+              pinnedSquaresAndMoves[pinnedSquare] = { piece: pinnedPiece, validSquares: validMovesArr }
+            }
           }
           break
         }
