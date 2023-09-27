@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Square from './Square'
 import { allowDrop } from '../logic/handlers';
-import { BoardState, CapturedPiecesType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor } from '../types';
+import { BoardState, CapturedPiecesType, CheckMateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor } from '../types';
 import '../App.css';
 
 const Board = () => {
@@ -75,16 +75,17 @@ const Board = () => {
   const [alertMessage, setAlertMessage] = useState('');
   const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([]);
   const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({w: [], b: []});
-  const [kingSquare, setKingSquare] = useState<KingSquareType>({w: 'e1', b: 'e8'})
-  const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, squaresInCheck: {}})
+  const [kingSquare, setKingSquare] = useState<KingSquareType>({w: 'e1', b: 'e8'});
+  const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, squaresInCheck: {}});
+  const [checkMate, setCheckMate] = useState<CheckMateType>(null);
 
   return (
     <div className="container">
-      <div className="turn">
+    {!checkMate ? (<div className="turn">
         <p>Current player turn: <strong>{`${currentPlayerColor === 'w' ? 'White' : 'Black'}`}</strong></p>
-        <p style={{ color: 'red' }}>{kingInCheck?.color ? `Check! ${kingInCheck.color === 'w' ? 'White' : 'Black'} king is under attack!` : ''}</p>
-        <p><strong style={{ color: 'red' }}>{alertMessage}</strong></p>
-      </div>
+        <p>|: <strong style={{ color: 'red' }}>{kingInCheck?.color ? `Check! ${kingInCheck.color === 'w' ? 'White' : 'Black'} king is under attack!` : ''}</strong></p>
+        <p>|: <strong style={{ color: 'red' }}>{alertMessage}</strong></p>
+      </div>) : <div className="turn"><p><strong style={{ color: 'red' }}>{`Checkmate! ${checkMate === 'w' ? 'White' : 'Black'} wins`}</strong></p></div>}
       <table className="board">
         {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
           <tr key={`row-${row}`}>
@@ -109,6 +110,8 @@ const Board = () => {
                   setKingSquare={setKingSquare}
                   kingInCheck={kingInCheck}
                   setKingInCheck={setKingInCheck}
+                  checkMate={checkMate}
+                  setCheckMate={setCheckMate}
                 />
               );
             })}
