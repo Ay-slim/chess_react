@@ -64,10 +64,10 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       if (!Object.keys(validCheckMoves).length) {
         setCheckMate(colorState)
       } else {
-        setKingInCheck({color: opponentColor, squaresInCheck: validCheckMoves})
+        setKingInCheck({color: opponentColor, validCheckMoves})
       }
     } else {
-      setKingInCheck({color: null, squaresInCheck: {}})
+      setKingInCheck({color: null, validCheckMoves: {}})
     }
     setMoveHistory(movesHistory.concat([move]));
     setColorState(colorState === 'w' ? 'b' : 'w');

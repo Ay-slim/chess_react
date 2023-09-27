@@ -73,7 +73,7 @@ export type KingSquareType = {
 
 export type KingCheckType = {
   color: PlayerColor | null;
-  squaresInCheck: {
+  validCheckMoves: {
     [key: string]: string[]
   }
 }

@@ -12,7 +12,7 @@ import { default as generatePinnedSquares } from "../pinnedSquares"
 
 export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], pieceName: string, kingSquare: string, kingInCheck: KingCheckType, checkMate: CheckMateType, setCheckMate: SetCheckMateType) => {
   if (kingInCheck.color) {
-    const validCheckMoves = kingInCheck.squaresInCheck
+    const { validCheckMoves } = kingInCheck
     if (validCheckMoves?.[srcSquareId] && validCheckMoves[srcSquareId].includes(destSquareId)) {
       return true
     }

@@ -76,7 +76,7 @@ const Board = () => {
   const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([]);
   const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({w: [], b: []});
   const [kingSquare, setKingSquare] = useState<KingSquareType>({w: 'e1', b: 'e8'});
-  const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, squaresInCheck: {}});
+  const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, validCheckMoves: {}});
   const [checkMate, setCheckMate] = useState<CheckMateType>(null);
 
   return (
