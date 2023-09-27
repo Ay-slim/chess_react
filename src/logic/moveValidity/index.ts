@@ -1,4 +1,4 @@
-import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType } from "../../types";
+import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType, KingCheckType, CheckMateType, SetCheckMateType } from "../../types";
 
 import { default as corePawnValidity } from './pawn'
 import { default as pawnValidity } from './pawnAug'
@@ -10,7 +10,15 @@ import { default as kingValidity } from './kingAug'
 import { default as coreKingValidity } from './king'
 import { default as generatePinnedSquares } from "../pinnedSquares"
 
-export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], pieceName: string, kingSquare: string) => {
+export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], pieceName: string, kingSquare: string, kingInCheck: KingCheckType, checkMate: CheckMateType, setCheckMate: SetCheckMateType) => {
+  if (kingInCheck.color) {
+    const validCheckMoves = kingInCheck.squaresInCheck
+    if (validCheckMoves?.[srcSquareId] && validCheckMoves[srcSquareId].includes(destSquareId)) {
+      return true
+    }
+    return false
+  }
+
   const pinnedSquares = generatePinnedSquares(kingSquare, boardState, color)
   if (Object.keys(pinnedSquares).includes(srcSquareId)) {
     if (pinnedSquares[srcSquareId].validSquares.includes(destSquareId)) {
