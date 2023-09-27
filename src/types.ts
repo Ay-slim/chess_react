@@ -7,13 +7,15 @@ export type SetMoveHistoryType = React.Dispatch<React.SetStateAction<MoveHistory
 export type SetCapturedPieceType = React.Dispatch<React.SetStateAction<CapturedPiecesType>>;
 export type SetKingSquareType = React.Dispatch<React.SetStateAction<KingSquareType>>;
 export type SetKingInCheckType = React.Dispatch<React.SetStateAction<KingCheckType>>
+export type SetCheckMateType = React.Dispatch<React.SetStateAction<CheckMateType>>;
 export type GenericStringSetStateType = React.Dispatch<React.SetStateAction<string>>;
 
 export type PlayerColor = 'w' | 'b';
-export type PieceValidityTypes = 'n' | 'r' | 'b' | 'q'; //Will ultimately extend this for all pieces (queen, knight etc etc)
+export type PieceValidityTypes = 'n' | 'r' | 'b' | 'q';
 export type BoardNumbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 export type OperationType = 'sum' | 'diff';
-export type PieceNameType = 'p' | 'n' | 'b' | 'r' | 'q' | 'k'
+export type PieceNameType = 'p' | 'n' | 'b' | 'r' | 'q' | 'k';
+export type CheckMateType = PlayerColor | null;
 
 export type SquareProps = {
   id: string;
@@ -32,12 +34,15 @@ export type SquareProps = {
   setKingSquare: SetKingSquareType;
   kingInCheck: KingCheckType;
   setKingInCheck: SetKingInCheckType;
+  checkMate: CheckMateType;
+  setCheckMate: SetCheckMateType;
 }
 
 export type PieceProps = {
   id: string;
   currentColor: PlayerColor;
   squareId: string;
+  checkMate: CheckMateType;
 }
 
 export type SquareInfoType = {
