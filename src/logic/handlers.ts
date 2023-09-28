@@ -1,9 +1,10 @@
 import React from 'react';
-import { BoardState, CapturedPiecesType, CheckMateType, GenericStringSetStateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetCheckMateType, SetColorStateType, SetKingInCheckType, SetKingSquareType, SetMoveHistoryType, SquareInfoType } from '../types';
-import { moveValidityCheck } from './moveValidity';
+import { BoardState, CapturedPiecesType, CheckMateType, GenericStringSetStateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetCheckMateType, SetColorStateType, SetKingInCheckType, SetKingSquareType, SetMoveHistoryType, SetStaleMateType, SquareInfoType } from '../types';
+import { allValidMoves, moveValidityCheck } from './moveValidity';
 import { isValidEnpassantMove } from './enpassant';
 import { grabCastlingRookAndSquares } from './castling';
 import { evaluateKingInCheck, validMovesWhenInCheck } from './check';
+import { default as generatePinnedSquares } from './pinnedSquares'
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault();
@@ -16,7 +17,7 @@ export const drag = (squareId: string) => (ev: React.DragEvent) => {
   }));
 };
 
-export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType, kingSquare: KingSquareType, setKingSquare: SetKingSquareType, kingInCheck: KingCheckType, setKingInCheck: SetKingInCheckType, checkMate: CheckMateType, setCheckMate: SetCheckMateType) => (ev: React.DragEvent) => {
+export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType, kingSquare: KingSquareType, setKingSquare: SetKingSquareType, kingInCheck: KingCheckType, setKingInCheck: SetKingInCheckType, checkMate: CheckMateType, setCheckMate: SetCheckMateType, staleMate: Boolean, setStaleMate: SetStaleMateType) => (ev: React.DragEvent) => {
   ev.preventDefault();
   const { srcSquareId, pieceId }: {srcSquareId: string, pieceId: string} = JSON.parse(ev.dataTransfer.getData('drag_info'));
   const targetSquareId = ev.currentTarget.id;
@@ -68,6 +69,18 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       }
     } else {
       setKingInCheck({color: null, validCheckMoves: {}})
+      const oppPinnedSquares = generatePinnedSquares(kingSquare[opponentColor], newBoardState, opponentColor)
+      const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, movesHistory)
+      let noValidMoves = true
+      for (let srcSquare in validOppMoves) {
+        if (validOppMoves[srcSquare].validSquares.length) {
+          noValidMoves = false
+          break
+        }
+      }
+      if (noValidMoves) {
+        setStaleMate(true)
+      }
     }
     setMoveHistory(movesHistory.concat([move]));
     setColorState(colorState === 'w' ? 'b' : 'w');
