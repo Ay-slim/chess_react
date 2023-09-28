@@ -16,7 +16,7 @@ const pawnForwardSquares = (boardState: BoardState, squareId: string, color: Pla
     if (isValidBoardCoordinates(x_coord, secondSquareAheadYCoord)) {
       const secondSquareAheadId = INVERTED_SQUARES[`${x_coord},${secondSquareAheadYCoord as BoardNumbers}`];
       const secondSquareAheadPiece = boardState[secondSquareAheadId]['piece'];
-      if (pawnhasNotMoved && !secondSquareAheadPiece) {
+      if (pawnhasNotMoved && !firstSquareAheadPiece && !secondSquareAheadPiece) {
         forwardSquares.push(secondSquareAheadId)
       }
     }
