@@ -78,14 +78,15 @@ const Board = () => {
   const [kingSquare, setKingSquare] = useState<KingSquareType>({w: 'e1', b: 'e8'});
   const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, validCheckMoves: {}});
   const [checkMate, setCheckMate] = useState<CheckMateType>(null);
+  const [staleMate, setStaleMate] = useState<Boolean>(false);
 
   return (
     <div className="container">
-    {!checkMate ? (<div className="turn">
+    {!checkMate && !staleMate ? (<div className="turn">
         <p>Current player turn: <strong>{`${currentPlayerColor === 'w' ? 'White' : 'Black'}`}</strong></p>
         <p>|: <strong style={{ color: 'red' }}>{kingInCheck?.color ? `Check! ${kingInCheck.color === 'w' ? 'White' : 'Black'} king is under attack!` : ''}</strong></p>
         <p>|: <strong style={{ color: 'red' }}>{alertMessage}</strong></p>
-      </div>) : <div className="turn"><p><strong style={{ color: 'red' }}>{`Checkmate! ${checkMate === 'w' ? 'White' : 'Black'} wins`}</strong></p></div>}
+      </div>) : <div className="turn"><p><strong style={{ color: 'red' }}>{staleMate ? `Stalemate! Game ends in a draw.` : `Checkmate! ${checkMate === 'w' ? 'White' : 'Black'} wins`}</strong></p></div>}
       <table className="board">
         {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
           <tr key={`row-${row}`}>
@@ -112,6 +113,8 @@ const Board = () => {
                   setKingInCheck={setKingInCheck}
                   checkMate={checkMate}
                   setCheckMate={setCheckMate}
+                  staleMate={staleMate}
+                  setStaleMate={setStaleMate}
                 />
               );
             })}
