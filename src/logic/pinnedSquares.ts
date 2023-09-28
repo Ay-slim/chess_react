@@ -47,7 +47,12 @@ const pinnedSquares = (kingSquare: string, boardState: BoardState, color: Player
             }
             let validMovesArr: string[] = []
             if (['b', 'r', 'q'].includes(pinnedPieceName)) {
-              validMovesArr = restrictedValidMoveSquares
+              if (['b', 'q'].includes(pinnedPieceName) && BISHOP_DIR) {
+                validMovesArr = restrictedValidMoveSquares
+              }
+              if (['r', 'q'].includes(pinnedPieceName) && ROOK_DIR) {
+                validMovesArr = restrictedValidMoveSquares
+              }
             }
             if (pinnedPieceName === 'p') {
               if (dir[0] === 0 && dir[1] === 1) {
