@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Square from './Square'
 import { allowDrop } from '../logic/handlers';
-import { BoardState, CapturedPiecesType, CheckMateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor } from '../types';
+import { BoardState, CapturedPiecesType, CheckMateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor, SourceSquareAndValidMovesType } from '../types';
 import '../App.css';
 
 const Board = () => {
@@ -79,6 +79,18 @@ const Board = () => {
   const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, validCheckMoves: {}});
   const [checkMate, setCheckMate] = useState<CheckMateType>(null);
   const [staleMate, setStaleMate] = useState<Boolean>(false);
+  const [validMoves, setValidMoves] = useState<SourceSquareAndValidMovesType>({
+    a2: { piece: 'wp1', validSquares: ['a3', 'a4'] },
+    b2: { piece: 'wp2', validSquares: ['b3', 'b4'] },
+    c2: { piece: 'wp3', validSquares: ['c3', 'c4'] },
+    d2: { piece: 'wp4', validSquares: ['d3', 'd4'] },
+    e2: { piece: 'wp5', validSquares: ['e3', 'e4'] },
+    f2: { piece: 'wp6', validSquares: ['f3', 'f4'] },
+    g2: { piece: 'wp7', validSquares: ['g3', 'g4'] },
+    h2: { piece: 'wp8', validSquares: ['h3', 'h4'] },
+    b1: { piece: 'wn2', validSquares: ['a3', 'c3'] },
+    g1: { piece: 'wn1', validSquares: ['f3', 'h3'] },
+  });
 
   return (
     <div className="container">
@@ -115,6 +127,8 @@ const Board = () => {
                   setCheckMate={setCheckMate}
                   staleMate={staleMate}
                   setStaleMate={setStaleMate}
+                  validMoves={validMoves}
+                  setValidMoves={setValidMoves}
                 />
               );
             })}

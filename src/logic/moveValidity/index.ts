@@ -1,4 +1,4 @@
-import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType, KingCheckType, CheckMateType, SetCheckMateType, SourceSquareAndValidMovesType } from "../../types";
+import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType, KingCheckType, SourceSquareAndValidMovesType } from "../../types";
 
 import { default as corePawnValidity } from './pawn'
 import { default as pawnValidity } from './pawnAug'
@@ -8,7 +8,6 @@ import { default as bishopValidity } from './bishop'
 import { default as queenValidity } from './queen'
 import { default as kingValidity } from './kingAug'
 import { default as coreKingValidity } from './king'
-import { default as generatePinnedSquares } from "../pinnedSquares"
 
 
 const validityMap = {
@@ -18,7 +17,7 @@ const validityMap = {
   q: queenValidity,
 }
 
-export const moveValidityCheck = (srcSquareId: string, destSquareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], pieceName: string, kingSquare: string, kingInCheck: KingCheckType, checkMate: CheckMateType, setCheckMate: SetCheckMateType) => {
+export const moveValidityCheck = (srcSquareId: string, destSquareId: string, kingInCheck: KingCheckType, allValidMoves: SourceSquareAndValidMovesType) => {
   if (kingInCheck.color) {
     const { validCheckMoves } = kingInCheck
     if (validCheckMoves?.[srcSquareId] && validCheckMoves[srcSquareId].includes(destSquareId)) {
@@ -27,21 +26,11 @@ export const moveValidityCheck = (srcSquareId: string, destSquareId: string, col
     return false
   }
 
-  const pinnedSquares = generatePinnedSquares(kingSquare, boardState, color)
-  if (Object.keys(pinnedSquares).includes(srcSquareId)) {
-    if (pinnedSquares[srcSquareId].validSquares.includes(destSquareId)) {
-      return true
-    }
-    return false
+  if (Object.keys(allValidMoves).includes(srcSquareId) && allValidMoves[srcSquareId].validSquares.includes(destSquareId)) {
+    return true
   }
 
-  if (pieceName === 'p') {
-    return pawnValidity(srcSquareId, color, boardState, gameMoves).includes(destSquareId);
-  } else if (pieceName === 'k') {
-    return kingValidity(srcSquareId, color, boardState, gameMoves).includes(destSquareId);
-  } else {
-    return validityMap[pieceName as PieceValidityTypes](srcSquareId, color, boardState).includes(destSquareId);
-  }
+  return false
 }
 
 export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinnedSquares: SourceSquareAndValidMovesType, movesHistory: MoveHistoryType[]) => {
