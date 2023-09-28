@@ -3,10 +3,10 @@ import '../App.css';
 import { drag } from '../logic/handlers';
 
 const Piece = (props: PieceProps) => {
-  const {id, squareId, currentColor, checkMate} = props;
+  const {id, squareId, currentColor, checkMate, staleMate} = props;
   const handleDrag = drag(squareId)
   const src = `${id.substring(0, 2)}.png`;
-  const draggable = checkMate ? false: currentColor === id[0];
+  const draggable = checkMate || staleMate ? false : currentColor === id[0];
   return (
     <img id={id} src={src} draggable={draggable} alt={''} onDragStart={handleDrag}/>
   );
