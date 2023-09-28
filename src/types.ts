@@ -46,6 +46,7 @@ export type PieceProps = {
   currentColor: PlayerColor;
   squareId: string;
   checkMate: CheckMateType;
+  staleMate: Boolean;
 }
 
 export type SquareInfoType = {
