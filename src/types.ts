@@ -10,6 +10,7 @@ export type SetKingInCheckType = React.Dispatch<React.SetStateAction<KingCheckTy
 export type SetCheckMateType = React.Dispatch<React.SetStateAction<CheckMateType>>;
 export type SetStaleMateType = React.Dispatch<React.SetStateAction<Boolean>>;
 export type SetValidMovesType = React.Dispatch<React.SetStateAction<SourceSquareAndValidMovesType>>;
+export type SetOccupiedScaresType = React.Dispatch<React.SetStateAction<OccupiedSquaresType>>;
 export type GenericStringSetStateType = React.Dispatch<React.SetStateAction<string>>;
 
 export type PlayerColor = 'w' | 'b';
@@ -40,8 +41,10 @@ export type SquareProps = {
   setCheckMate: SetCheckMateType;
   staleMate: Boolean;
   setStaleMate: SetStaleMateType;
-  validMoves: SourceSquareAndValidMovesType
-  setValidMoves: SetValidMovesType
+  validMoves: SourceSquareAndValidMovesType;
+  setValidMoves: SetValidMovesType;
+  occupiedSquares: OccupiedSquaresType;
+  setOccupiedSquares: SetOccupiedScaresType;
 }
 
 export type PieceProps = {
@@ -90,4 +93,8 @@ export type SourceSquareAndValidMovesType = {
     piece: string,
     validSquares: string[]
   }
+}
+
+export type OccupiedSquaresType = {
+ [key:string]: string[]
 }

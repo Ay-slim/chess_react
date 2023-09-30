@@ -136,7 +136,7 @@ export const validMovesWhenInCheck = (color: PlayerColor, checkedSquaresAndAttac
   const pinnedSquaresMap = pinnedSquares(kingSquare, boardState, color)
   const pinnedSquareVals = Object.keys(pinnedSquaresMap)
   const validMoves: {[key: string]: string[]} = {} //Key is the source square of any movable pieces, value is an array of their allowed destination square(s)
-
+  const opponentColor = color === 'w' ? 'b' : 'w'
   //Three things can occur when in check: 1/ Capture attacking piece, 2/ Block check by placing a piece btw king and attacker. 3/Move king to a safe square
   //1 and 2 above can only be achieved if there's only one piece attacking the king, hence the if condition below.
   if (Object.keys(checkedSquaresAndAttackers).length === 1) {
@@ -145,7 +145,6 @@ export const validMovesWhenInCheck = (color: PlayerColor, checkedSquaresAndAttac
     //...is getting an opposing (and unpinned) piece to either capture the attacker or block the check, so we'll concatenate the keys and values, then apply the function to them all.
     const attackingPieceSquare = Object.keys(checkedSquaresAndAttackers)[0]
     const attackingSquareAndSquaresToBlock = [attackingPieceSquare, ...checkedSquaresAndAttackers[attackingPieceSquare]]
-    const opponentColor = color === 'w' ? 'b' : 'w'
     attackingSquareAndSquaresToBlock.forEach(intendedSquare => {
       const squaresThatCanCaptureOrBlock = piecesAttackingMe(intendedSquare, boardState, opponentColor)
       if (squaresThatCanCaptureOrBlock.length) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BoardState, CapturedPiecesType, GenericStringSetStateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetCheckMateType, SetColorStateType, SetKingInCheckType, SetKingSquareType, SetMoveHistoryType, SetStaleMateType, SetValidMovesType, SourceSquareAndValidMovesType, SquareInfoType } from '../types';
+import { BoardState, CapturedPiecesType, GenericStringSetStateType, KingCheckType, KingSquareType, MoveHistoryType, OccupiedSquaresType, PlayerColor, SetBoardStateType, SetCapturedPieceType, SetCheckMateType, SetColorStateType, SetKingInCheckType, SetKingSquareType, SetMoveHistoryType, SetOccupiedScaresType, SetStaleMateType, SetValidMovesType, SourceSquareAndValidMovesType, SquareInfoType } from '../types';
 import { allValidMoves, moveValidityCheck } from './moveValidity';
 import { isValidEnpassantMove } from './enpassant';
 import { grabCastlingRookAndSquares } from './castling';
@@ -17,12 +17,13 @@ export const drag = (squareId: string) => (ev: React.DragEvent) => {
   }));
 };
 
-export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType, kingSquare: KingSquareType, setKingSquare: SetKingSquareType, kingInCheck: KingCheckType, setKingInCheck: SetKingInCheckType, setCheckMate: SetCheckMateType, setStaleMate: SetStaleMateType, validMoves: SourceSquareAndValidMovesType, setValidMoves: SetValidMovesType) => (ev: React.DragEvent) => {
+export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, currentBoard: BoardState, setBoardState: SetBoardStateType, setAlertMessage: GenericStringSetStateType, movesHistory: MoveHistoryType[], setMoveHistory: SetMoveHistoryType, capturedPieces: CapturedPiecesType, setCapturedPiece: SetCapturedPieceType, kingSquare: KingSquareType, setKingSquare: SetKingSquareType, kingInCheck: KingCheckType, setKingInCheck: SetKingInCheckType, setCheckMate: SetCheckMateType, setStaleMate: SetStaleMateType, validMoves: SourceSquareAndValidMovesType, setValidMoves: SetValidMovesType, occupiedSquares: OccupiedSquaresType, setOccupiedSquares: SetOccupiedScaresType) => (ev: React.DragEvent) => {
   ev.preventDefault();
   const { srcSquareId, pieceId }: {srcSquareId: string, pieceId: string} = JSON.parse(ev.dataTransfer.getData('drag_info'));
   const targetSquareId = ev.currentTarget.id;
   const lastGameMove = movesHistory[movesHistory.length - 1];
   let newBoardState: BoardState
+  const opponentColor = colorState === 'w' ? 'b' : 'w'
 
   if (moveValidityCheck(srcSquareId, targetSquareId,  kingInCheck, validMoves)) {
     //Execute valid moves and update color state
@@ -36,12 +37,23 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       piece: pieceId,
       boardBefore: currentBoard
     }
-    if (isValidEnpassant) {
+    if (isValidEnpassant) {      
+      const newCurrentColorOccupiedSquares =[...occupiedSquares[colorState]]
+      newCurrentColorOccupiedSquares.splice(newCurrentColorOccupiedSquares.indexOf(srcSquareId), 1)
+      newCurrentColorOccupiedSquares.push(targetSquareId)
+      const newOppColorOccupiedSquares = [...occupiedSquares[opponentColor]]
+      newOppColorOccupiedSquares.splice(newOppColorOccupiedSquares.indexOf(lastGameMove.destSquare), 1)
+      setOccupiedSquares({[colorState]: newCurrentColorOccupiedSquares, [opponentColor]: newOppColorOccupiedSquares})
       const enpassantVictimUpdated = {...currentBoard[lastGameMove['destSquare']], piece: ''}
       newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [lastGameMove['destSquare']]: enpassantVictimUpdated}
       setBoardState(newBoardState)
       setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([lastGameMove['piece']])})
     } else if (castlingRookInfo) {
+      const newOccupiedSquaresState = [...occupiedSquares[colorState]]
+      newOccupiedSquaresState.splice(newOccupiedSquaresState.indexOf(srcSquareId), 1)
+      newOccupiedSquaresState.splice(newOccupiedSquaresState.indexOf(castlingRookInfo.rookSrc), 1)
+      newOccupiedSquaresState.push(targetSquareId, castlingRookInfo.rookDest)
+      setOccupiedSquares({...occupiedSquares, [colorState]: newOccupiedSquaresState})
       const castlingRookSrcUpdated = { ...currentBoard[castlingRookInfo.rookSrc], piece: '' };
       const castlingRookDestUpdated = { ...currentBoard[castlingRookInfo.rookDest], piece: castlingRookInfo.rookId }
       newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [castlingRookInfo.rookSrc]: castlingRookSrcUpdated, [castlingRookInfo.rookDest]: castlingRookDestUpdated}
@@ -49,16 +61,21 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
     } else {
       newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated}
       setBoardState(newBoardState)
+      const occupiedSquaresCurrColor = [...occupiedSquares[colorState]]
+      occupiedSquaresCurrColor.splice(occupiedSquaresCurrColor.indexOf(srcSquareId), 1)
+      occupiedSquaresCurrColor.push(targetSquareId)
+      const occupiedSquaresOppColor = [...occupiedSquares[opponentColor]]
       const destPiece = currentBoard[targetSquareId]['piece'];
       if (destPiece) {
         setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([destPiece])})
+        occupiedSquaresOppColor.splice(occupiedSquaresOppColor.indexOf(targetSquareId, 1))
       }
+      setOccupiedSquares({[colorState]: occupiedSquaresCurrColor, [opponentColor]: occupiedSquaresOppColor})
     }
     if (pieceId[1] === 'k') {
       //When you move the king, update the king square state
       setKingSquare({...kingSquare, [colorState]: targetSquareId})
     }
-    const opponentColor = colorState === 'w' ? 'b' : 'w'
     const kingInCheckDetails = evaluateKingInCheck(kingSquare[opponentColor], newBoardState, opponentColor)
     if (Object.keys(kingInCheckDetails).length) {
       const validCheckMoves = validMovesWhenInCheck(opponentColor, kingInCheckDetails, newBoardState, kingSquare[opponentColor])
@@ -69,8 +86,9 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       }
     } else {
       setKingInCheck({color: null, validCheckMoves: {}})
+      //Evaluate whether stalemate has been reached
       const oppPinnedSquares = generatePinnedSquares(kingSquare[opponentColor], newBoardState, opponentColor)
-      const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, movesHistory)
+      const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, movesHistory, occupiedSquares)
       let noValidMoves = true
       for (let srcSquare in validOppMoves) {
         if (validOppMoves[srcSquare].validSquares.length) {

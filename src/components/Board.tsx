@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Square from './Square'
 import { allowDrop } from '../logic/handlers';
-import { BoardState, CapturedPiecesType, CheckMateType, KingCheckType, KingSquareType, MoveHistoryType, PlayerColor, SourceSquareAndValidMovesType } from '../types';
+import { BoardState, CapturedPiecesType, CheckMateType, KingCheckType, KingSquareType, MoveHistoryType, OccupiedSquaresType, PlayerColor, SourceSquareAndValidMovesType } from '../types';
 import '../App.css';
 
 const Board = () => {
@@ -91,6 +91,17 @@ const Board = () => {
     b1: { piece: 'wn2', validSquares: ['a3', 'c3'] },
     g1: { piece: 'wn1', validSquares: ['f3', 'h3'] },
   });
+  //Rather than loop through the whole board when generating allThreatenedSquares or allValidMoves, 
+  //thought it might be a good idea to instead track all occupied squares and loop through this
+  //way smaller array (16 squares at worst as opposed to 64 when looping through the whole board)
+  //Pro: Faster lookup when evaluating the above
+  //Con: This state has to be updated on every move as well and I'm not sure which is more efficient
+  //looping through the whole board without having to update this or updating this on every move and not
+  //looping through the board
+  const [occupiedSquares, setOccupiedSquares] = useState<OccupiedSquaresType>({
+    w: ['a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1', 'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2'],
+    b: ['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7', 'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8']
+  });
 
   return (
     <div className="container">
@@ -129,6 +140,8 @@ const Board = () => {
                   setStaleMate={setStaleMate}
                   validMoves={validMoves}
                   setValidMoves={setValidMoves}
+                  occupiedSquares={occupiedSquares}
+                  setOccupiedSquares={setOccupiedSquares}
                 />
               );
             })}
