@@ -4,7 +4,7 @@ import { INVERTED_SQUARES, isValidBoardCoordinates, normalizedArithmetic } from 
 import { default as corePawnValidity } from './pawn'
 import { default as pawnForwardSquares } from './pawnForwardSquares'
 
-const validPawnSquares = (squareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[]): string[] => {
+const validPawnSquares = (squareId: string, color: PlayerColor, boardState: BoardState, lastMove: MoveHistoryType): string[] => {
   const pawnThreats: string[] = pawnForwardSquares(boardState, squareId, color)
   const [x_coord, y_coord] = boardState[squareId].loc;
   const topRightXCoord = normalizedArithmetic(color, 'sum', x_coord, 1);
@@ -13,13 +13,13 @@ const validPawnSquares = (squareId: string, color: PlayerColor, boardState: Boar
   const topLeftYCoord = normalizedArithmetic(color, 'sum', y_coord, 1);
   if(isValidBoardCoordinates(topRightXCoord, topRightYCoord)) {
     const targetRightSquareId = INVERTED_SQUARES[`${topRightXCoord as BoardNumbers},${topRightYCoord as BoardNumbers}`];
-    if (isValidEnpassantMove(squareId, targetRightSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
+    if (isValidEnpassantMove(squareId, targetRightSquareId, boardState, lastMove, color)) {
       pawnThreats.push(targetRightSquareId);
     }
   }
   if(isValidBoardCoordinates(topLeftXCoord, topLeftYCoord)) {
     const targetLeftSquareId = INVERTED_SQUARES[`${topLeftXCoord as BoardNumbers},${topLeftYCoord as BoardNumbers}`];
-    if (isValidEnpassantMove(squareId, targetLeftSquareId, boardState, gameMoves[gameMoves.length - 1], color)) {
+    if (isValidEnpassantMove(squareId, targetLeftSquareId, boardState, lastMove, color)) {
       pawnThreats.push(targetLeftSquareId);
     }
   }

@@ -23,6 +23,7 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
   const targetSquareId = ev.currentTarget.id;
   const lastGameMove = movesHistory[movesHistory.length - 1];
   let newBoardState: BoardState
+  let newOccupiedSquares: OccupiedSquaresType
   const opponentColor = colorState === 'w' ? 'b' : 'w'
 
   if (moveValidityCheck(srcSquareId, targetSquareId,  kingInCheck, validMoves)) {
@@ -37,13 +38,14 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       piece: pieceId,
       boardBefore: currentBoard
     }
-    if (isValidEnpassant) {      
-      const newCurrentColorOccupiedSquares =[...occupiedSquares[colorState]]
+    if (isValidEnpassant) {
+      const newCurrentColorOccupiedSquares = [...occupiedSquares[colorState]]
       newCurrentColorOccupiedSquares.splice(newCurrentColorOccupiedSquares.indexOf(srcSquareId), 1)
       newCurrentColorOccupiedSquares.push(targetSquareId)
       const newOppColorOccupiedSquares = [...occupiedSquares[opponentColor]]
       newOppColorOccupiedSquares.splice(newOppColorOccupiedSquares.indexOf(lastGameMove.destSquare), 1)
-      setOccupiedSquares({[colorState]: newCurrentColorOccupiedSquares, [opponentColor]: newOppColorOccupiedSquares})
+      newOccupiedSquares = {[colorState]: newCurrentColorOccupiedSquares, [opponentColor]: newOppColorOccupiedSquares}
+      setOccupiedSquares(newOccupiedSquares)
       const enpassantVictimUpdated = {...currentBoard[lastGameMove['destSquare']], piece: ''}
       newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [lastGameMove['destSquare']]: enpassantVictimUpdated}
       setBoardState(newBoardState)
@@ -53,7 +55,8 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       newOccupiedSquaresState.splice(newOccupiedSquaresState.indexOf(srcSquareId), 1)
       newOccupiedSquaresState.splice(newOccupiedSquaresState.indexOf(castlingRookInfo.rookSrc), 1)
       newOccupiedSquaresState.push(targetSquareId, castlingRookInfo.rookDest)
-      setOccupiedSquares({...occupiedSquares, [colorState]: newOccupiedSquaresState})
+      newOccupiedSquares = {...occupiedSquares, [colorState]: newOccupiedSquaresState}
+      setOccupiedSquares(newOccupiedSquares)
       const castlingRookSrcUpdated = { ...currentBoard[castlingRookInfo.rookSrc], piece: '' };
       const castlingRookDestUpdated = { ...currentBoard[castlingRookInfo.rookDest], piece: castlingRookInfo.rookId }
       newBoardState = {...currentBoard, [srcSquareId]: srcSquareUpdated, [targetSquareId]: targetSquareUpdated, [castlingRookInfo.rookSrc]: castlingRookSrcUpdated, [castlingRookInfo.rookDest]: castlingRookDestUpdated}
@@ -68,9 +71,10 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       const destPiece = currentBoard[targetSquareId]['piece'];
       if (destPiece) {
         setCapturedPiece({...capturedPieces, [colorState]: capturedPieces[colorState].concat([destPiece])})
-        occupiedSquaresOppColor.splice(occupiedSquaresOppColor.indexOf(targetSquareId, 1))
+        occupiedSquaresOppColor.splice(occupiedSquaresOppColor.indexOf(targetSquareId), 1)
       }
-      setOccupiedSquares({[colorState]: occupiedSquaresCurrColor, [opponentColor]: occupiedSquaresOppColor})
+      newOccupiedSquares = {[colorState]: occupiedSquaresCurrColor, [opponentColor]: occupiedSquaresOppColor}
+      setOccupiedSquares(newOccupiedSquares)
     }
     if (pieceId[1] === 'k') {
       //When you move the king, update the king square state
@@ -88,7 +92,16 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       setKingInCheck({color: null, validCheckMoves: {}})
       //Evaluate whether stalemate has been reached
       const oppPinnedSquares = generatePinnedSquares(kingSquare[opponentColor], newBoardState, opponentColor)
-      const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, movesHistory, occupiedSquares)
+      const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, movesHistory, move)
+      const wOcc = newOccupiedSquares['w'].map(square=>newBoardState[square].piece)
+      const bOcc = newOccupiedSquares['b'].map(square=>newBoardState[square].piece)
+      const wLen = wOcc.length
+      const bLen = bOcc.length
+      const whiteOnlyKing = wLen === 1 && wOcc.includes('wk')
+      const blackOnlyKing = bLen === 1 && bOcc.includes('bk')
+      const blackInsufficientMaterial = whiteOnlyKing && ((bLen === 2 && bOcc.includes('bk') && bOcc.some(bElem => (bElem.startsWith('bb') || bElem.startsWith('bn')))) || blackOnlyKing)
+      const whiteInsufficientMaterial = blackOnlyKing && ((wLen === 2 && wOcc.includes('wk') && wOcc.some(wElem => (wElem.startsWith('wb') || wElem.startsWith('wn')))) || whiteOnlyKing)
+      const insufficientMaterial = blackInsufficientMaterial || whiteInsufficientMaterial
       let noValidMoves = true
       for (let srcSquare in validOppMoves) {
         if (validOppMoves[srcSquare].validSquares.length) {
@@ -96,7 +109,7 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
           break
         }
       }
-      if (noValidMoves) {
+      if (noValidMoves || insufficientMaterial) {
         setStaleMate(true)
       }
       setValidMoves(validOppMoves)
