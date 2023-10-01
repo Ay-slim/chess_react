@@ -38,6 +38,7 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       piece: pieceId,
       boardBefore: currentBoard
     }
+    const updatedMovesHistory = [...movesHistory, move]
     if (isValidEnpassant) {
       const newCurrentColorOccupiedSquares = [...occupiedSquares[colorState]]
       newCurrentColorOccupiedSquares.splice(newCurrentColorOccupiedSquares.indexOf(srcSquareId), 1)
@@ -92,7 +93,7 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       setKingInCheck({color: null, validCheckMoves: {}})
       //Evaluate whether stalemate has been reached
       const oppPinnedSquares = generatePinnedSquares(kingSquare[opponentColor], newBoardState, opponentColor)
-      const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, movesHistory, move)
+      const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, updatedMovesHistory)
       const wOcc = newOccupiedSquares['w'].map(square=>newBoardState[square].piece)
       const bOcc = newOccupiedSquares['b'].map(square=>newBoardState[square].piece)
       const wLen = wOcc.length
@@ -114,7 +115,7 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       }
       setValidMoves(validOppMoves)
     }
-    setMoveHistory(movesHistory.concat([move]));
+    setMoveHistory(updatedMovesHistory);
     setColorState(colorState === 'w' ? 'b' : 'w');
     //This is going to be the fallback message if there are no other messages such as "Check!" etc
     setAlertMessage('')

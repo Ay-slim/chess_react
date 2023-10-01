@@ -33,14 +33,14 @@ export const moveValidityCheck = (srcSquareId: string, destSquareId: string, kin
   return false
 }
 
-export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinnedSquares: SourceSquareAndValidMovesType, movesHistory: MoveHistoryType[], lastMove: MoveHistoryType) => {
+export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinnedSquares: SourceSquareAndValidMovesType, movesHistory: MoveHistoryType[]) => {
   const allValidMovesMap: SourceSquareAndValidMovesType = {}
   const pinnedSquaresArr = Object.keys(pinnedSquares)
   for (let currentSquare in boardState) {
     const currentPiece = boardState[currentSquare]?.piece
     const currentPieceName = currentPiece[1]
     if (currentPiece[0] === color && !pinnedSquaresArr.includes(currentSquare)) {
-      const validSquares = currentPieceName === 'p' ? pawnValidity(currentSquare, color, boardState, lastMove)
+      const validSquares = currentPieceName === 'p' ? pawnValidity(currentSquare, color, boardState, movesHistory[movesHistory.length - 1])
        : currentPieceName === 'k' ? kingValidity(currentSquare, color, boardState, movesHistory) 
        :  validityMap[currentPieceName as PieceValidityTypes](currentSquare, color, boardState)
       allValidMovesMap[currentSquare] = {
