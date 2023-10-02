@@ -5,6 +5,7 @@ import { isValidEnpassantMove } from './enpassant';
 import { grabCastlingRookAndSquares } from './castling';
 import { evaluateKingInCheck, validMovesWhenInCheck } from './check';
 import { default as generatePinnedSquares } from './pinnedSquares'
+import { threefoldRepitition } from './draw';
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault();
@@ -36,9 +37,11 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
       srcSquare: srcSquareId,
       destSquare: targetSquareId,
       piece: pieceId,
-      boardBefore: currentBoard
+      boardBefore: currentBoard,
+      occupiedSquares,
     }
     const updatedMovesHistory = [...movesHistory, move]
+    //console.log(updatedMovesHistory)
     if (isValidEnpassant) {
       const newCurrentColorOccupiedSquares = [...occupiedSquares[colorState]]
       newCurrentColorOccupiedSquares.splice(newCurrentColorOccupiedSquares.indexOf(srcSquareId), 1)
@@ -110,7 +113,15 @@ export const drop = (colorState: PlayerColor, setColorState: SetColorStateType, 
           break
         }
       }
-      if (noValidMoves || insufficientMaterial) {
+      const updatedMovesHistoryWithPresentState = [...updatedMovesHistory, {
+        srcSquare: '',
+        destSquare: '',
+        piece: '',
+        boardBefore: newBoardState,
+        occupiedSquares: newOccupiedSquares,
+      }]
+      const threeFoldRepition = updatedMovesHistoryWithPresentState.length >= 9 && threefoldRepitition(updatedMovesHistoryWithPresentState)
+      if (noValidMoves || insufficientMaterial || threeFoldRepition) {
         setStaleMate(true)
       }
       setValidMoves(validOppMoves)

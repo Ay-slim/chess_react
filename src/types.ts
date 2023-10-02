@@ -69,6 +69,7 @@ export type MoveHistoryType = {
   destSquare: string;
   piece: string;
   boardBefore: BoardState;
+  occupiedSquares: OccupiedSquaresType
 }
 
 export type CapturedPiecesType = {
@@ -97,4 +98,9 @@ export type SourceSquareAndValidMovesType = {
 
 export type OccupiedSquaresType = {
  [key:string]: string[]
+}
+
+export type MoveComparisonType = {
+  boardState: BoardState
+  occupiedSquares: string[]
 }
