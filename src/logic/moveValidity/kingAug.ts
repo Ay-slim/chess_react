@@ -1,11 +1,11 @@
-import { BoardState, MoveHistoryType, PlayerColor } from "../../types";
+import { BoardState, MoveHistoryType, OccupiedSquaresType, PlayerColor } from "../../types";
 import { castlingCheck } from "../castling";
 import { CASTLING_ROOKS_DICT } from "../utils";
 import { default as kingValidSquares } from './king'
 import { allThreatenedSquares } from ".";
 
-const allValidKingSquares = (squareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[]) => {
-  const allSquaresUnderAttack = allThreatenedSquares(color, boardState)
+const allValidKingSquares = (squareId: string, color: PlayerColor, boardState: BoardState, gameMoves: MoveHistoryType[], occupiedSquares: OccupiedSquaresType) => {
+  const allSquaresUnderAttack = allThreatenedSquares(color, boardState, occupiedSquares)
   const targetCastlingSquares = []
   for (const xDiff of [2, -2]) {
     const castlingDirection = xDiff === 2 ? '+ve' : '-ve';

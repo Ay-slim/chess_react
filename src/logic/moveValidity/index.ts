@@ -41,7 +41,7 @@ export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinned
     const currentPieceName = currentPiece[1]
     if (!pinnedSquaresArr.includes(currentSquare)) {
       const validSquares = currentPieceName === 'p' ? pawnValidity(currentSquare, color, boardState, movesHistory[movesHistory.length - 1])
-       : currentPieceName === 'k' ? kingValidity(currentSquare, color, boardState, movesHistory) 
+       : currentPieceName === 'k' ? kingValidity(currentSquare, color, boardState, movesHistory, occupiedSquares) 
        :  validityMap[currentPieceName as PieceValidityTypes](currentSquare, color, boardState)
       allValidMovesMap[currentSquare] = {
         piece: boardState[currentSquare].piece,
@@ -52,7 +52,7 @@ export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinned
   return {...allValidMovesMap, ...pinnedSquares}
 }
 
-export const allThreatenedSquares = (color: PlayerColor, boardState: BoardState) => {
+export const allThreatenedSquares = (color: PlayerColor, boardState: BoardState, occupiedSquares: OccupiedSquaresType) => {
   const threatenedSquaresFns = {
     p: corePawnValidity,
     n: knightValidity,
@@ -62,14 +62,12 @@ export const allThreatenedSquares = (color: PlayerColor, boardState: BoardState)
     k: coreKingValidity,
   }
   let threatenedSquaresArr: string[] = []
-  for (const square of Object.keys(boardState)) {
+  for (const square of occupiedSquares[color === 'w' ? 'b' : 'w']) {
     const piece = boardState[square].piece
-    if (piece && piece[0] !== color) {
-      const pieceName: PieceNameType = piece[1] as PieceNameType
-      const colorArg = color === 'w' ? 'b' : 'w'
-      const squaresThreatenedByThisPiece = threatenedSquaresFns[pieceName](square, colorArg, boardState, true)
-      threatenedSquaresArr = threatenedSquaresArr.concat(squaresThreatenedByThisPiece)
-    }
+    const pieceName: PieceNameType = piece[1] as PieceNameType
+    const colorArg = color === 'w' ? 'b' : 'w'
+    const squaresThreatenedByThisPiece = threatenedSquaresFns[pieceName](square, colorArg, boardState, true)
+    threatenedSquaresArr = threatenedSquaresArr.concat(squaresThreatenedByThisPiece)
   }
   return Array.from(new Set(threatenedSquaresArr))
 }

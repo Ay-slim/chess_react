@@ -1,4 +1,4 @@
-import { BoardNumbers, BoardState, PlayerColor } from "../types";
+import { BoardNumbers, BoardState, OccupiedSquaresType, PlayerColor } from "../types";
 import { allThreatenedSquares } from "./moveValidity";
 import pinnedSquares from "./pinnedSquares";
 import { INVERTED_SQUARES, isValidBoardCoordinates, normalizedArithmetic } from "./utils";
@@ -132,7 +132,7 @@ const piecesAttackingMe = (squareId: string, boardState: BoardState, color: Play
   return myAttackers
 }
 
-export const validMovesWhenInCheck = (color: PlayerColor, checkedSquaresAndAttackers: {[key: string]: string[]}, boardState: BoardState, kingSquare: string) => {
+export const validMovesWhenInCheck = (color: PlayerColor, checkedSquaresAndAttackers: {[key: string]: string[]}, boardState: BoardState, kingSquare: string, occupiedSquares: OccupiedSquaresType) => {
   const pinnedSquaresMap = pinnedSquares(kingSquare, boardState, color)
   const pinnedSquareVals = Object.keys(pinnedSquaresMap)
   const validMoves: {[key: string]: string[]} = {} //Key is the source square of any movable pieces, value is an array of their allowed destination square(s)
@@ -158,7 +158,7 @@ export const validMovesWhenInCheck = (color: PlayerColor, checkedSquaresAndAttac
     })
   }
 
-  const squaresForbiddenForKing = allThreatenedSquares(color, boardState)
+  const squaresForbiddenForKing = allThreatenedSquares(color, boardState, occupiedSquares)
   const SURROUNDING_DIRECTIONS = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [1, 1], [-1, 1], [1, -1]]
 
   for (const dir of SURROUNDING_DIRECTIONS) {

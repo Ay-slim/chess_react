@@ -79,7 +79,7 @@ export const executeValidMove = (srcSquareId: string, targetSquareId: string, pi
   setFiftyMovesTracker(newFiftyMovesTracker)
   const kingInCheckDetails = evaluateKingInCheck(kingSquare[opponentColor], newBoardState, opponentColor)
   if (Object.keys(kingInCheckDetails).length) {
-    const validCheckMoves = validMovesWhenInCheck(opponentColor, kingInCheckDetails, newBoardState, kingSquare[opponentColor])
+    const validCheckMoves = validMovesWhenInCheck(opponentColor, kingInCheckDetails, newBoardState, kingSquare[opponentColor], newOccupiedSquares)
     if (!Object.keys(validCheckMoves).length) {
       setCheckMate(colorState)
     } else {
