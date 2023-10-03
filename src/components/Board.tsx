@@ -1,8 +1,18 @@
-import { useState } from 'react';
+import { useState } from 'react'
 import Square from './Square'
-import { allowDrop } from '../logic/handlers';
-import { BoardState, CapturedPiecesType, CheckMateType, KingCheckType, KingSquareType, MoveHistoryType, OccupiedSquaresType, PlayerColor, SourceSquareAndValidMovesType } from '../types';
-import '../App.css';
+import { allowDrop } from '../logic/handlers'
+import {
+  BoardState,
+  CapturedPiecesType,
+  CheckMateType,
+  KingCheckType,
+  KingSquareType,
+  MoveHistoryType,
+  OccupiedSquaresType,
+  PlayerColor,
+  SourceSquareAndValidMovesType,
+} from '../types'
+import '../App.css'
 
 const Board = () => {
   const [boardState, setBoardState] = useState<BoardState>({
@@ -71,14 +81,23 @@ const Board = () => {
     g8: { loc: [6, 7], piece: 'bn1' },
     h8: { loc: [7, 7], piece: 'br1' },
   })
-  const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w');
-  const [alertMessage, setAlertMessage] = useState('');
-  const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([]);
-  const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({w: [], b: []});
-  const [kingSquare, setKingSquare] = useState<KingSquareType>({w: 'e1', b: 'e8'});
-  const [kingInCheck, setKingInCheck] = useState<KingCheckType>({color: null, validCheckMoves: {}});
-  const [checkMate, setCheckMate] = useState<CheckMateType>(null);
-  const [staleMate, setStaleMate] = useState<Boolean>(false);
+  const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w')
+  const [alertMessage, setAlertMessage] = useState('')
+  const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([])
+  const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({
+    w: [],
+    b: [],
+  })
+  const [kingSquare, setKingSquare] = useState<KingSquareType>({
+    w: 'e1',
+    b: 'e8',
+  })
+  const [kingInCheck, setKingInCheck] = useState<KingCheckType>({
+    color: null,
+    validCheckMoves: {},
+  })
+  const [checkMate, setCheckMate] = useState<CheckMateType>(null)
+  const [staleMate, setStaleMate] = useState<Boolean>(false)
   const [validMoves, setValidMoves] = useState<SourceSquareAndValidMovesType>({
     a2: { piece: 'wp1', validSquares: ['a3', 'a4'] },
     b2: { piece: 'wp2', validSquares: ['b3', 'b4'] },
@@ -90,8 +109,8 @@ const Board = () => {
     h2: { piece: 'wp8', validSquares: ['h3', 'h4'] },
     b1: { piece: 'wn2', validSquares: ['a3', 'c3'] },
     g1: { piece: 'wn1', validSquares: ['f3', 'h3'] },
-  });
-  //Rather than loop through the whole board when generating allThreatenedSquares or allValidMoves, 
+  })
+  //Rather than loop through the whole board when generating allThreatenedSquares or allValidMoves,
   //thought it might be a good idea to instead track all occupied squares and loop through this
   //way smaller array (16 squares at worst as opposed to 64 when looping through the whole board)
   //Pro: Faster lookup when evaluating the above
@@ -99,23 +118,85 @@ const Board = () => {
   //looping through the whole board without having to update this or updating this on every move and not
   //looping through the board
   const [occupiedSquares, setOccupiedSquares] = useState<OccupiedSquaresType>({
-    w: ['a1', 'b1', 'c1', 'd1', 'e1', 'f1', 'g1', 'h1', 'a2', 'b2', 'c2', 'd2', 'e2', 'f2', 'g2', 'h2'],
-    b: ['a7', 'b7', 'c7', 'd7', 'e7', 'f7', 'g7', 'h7', 'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8']
-  });
-  const [fiftyMovesTracker, setFiftyMovesTracker] = useState<number>(0);
+    w: [
+      'a1',
+      'b1',
+      'c1',
+      'd1',
+      'e1',
+      'f1',
+      'g1',
+      'h1',
+      'a2',
+      'b2',
+      'c2',
+      'd2',
+      'e2',
+      'f2',
+      'g2',
+      'h2',
+    ],
+    b: [
+      'a7',
+      'b7',
+      'c7',
+      'd7',
+      'e7',
+      'f7',
+      'g7',
+      'h7',
+      'a8',
+      'b8',
+      'c8',
+      'd8',
+      'e8',
+      'f8',
+      'g8',
+      'h8',
+    ],
+  })
+  const [fiftyMovesTracker, setFiftyMovesTracker] = useState<number>(0)
 
   return (
     <div className="container">
-    {!checkMate && !staleMate ? (<div className="turn">
-        <p>Current player turn: <strong>{`${currentPlayerColor === 'w' ? 'White' : 'Black'}`}</strong></p>
-        <p>|: <strong style={{ color: 'red' }}>{kingInCheck?.color ? `Check! ${kingInCheck.color === 'w' ? 'White' : 'Black'} king is under attack!` : ''}</strong></p>
-        <p>|: <strong style={{ color: 'red' }}>{alertMessage}</strong></p>
-      </div>) : <div className="turn"><p><strong style={{ color: 'red' }}>{staleMate ? `Stalemate! Game ends in a draw.` : `Checkmate! ${checkMate === 'w' ? 'White' : 'Black'} wins`}</strong></p></div>}
+      {!checkMate && !staleMate ? (
+        <div className="turn">
+          <p>
+            Current player turn:{' '}
+            <strong>{`${
+              currentPlayerColor === 'w' ? 'White' : 'Black'
+            }`}</strong>
+          </p>
+          <p>
+            |:{' '}
+            <strong style={{ color: 'red' }}>
+              {kingInCheck?.color
+                ? `Check! ${
+                    kingInCheck.color === 'w' ? 'White' : 'Black'
+                  } king is under attack!`
+                : ''}
+            </strong>
+          </p>
+          <p>
+            |: <strong style={{ color: 'red' }}>{alertMessage}</strong>
+          </p>
+        </div>
+      ) : (
+        <div className="turn">
+          <p>
+            <strong style={{ color: 'red' }}>
+              {staleMate
+                ? `Stalemate! Game ends in a draw.`
+                : `Checkmate! ${checkMate === 'w' ? 'White' : 'Black'} wins`}
+            </strong>
+          </p>
+        </div>
+      )}
       <table className="board">
         {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
           <tr key={`row-${row}`}>
             {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
-              const id = col + row;
+              const id = col + row
               return (
                 <Square
                   key={id}
@@ -146,13 +227,13 @@ const Board = () => {
                   fiftyMovesTracker={fiftyMovesTracker}
                   setFiftyMovesTracker={setFiftyMovesTracker}
                 />
-              );
+              )
             })}
           </tr>
         ))}
       </table>
     </div>
-  );
+  )
 }
 
 export default Board

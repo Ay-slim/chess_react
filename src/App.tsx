@@ -1,8 +1,6 @@
-import Board from "./components/Board";
+import Board from './components/Board'
 const App = () => {
-  return (
-    <Board/>
-  );
+  return <Board />
 }
 
-export default App;
+export default App

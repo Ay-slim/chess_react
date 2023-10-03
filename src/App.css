@@ -2,37 +2,95 @@
   text-align: center;
 }
 
-.container{
+.container {
   padding-top: 140px;
 }
-.board{
+.board {
   border: 2px solid;
-  margin:auto;
-  width: 25%;
-}
-.turn{
   margin: auto;
   width: 25%;
 }
-.alert{
+.turn {
   margin: auto;
   width: 25%;
 }
-th{
+.alert {
+  margin: auto;
+  width: 25%;
+}
+th {
   width: 40px;
   height: 40px;
 }
-.a1, .a3, .a5, .a7, .c1, .c3, .c5, .c7, 
-.e1, .e3, .e5, .e7, .g1, .g3, .g5, .g7, 
-.b2, .b4, .b6, .b8, .d2, .d4, .d6, .d8, .f2, .f4, .f6, .f8, .h2, .h4, .h6, .h8    {
+.a1,
+.a3,
+.a5,
+.a7,
+.c1,
+.c3,
+.c5,
+.c7,
+.e1,
+.e3,
+.e5,
+.e7,
+.g1,
+.g3,
+.g5,
+.g7,
+.b2,
+.b4,
+.b6,
+.b8,
+.d2,
+.d4,
+.d6,
+.d8,
+.f2,
+.f4,
+.f6,
+.f8,
+.h2,
+.h4,
+.h6,
+.h8 {
   background-color: brown;
 }
-.b1, .b3, .b5, .b7, .d1, .d3, .d5, .d7, 
-.f1, .f3, .f5, .f7, .h1, .h3, .h5, .h7,
-.a2, .a4, .a6, .a8, .c2, .c4, .c6, .c8, .e2, .e4, .e6, .e8, .g2, .g4, .g6, .g8 {
+.b1,
+.b3,
+.b5,
+.b7,
+.d1,
+.d3,
+.d5,
+.d7,
+.f1,
+.f3,
+.f5,
+.f7,
+.h1,
+.h3,
+.h5,
+.h7,
+.a2,
+.a4,
+.a6,
+.a8,
+.c2,
+.c4,
+.c6,
+.c8,
+.e2,
+.e4,
+.e6,
+.e8,
+.g2,
+.g4,
+.g6,
+.g8 {
   background-color: white;
 }
-img{
+img {
   width: 35px;
   height: 35px;
 }

@@ -1,4 +1,13 @@
-import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType, KingCheckType, SourceSquareAndValidMovesType, OccupiedSquaresType } from "../../types";
+import {
+  BoardState,
+  MoveHistoryType,
+  PieceValidityTypes,
+  PlayerColor,
+  PieceNameType,
+  KingCheckType,
+  SourceSquareAndValidMovesType,
+  OccupiedSquaresType,
+} from '../../types'
 
 import { default as corePawnValidity } from './pawn'
 import { default as pawnValidity } from './pawnAug'
@@ -9,7 +18,6 @@ import { default as queenValidity } from './queen'
 import { default as kingValidity } from './kingAug'
 import { default as coreKingValidity } from './king'
 
-
 const validityMap = {
   n: knightValidity,
   r: rookValidity,
@@ -17,42 +25,81 @@ const validityMap = {
   q: queenValidity,
 }
 
-export const moveValidityCheck = (srcSquareId: string, destSquareId: string, kingInCheck: KingCheckType, allValidMoves: SourceSquareAndValidMovesType) => {
+export const moveValidityCheck = (
+  srcSquareId: string,
+  destSquareId: string,
+  kingInCheck: KingCheckType,
+  allValidMoves: SourceSquareAndValidMovesType
+) => {
   if (kingInCheck.color) {
     const { validCheckMoves } = kingInCheck
-    if (validCheckMoves?.[srcSquareId] && validCheckMoves[srcSquareId].includes(destSquareId)) {
+    if (
+      validCheckMoves?.[srcSquareId] &&
+      validCheckMoves[srcSquareId].includes(destSquareId)
+    ) {
       return true
     }
     return false
   }
 
-  if (Object.keys(allValidMoves).includes(srcSquareId) && allValidMoves[srcSquareId].validSquares.includes(destSquareId)) {
+  if (
+    Object.keys(allValidMoves).includes(srcSquareId) &&
+    allValidMoves[srcSquareId].validSquares.includes(destSquareId)
+  ) {
     return true
   }
 
   return false
 }
 
-export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinnedSquares: SourceSquareAndValidMovesType, movesHistory: MoveHistoryType[], occupiedSquares: OccupiedSquaresType) => {
+export const allValidMoves = (
+  color: PlayerColor,
+  boardState: BoardState,
+  pinnedSquares: SourceSquareAndValidMovesType,
+  movesHistory: MoveHistoryType[],
+  occupiedSquares: OccupiedSquaresType
+) => {
   const allValidMovesMap: SourceSquareAndValidMovesType = {}
   const pinnedSquaresArr = Object.keys(pinnedSquares)
   for (let currentSquare of occupiedSquares[color]) {
     const currentPiece = boardState[currentSquare]?.piece
     const currentPieceName = currentPiece[1]
     if (!pinnedSquaresArr.includes(currentSquare)) {
-      const validSquares = currentPieceName === 'p' ? pawnValidity(currentSquare, color, boardState, movesHistory[movesHistory.length - 1])
-       : currentPieceName === 'k' ? kingValidity(currentSquare, color, boardState, movesHistory, occupiedSquares) 
-       :  validityMap[currentPieceName as PieceValidityTypes](currentSquare, color, boardState)
+      const validSquares =
+        currentPieceName === 'p'
+          ? pawnValidity(
+              currentSquare,
+              color,
+              boardState,
+              movesHistory[movesHistory.length - 1]
+            )
+          : currentPieceName === 'k'
+          ? kingValidity(
+              currentSquare,
+              color,
+              boardState,
+              movesHistory,
+              occupiedSquares
+            )
+          : validityMap[currentPieceName as PieceValidityTypes](
+              currentSquare,
+              color,
+              boardState
+            )
       allValidMovesMap[currentSquare] = {
         piece: boardState[currentSquare].piece,
-        validSquares
+        validSquares,
       }
     }
   }
-  return {...allValidMovesMap, ...pinnedSquares}
+  return { ...allValidMovesMap, ...pinnedSquares }
 }
 
-export const allThreatenedSquares = (color: PlayerColor, boardState: BoardState, occupiedSquares: OccupiedSquaresType) => {
+export const allThreatenedSquares = (
+  color: PlayerColor,
+  boardState: BoardState,
+  occupiedSquares: OccupiedSquaresType
+) => {
   const threatenedSquaresFns = {
     p: corePawnValidity,
     n: knightValidity,
@@ -66,8 +113,15 @@ export const allThreatenedSquares = (color: PlayerColor, boardState: BoardState,
     const piece = boardState[square].piece
     const pieceName: PieceNameType = piece[1] as PieceNameType
     const colorArg = color === 'w' ? 'b' : 'w'
-    const squaresThreatenedByThisPiece = threatenedSquaresFns[pieceName](square, colorArg, boardState, true)
-    threatenedSquaresArr = threatenedSquaresArr.concat(squaresThreatenedByThisPiece)
+    const squaresThreatenedByThisPiece = threatenedSquaresFns[pieceName](
+      square,
+      colorArg,
+      boardState,
+      true
+    )
+    threatenedSquaresArr = threatenedSquaresArr.concat(
+      squaresThreatenedByThisPiece
+    )
   }
   return Array.from(new Set(threatenedSquaresArr))
 }
