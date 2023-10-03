@@ -1,4 +1,4 @@
-import { MoveComparisonType, MoveHistoryType } from "../types";
+import { BoardState, MoveComparisonType, MoveHistoryType, OccupiedSquaresType, SourceSquareAndValidMovesType } from "../types";
 const identicalPositionsCheck = (move1: MoveComparisonType, move2: MoveComparisonType) => {
   for (const square of move1.occupiedSquares) {
     //console.log(!move2.occupiedSquares.includes(square), 'equality', move1.boardState[square].piece, 'first piece', move2.boardState[square].piece, 'second piece')
@@ -8,7 +8,7 @@ const identicalPositionsCheck = (move1: MoveComparisonType, move2: MoveCompariso
   }
   return true
 }
-export const threefoldRepitition = (movesHistory: MoveHistoryType[]) => {
+const threefoldRepitition = (movesHistory: MoveHistoryType[]) => {
   const historyLength = movesHistory.length
   const currentOccupiedSquares = [...movesHistory[historyLength - 1].occupiedSquares['w'], ...movesHistory[historyLength - 1].occupiedSquares['b']]
   const middleOccupiedSquares = [...movesHistory[historyLength - 5].occupiedSquares['w'], ...movesHistory[historyLength - 5].occupiedSquares['b']]
@@ -24,4 +24,32 @@ export const threefoldRepitition = (movesHistory: MoveHistoryType[]) => {
     return false
   }
   return true
+}
+
+export const evaluateDraw = (validOppMoves: SourceSquareAndValidMovesType, newOccupiedSquares: OccupiedSquaresType, newBoardState: BoardState, updatedMovesHistory: MoveHistoryType[], newFiftyMovesTracker: number) => {
+  const wOcc = newOccupiedSquares['w'].map(square=>newBoardState[square].piece)
+  const bOcc = newOccupiedSquares['b'].map(square=>newBoardState[square].piece)
+  const wLen = wOcc.length
+  const bLen = bOcc.length
+  const whiteOnlyKing = wLen === 1 && wOcc.includes('wk')
+  const blackOnlyKing = bLen === 1 && bOcc.includes('bk')
+  const blackInsufficientMaterial = whiteOnlyKing && ((bLen === 2 && bOcc.includes('bk') && bOcc.some(bElem => (bElem.startsWith('bb') || bElem.startsWith('bn')))) || blackOnlyKing)
+  const whiteInsufficientMaterial = blackOnlyKing && ((wLen === 2 && wOcc.includes('wk') && wOcc.some(wElem => (wElem.startsWith('wb') || wElem.startsWith('wn')))) || whiteOnlyKing)
+  const insufficientMaterial = blackInsufficientMaterial || whiteInsufficientMaterial
+  let noValidMoves = true
+  for (let srcSquare in validOppMoves) {
+    if (validOppMoves[srcSquare].validSquares.length) {
+      noValidMoves = false
+      break
+    }
+  }
+  const updatedMovesHistoryWithPresentState = [...updatedMovesHistory, {
+    srcSquare: '',
+    destSquare: '',
+    piece: '',
+    boardBefore: newBoardState,
+    occupiedSquares: newOccupiedSquares,
+  }]
+  const threeFoldRepition = updatedMovesHistoryWithPresentState.length >= 9 && threefoldRepitition(updatedMovesHistoryWithPresentState)
+  return noValidMoves || insufficientMaterial || threeFoldRepition || newFiftyMovesTracker >= 50
 }
