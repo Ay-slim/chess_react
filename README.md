@@ -3,6 +3,10 @@
 This is a hobby implementation of Chess rules in React.js.
 At core, it relies on Williams Nimi's coordinate representation of squares using the cartesian coordinate system originally implemented [here](https://github.com/WilliamsNimi/Chess_Logic)
 
+
+## Live link
+
+Play a quick game of chess against yourself [here](https://chess-react-lake.vercel.app/)
 ## Local setup
 
 - Clone the repo
