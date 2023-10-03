@@ -11,6 +11,7 @@ export type SetCheckMateType = React.Dispatch<React.SetStateAction<CheckMateType
 export type SetStaleMateType = React.Dispatch<React.SetStateAction<Boolean>>;
 export type SetValidMovesType = React.Dispatch<React.SetStateAction<SourceSquareAndValidMovesType>>;
 export type SetOccupiedScaresType = React.Dispatch<React.SetStateAction<OccupiedSquaresType>>;
+export type SetFiftyMovesTrackerType = React.Dispatch<React.SetStateAction<number>>;
 export type GenericStringSetStateType = React.Dispatch<React.SetStateAction<string>>;
 
 export type PlayerColor = 'w' | 'b';
@@ -45,6 +46,8 @@ export type SquareProps = {
   setValidMoves: SetValidMovesType;
   occupiedSquares: OccupiedSquaresType;
   setOccupiedSquares: SetOccupiedScaresType;
+  fiftyMovesTracker: number;
+  setFiftyMovesTracker: SetFiftyMovesTrackerType;
 }
 
 export type PieceProps = {
