@@ -1,4 +1,4 @@
-import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType, KingCheckType, SourceSquareAndValidMovesType } from "../../types";
+import { BoardState, MoveHistoryType, PieceValidityTypes, PlayerColor, PieceNameType, KingCheckType, SourceSquareAndValidMovesType, OccupiedSquaresType } from "../../types";
 
 import { default as corePawnValidity } from './pawn'
 import { default as pawnValidity } from './pawnAug'
@@ -33,13 +33,13 @@ export const moveValidityCheck = (srcSquareId: string, destSquareId: string, kin
   return false
 }
 
-export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinnedSquares: SourceSquareAndValidMovesType, movesHistory: MoveHistoryType[]) => {
+export const allValidMoves = (color: PlayerColor, boardState: BoardState, pinnedSquares: SourceSquareAndValidMovesType, movesHistory: MoveHistoryType[], occupiedSquares: OccupiedSquaresType) => {
   const allValidMovesMap: SourceSquareAndValidMovesType = {}
   const pinnedSquaresArr = Object.keys(pinnedSquares)
-  for (let currentSquare in boardState) {
+  for (let currentSquare of occupiedSquares[color]) {
     const currentPiece = boardState[currentSquare]?.piece
     const currentPieceName = currentPiece[1]
-    if (currentPiece[0] === color && !pinnedSquaresArr.includes(currentSquare)) {
+    if (!pinnedSquaresArr.includes(currentSquare)) {
       const validSquares = currentPieceName === 'p' ? pawnValidity(currentSquare, color, boardState, movesHistory[movesHistory.length - 1])
        : currentPieceName === 'k' ? kingValidity(currentSquare, color, boardState, movesHistory) 
        :  validityMap[currentPieceName as PieceValidityTypes](currentSquare, color, boardState)

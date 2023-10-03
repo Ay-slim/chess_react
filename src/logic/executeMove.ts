@@ -88,7 +88,7 @@ export const executeValidMove = (srcSquareId: string, targetSquareId: string, pi
   } else {
     setKingInCheck({color: null, validCheckMoves: {}})
     const oppPinnedSquares = generatePinnedSquares(kingSquare[opponentColor], newBoardState, opponentColor)
-    const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, updatedMovesHistory)
+    const validOppMoves = allValidMoves(opponentColor, newBoardState, oppPinnedSquares, updatedMovesHistory, newOccupiedSquares)
     const gameEndsInDraw = evaluateDraw(validOppMoves, newOccupiedSquares, newBoardState, updatedMovesHistory, newFiftyMovesTracker)
     if (gameEndsInDraw) {
       setStaleMate(true)
