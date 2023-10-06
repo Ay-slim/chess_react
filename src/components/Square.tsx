@@ -31,6 +31,8 @@ const Square = (props: SquareProps) => {
     setOccupiedSquares,
     fiftyMovesTracker,
     setFiftyMovesTracker,
+    setOpenPromotionModal,
+    setPromotionSquaresInfo,
   } = props
   const handleDrop = drop(
     currentColor,
@@ -53,7 +55,9 @@ const Square = (props: SquareProps) => {
     occupiedSquares,
     setOccupiedSquares,
     fiftyMovesTracker,
-    setFiftyMovesTracker
+    setFiftyMovesTracker,
+    setOpenPromotionModal,
+    setPromotionSquaresInfo
   )
   return (
     <th id={id} className={id} onDrop={handleDrop} onDragOver={onDragOver}>
