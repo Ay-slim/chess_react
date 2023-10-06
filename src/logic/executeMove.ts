@@ -56,6 +56,7 @@ export const executeValidMove = (
   let newOccupiedSquares: OccupiedSquaresType
   let aPieceWasCaptured = false
   let newFiftyMovesTracker: number
+  let updatedKingSquare: KingSquareType
   const opponentColor = colorState === 'w' ? 'b' : 'w'
   const isValidEnpassant =
     pieceId[1] === 'p' &&
@@ -188,7 +189,14 @@ export const executeValidMove = (
   }
   if (pieceId[1] === 'k') {
     //When you move the king, update the king square state
-    setKingSquare({ ...kingSquare, [colorState]: targetSquareId })
+    updatedKingSquare = { ...kingSquare, [colorState]: targetSquareId }
+    // Not necessarily urgent to uensure that the current color king square state
+    // is updated as we really only care about the oppohnent king square for 
+    // purposes of evaluating check, checkmate or draw, but who knows, down the line
+    // The current color state may become useful
+    setKingSquare(updatedKingSquare)
+  } else {
+    updatedKingSquare = kingSquare
   }
   if (pieceId[1] === 'p' || aPieceWasCaptured) {
     newFiftyMovesTracker = 0
@@ -197,7 +205,7 @@ export const executeValidMove = (
   }
   setFiftyMovesTracker(newFiftyMovesTracker)
   const kingInCheckDetails = evaluateKingInCheck(
-    kingSquare[opponentColor],
+    updatedKingSquare[opponentColor],
     newBoardState,
     opponentColor
   )
@@ -206,7 +214,7 @@ export const executeValidMove = (
       opponentColor,
       kingInCheckDetails,
       newBoardState,
-      kingSquare[opponentColor],
+      updatedKingSquare[opponentColor],
       newOccupiedSquares
     )
     if (!Object.keys(validCheckMoves).length) {
@@ -217,7 +225,7 @@ export const executeValidMove = (
   } else {
     setKingInCheck({ color: null, validCheckMoves: {} })
     const oppPinnedSquares = generatePinnedSquares(
-      kingSquare[opponentColor],
+      updatedKingSquare[opponentColor],
       newBoardState,
       opponentColor
     )
