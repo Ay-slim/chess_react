@@ -32,6 +32,15 @@ export type SetOccupiedScaresType = React.Dispatch<
 export type SetFiftyMovesTrackerType = React.Dispatch<
   React.SetStateAction<number>
 >
+export type SetOpenPromotionModalType = React.Dispatch<
+  React.SetStateAction<boolean>
+>
+export type SetPromotedPiecesTrackerType = React.Dispatch<
+  React.SetStateAction<PromotedPiecesTrackerType>
+>
+export type SetPromotionSquaresInfoType = React.Dispatch<
+  React.SetStateAction<PromotionSquaresInfoType>
+>
 export type GenericStringSetStateType = React.Dispatch<
   React.SetStateAction<string>
 >
@@ -70,6 +79,8 @@ export type SquareProps = {
   setOccupiedSquares: SetOccupiedScaresType
   fiftyMovesTracker: number
   setFiftyMovesTracker: SetFiftyMovesTrackerType
+  setOpenPromotionModal: SetOpenPromotionModalType
+  setPromotionSquaresInfo: SetPromotionSquaresInfoType
 }
 
 export type PieceProps = {
@@ -78,6 +89,31 @@ export type PieceProps = {
   squareId: string
   checkMate: CheckMateType
   staleMate: Boolean
+}
+
+export type PromotionProps = {
+  colorState: PlayerColor
+  setOpenPromotionModal: SetOpenPromotionModalType
+  fiftyMovesTracker: number
+  occupiedSquares: OccupiedSquaresType
+  setOccupiedSquares: SetOccupiedScaresType
+  promotedPiecesTracker: PromotedPiecesTrackerType
+  setPromotedPiecesTracker: SetPromotedPiecesTrackerType
+  promotionSquaresInfo: PromotionSquaresInfoType
+  currentBoard: BoardState
+  setBoardState: SetBoardStateType
+  capturedPieces: CapturedPiecesType
+  setCapturedPieces: SetCapturedPieceType
+  movesHistory: MoveHistoryType[]
+  setMovesHistory: SetMoveHistoryType
+  setColorState: SetColorStateType
+  setFiftyMovesTracker: SetFiftyMovesTrackerType
+  kingSquare: KingSquareType
+  setCheckmate: SetCheckMateType
+  setKingInCheck: SetKingInCheckType
+  setStalemate: SetStaleMateType
+  setValidMoves: SetValidMovesType
+  setAlertMessage: GenericStringSetStateType
 }
 
 export type SquareInfoType = {
@@ -128,4 +164,16 @@ export type OccupiedSquaresType = {
 export type MoveComparisonType = {
   boardState: BoardState
   occupiedSquares: string[]
+}
+
+export type PromotedPiecesTrackerType = {
+  q: number
+  r: number
+  n: number
+  b: number
+}
+
+export type PromotionSquaresInfoType = {
+  src: string
+  dest: string
 }
