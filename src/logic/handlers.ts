@@ -8,6 +8,8 @@ import {
   MoveHistoryType,
   OccupiedSquaresType,
   PlayerColor,
+  PromotedPiecesTrackerType,
+  PromotionSquaresInfoType,
   SetBoardStateType,
   SetCapturedPieceType,
   SetCheckMateType,
@@ -17,12 +19,15 @@ import {
   SetKingSquareType,
   SetMoveHistoryType,
   SetOccupiedScaresType,
+  SetOpenPromotionModalType,
+  SetPromotedPiecesTrackerType,
+  SetPromotionSquaresInfoType,
   SetStaleMateType,
   SetValidMovesType,
   SourceSquareAndValidMovesType,
 } from '../types'
 import { moveValidityCheck } from './moveValidity'
-import { executeValidMove } from './executeMove'
+import { evaluateOpponentKingAndNextTurn, executeValidMove } from './executeMove'
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault()
@@ -60,7 +65,9 @@ export const drop =
     occupiedSquares: OccupiedSquaresType,
     setOccupiedSquares: SetOccupiedScaresType,
     fiftyMovesTracker: number,
-    setFiftyMovesTracker: SetFiftyMovesTrackerType
+    setFiftyMovesTracker: SetFiftyMovesTrackerType,
+    setOpenPromotionModal: SetOpenPromotionModalType,
+    setPromotionSquaresInfo: SetPromotionSquaresInfoType,
   ) =>
   (ev: React.DragEvent) => {
     ev.preventDefault()
@@ -93,9 +100,112 @@ export const drop =
         occupiedSquares,
         setOccupiedSquares,
         fiftyMovesTracker,
-        setFiftyMovesTracker
+        setFiftyMovesTracker,
+        setOpenPromotionModal,
+        setPromotionSquaresInfo,
       )
       return
     }
     setAlertMessage('Illegal move!')
   }
+
+export const onPromotionClick = (
+    fiftyMovesTracker: number,
+    setFiftyMovesTracker: SetFiftyMovesTrackerType,
+    occupiedSquares: OccupiedSquaresType,
+    setOccupiedSquares: SetOccupiedScaresType,
+    colorState: PlayerColor,
+    setBoardState: SetBoardStateType,
+    pieceId: 'b' | 'n' | 'q' | 'r',
+    promotedPiecesTracker: PromotedPiecesTrackerType,
+    setPromotedPiecesTracker: SetPromotedPiecesTrackerType,
+    promotionSquaresInfo: PromotionSquaresInfoType,
+    currentBoard: BoardState,
+    capturedPieces: CapturedPiecesType,
+    setCapturedPiece: SetCapturedPieceType,
+    movesHistory: MoveHistoryType[],
+    setMoveHistory: SetMoveHistoryType,
+    setColor: SetColorStateType,
+    kingSquare: KingSquareType,
+    setCheckMate: SetCheckMateType,
+    setKingInCheck: SetKingInCheckType,
+    setStaleMate: SetStaleMateType,
+    setValidMoves: SetValidMovesType,
+    setAlertMessage: GenericStringSetStateType,
+    setOpenPromotionModal: SetOpenPromotionModalType
+  ) => {
+  const newPieceCount = promotedPiecesTracker[pieceId] + 1
+  const promotedPiece = `${colorState}${pieceId}${newPieceCount}`
+  setPromotedPiecesTracker({...promotedPiecesTracker, [pieceId]: newPieceCount})
+  const srcSquareId = promotionSquaresInfo.src
+  const targetSquareId = promotionSquaresInfo.dest
+  const srcSquareUpdated = {
+    ...currentBoard[srcSquareId],
+    piece: ''
+  }
+  const destSquareUpdated = {
+    ...currentBoard[targetSquareId],
+    piece: promotedPiece
+  }
+  const newBoardState = {
+    ...currentBoard,
+    [srcSquareId]: srcSquareUpdated,
+    [targetSquareId]: destSquareUpdated,
+  }
+  setBoardState(newBoardState)
+  const occupiedSquaresCurrColor = [...occupiedSquares[colorState]]
+  occupiedSquaresCurrColor.splice(
+    occupiedSquaresCurrColor.indexOf(srcSquareId),
+    1
+  )
+  occupiedSquaresCurrColor.push(targetSquareId)
+  const opponentColor = colorState === 'w' ? 'b' : 'w'
+  const occupiedSquaresOppColor = [...occupiedSquares[opponentColor]]
+  const destPiece = currentBoard[targetSquareId]['piece']
+  if (destPiece) {
+    setCapturedPiece({
+      ...capturedPieces,
+      [colorState]: capturedPieces[colorState].concat([destPiece]),
+    })
+    occupiedSquaresOppColor.splice(
+      occupiedSquaresOppColor.indexOf(targetSquareId),
+      1
+    )
+  }
+  const newOccupiedSquares = {
+      [colorState]: occupiedSquaresCurrColor,
+      [opponentColor]: occupiedSquaresOppColor,
+    }
+  setOccupiedSquares(newOccupiedSquares)
+  const move: MoveHistoryType = {
+    srcSquare: srcSquareId,
+    destSquare: targetSquareId,
+    piece: pieceId,
+    boardBefore: currentBoard,
+    occupiedSquares
+  }
+  const updatedMovesHistory = [...movesHistory, move]
+  evaluateOpponentKingAndNextTurn(
+    true,
+    fiftyMovesTracker,
+    setFiftyMovesTracker,
+    kingSquare,
+    colorState,
+    opponentColor,
+    newBoardState,
+    newOccupiedSquares,
+    setCheckMate,
+    setKingInCheck,
+    updatedMovesHistory,
+    setStaleMate,
+    setValidMoves,
+    setMoveHistory,
+    setColor,
+    setAlertMessage
+  )
+  setOpenPromotionModal(false)
+}
+
+export const closePromotionModal = (setOpenPromotionModal: SetOpenPromotionModalType) => (event: React.MouseEvent<HTMLButtonElement>) => {
+  setOpenPromotionModal(false)
+}
