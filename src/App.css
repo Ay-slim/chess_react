@@ -90,7 +90,33 @@ th {
 .g8 {
   background-color: white;
 }
-img {
+.board-image {
   width: 35px;
   height: 35px;
+}
+
+/* PromotionModal.css */
+.prom-images-container {
+  display: flex;
+  justify-content: space-evenly; /* To arrange images with space between them */
+  margin-top: 20px;
+  text-align: center;
+}
+
+.prom-image-item {
+  border: 2px solid;
+  background-color: aliceblue;
+}
+
+.prom-container {
+  margin: auto;
+  margin-top: 200px;
+  width: 75%;
+  text-align: center;
+  z-index: 999;
+}
+
+.prom-close-button {
+  margin-top: 50px;
+  background-color: rgb(255, 254, 240);
 }
