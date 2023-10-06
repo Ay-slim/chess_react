@@ -18,6 +18,8 @@ import {
   SetOccupiedScaresType,
   SetFiftyMovesTrackerType,
   SquareInfoType,
+  SetOpenPromotionModalType,
+  SetPromotionSquaresInfoType,
 } from '../types'
 import { grabCastlingRookAndSquares } from './castling'
 import { evaluateKingInCheck, validMovesWhenInCheck } from './check'
@@ -123,7 +125,9 @@ export const executeValidMove = (
   occupiedSquares: OccupiedSquaresType,
   setOccupiedSquares: SetOccupiedScaresType,
   fiftyMovesTracker: number,
-  setFiftyMovesTracker: SetFiftyMovesTrackerType
+  setFiftyMovesTracker: SetFiftyMovesTrackerType,
+  setOpenPromotionModal: SetOpenPromotionModalType,
+  setPromotionSquaresInfo: SetPromotionSquaresInfoType,
 ) => {
   //Execute valid moves and update appropriate states
   const lastGameMove = movesHistory[movesHistory.length - 1]
@@ -141,6 +145,8 @@ export const executeValidMove = (
       lastGameMove,
       colorState
     )
+  const PROMOTION_RANK_MAP = { b: 0, w: 7 }
+  const isPromotionMove = pieceId[1] === 'p' && currentBoard[targetSquareId].loc[1] === PROMOTION_RANK_MAP[colorState]
   const castlingRookInfo = grabCastlingRookAndSquares(
     srcSquareId,
     targetSquareId,
@@ -229,6 +235,10 @@ export const executeValidMove = (
       [castlingRookInfo.rookDest]: castlingRookDestUpdated,
     }
     setBoardState(newBoardState)
+  } else if (isPromotionMove) {
+    setOpenPromotionModal(true)
+    setPromotionSquaresInfo({ src: srcSquareId, dest: targetSquareId })
+    return
   } else {
     newBoardState = {
       ...currentBoard,
