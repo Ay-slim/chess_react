@@ -10,9 +10,12 @@ import {
   MoveHistoryType,
   OccupiedSquaresType,
   PlayerColor,
+  PromotedPiecesTrackerType,
+  PromotionSquaresInfoType,
   SourceSquareAndValidMovesType,
 } from '../types'
 import '../App.css'
+import PromotionModal from './PromotionModal'
 
 const Board = () => {
   const [boardState, setBoardState] = useState<BoardState>({
@@ -156,9 +159,38 @@ const Board = () => {
     ],
   })
   const [fiftyMovesTracker, setFiftyMovesTracker] = useState<number>(0)
-
+  const [openPromotionModal, setOpenPromotionModal] = useState<boolean>(false)
+  const [promotionSquaresInfo, setPromotionSquaresInfo] = useState<PromotionSquaresInfoType>({src: '', dest: ''}) 
+  const [promotedPiecesTracker, setPromotedPiecesTracker] = useState<PromotedPiecesTrackerType>({ q: 1, r: 2, b: 2, n: 2 })
   return (
-    <div className="container">
+    <div>
+      {
+        openPromotionModal ? 
+        <PromotionModal
+          colorState={currentPlayerColor}
+          setOpenPromotionModal={setOpenPromotionModal}
+          fiftyMovesTracker={fiftyMovesTracker}
+          occupiedSquares={occupiedSquares}
+          setOccupiedSquares={setOccupiedSquares}
+          promotedPiecesTracker={promotedPiecesTracker}
+          setPromotedPiecesTracker={setPromotedPiecesTracker}
+          promotionSquaresInfo={promotionSquaresInfo}
+          currentBoard={boardState}
+          setBoardState={setBoardState}
+          capturedPieces={capturedPieces}
+          setCapturedPieces={setCapturedPiece}
+          movesHistory={movesHistory}
+          setMovesHistory={setMovesHistory}
+          setColorState={setCurrentPlayerColor}
+          setFiftyMovesTracker={setFiftyMovesTracker}
+          kingSquare={kingSquare}
+          setCheckmate={setCheckMate}
+          setKingInCheck={setKingInCheck}
+          setStalemate={setStaleMate}
+          setValidMoves={setValidMoves}
+          setAlertMessage={setAlertMessage}
+        /> :
+        <div className="container">
       {!checkMate && !staleMate ? (
         <div className="turn">
           <p>
@@ -226,12 +258,16 @@ const Board = () => {
                   setOccupiedSquares={setOccupiedSquares}
                   fiftyMovesTracker={fiftyMovesTracker}
                   setFiftyMovesTracker={setFiftyMovesTracker}
+                  setOpenPromotionModal={setOpenPromotionModal}
+                  setPromotionSquaresInfo={setPromotionSquaresInfo}
                 />
               )
             })}
           </tr>
         ))}
       </table>
+    </div>
+      }
     </div>
   )
 }
