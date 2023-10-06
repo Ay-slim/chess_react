@@ -26,6 +26,81 @@ import { isValidEnpassantMove } from './enpassant'
 import { allValidMoves } from './moveValidity'
 import { default as generatePinnedSquares } from './pinnedSquares'
 
+export const evaluateOpponentKingAndNextTurn = (
+  shouldUpdateFiftyMovesTracker: boolean,
+  fiftyMovesTracker: number,
+  setFiftyMovesTracker: SetFiftyMovesTrackerType,
+  updatedKingSquare: KingSquareType,
+  colorState: PlayerColor,
+  opponentColor: PlayerColor,
+  newBoardState: BoardState,
+  newOccupiedSquares: OccupiedSquaresType,
+  setCheckMate: SetCheckMateType,
+  setKingInCheck: SetKingInCheckType,
+  updatedMovesHistory: MoveHistoryType[],
+  setStaleMate: SetStaleMateType,
+  setValidMoves: SetValidMovesType,
+  setMoveHistory: SetMoveHistoryType,
+  setColorState: SetColorStateType,
+  setAlertMessage: GenericStringSetStateType,
+) => {
+let newFiftyMovesTracker: number
+if (shouldUpdateFiftyMovesTracker) {
+  newFiftyMovesTracker = 0
+} else {
+  newFiftyMovesTracker = fiftyMovesTracker + 1
+}
+setFiftyMovesTracker(newFiftyMovesTracker)
+const kingInCheckDetails = evaluateKingInCheck(
+  updatedKingSquare[opponentColor],
+  newBoardState,
+  opponentColor
+)
+if (Object.keys(kingInCheckDetails).length) {
+  const validCheckMoves = validMovesWhenInCheck(
+    opponentColor,
+    kingInCheckDetails,
+    newBoardState,
+    updatedKingSquare[opponentColor],
+    newOccupiedSquares
+  )
+  if (!Object.keys(validCheckMoves).length) {
+    setCheckMate(colorState)
+  } else {
+    setKingInCheck({ color: opponentColor, validCheckMoves })
+  }
+} else {
+  setKingInCheck({ color: null, validCheckMoves: {} })
+  const oppPinnedSquares = generatePinnedSquares(
+    updatedKingSquare[opponentColor],
+    newBoardState,
+    opponentColor
+  )
+  const validOppMoves = allValidMoves(
+    opponentColor,
+    newBoardState,
+    oppPinnedSquares,
+    updatedMovesHistory,
+    newOccupiedSquares
+  )
+  const gameEndsInDraw = evaluateDraw(
+    validOppMoves,
+    newOccupiedSquares,
+    newBoardState,
+    updatedMovesHistory,
+    newFiftyMovesTracker
+  )
+  if (gameEndsInDraw) {
+    setStaleMate(true)
+  }
+  setValidMoves(validOppMoves)
+}
+setMoveHistory(updatedMovesHistory)
+setColorState(colorState === 'w' ? 'b' : 'w')
+//This is going to be the fallback message if there are no other messages such as "Check!" etc
+setAlertMessage('')
+}
+
 export const executeValidMove = (
   srcSquareId: string,
   targetSquareId: string,
@@ -55,7 +130,6 @@ export const executeValidMove = (
   let newBoardState: BoardState
   let newOccupiedSquares: OccupiedSquaresType
   let aPieceWasCaptured = false
-  let newFiftyMovesTracker: number
   let updatedKingSquare: KingSquareType
   const opponentColor = colorState === 'w' ? 'b' : 'w'
   const isValidEnpassant =
@@ -199,58 +273,22 @@ export const executeValidMove = (
     updatedKingSquare = kingSquare
   }
   const shouldUpdateFiftyMovesTracker = pieceId[1] === 'p' || aPieceWasCaptured
-  if (shouldUpdateFiftyMovesTracker) {
-    newFiftyMovesTracker = 0
-  } else {
-    newFiftyMovesTracker = fiftyMovesTracker + 1
-  }
-  setFiftyMovesTracker(newFiftyMovesTracker)
-  const kingInCheckDetails = evaluateKingInCheck(
-    updatedKingSquare[opponentColor],
+  evaluateOpponentKingAndNextTurn(
+    shouldUpdateFiftyMovesTracker,
+    fiftyMovesTracker,
+    setFiftyMovesTracker,
+    updatedKingSquare,
+    colorState,
+    opponentColor,
     newBoardState,
-    opponentColor
+    newOccupiedSquares,
+    setCheckMate,
+    setKingInCheck,
+    updatedMovesHistory,
+    setStaleMate,
+    setValidMoves,
+    setMoveHistory,
+    setColorState,
+    setAlertMessage,
   )
-  if (Object.keys(kingInCheckDetails).length) {
-    const validCheckMoves = validMovesWhenInCheck(
-      opponentColor,
-      kingInCheckDetails,
-      newBoardState,
-      updatedKingSquare[opponentColor],
-      newOccupiedSquares
-    )
-    if (!Object.keys(validCheckMoves).length) {
-      setCheckMate(colorState)
-    } else {
-      setKingInCheck({ color: opponentColor, validCheckMoves })
-    }
-  } else {
-    setKingInCheck({ color: null, validCheckMoves: {} })
-    const oppPinnedSquares = generatePinnedSquares(
-      updatedKingSquare[opponentColor],
-      newBoardState,
-      opponentColor
-    )
-    const validOppMoves = allValidMoves(
-      opponentColor,
-      newBoardState,
-      oppPinnedSquares,
-      updatedMovesHistory,
-      newOccupiedSquares
-    )
-    const gameEndsInDraw = evaluateDraw(
-      validOppMoves,
-      newOccupiedSquares,
-      newBoardState,
-      updatedMovesHistory,
-      newFiftyMovesTracker
-    )
-    if (gameEndsInDraw) {
-      setStaleMate(true)
-    }
-    setValidMoves(validOppMoves)
-  }
-  setMoveHistory(updatedMovesHistory)
-  setColorState(colorState === 'w' ? 'b' : 'w')
-  //This is going to be the fallback message if there are no other messages such as "Check!" etc
-  setAlertMessage('')
 }
