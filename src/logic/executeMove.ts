@@ -44,63 +44,63 @@ export const evaluateOpponentKingAndNextTurn = (
   setValidMoves: SetValidMovesType,
   setMoveHistory: SetMoveHistoryType,
   setColorState: SetColorStateType,
-  setAlertMessage: GenericStringSetStateType,
+  setAlertMessage: GenericStringSetStateType
 ) => {
-let newFiftyMovesTracker: number
-if (shouldUpdateFiftyMovesTracker) {
-  newFiftyMovesTracker = 0
-} else {
-  newFiftyMovesTracker = fiftyMovesTracker + 1
-}
-setFiftyMovesTracker(newFiftyMovesTracker)
-const kingInCheckDetails = evaluateKingInCheck(
-  updatedKingSquare[opponentColor],
-  newBoardState,
-  opponentColor
-)
-if (Object.keys(kingInCheckDetails).length) {
-  const validCheckMoves = validMovesWhenInCheck(
-    opponentColor,
-    kingInCheckDetails,
-    newBoardState,
-    updatedKingSquare[opponentColor],
-    newOccupiedSquares
-  )
-  if (!Object.keys(validCheckMoves).length) {
-    setCheckMate(colorState)
+  let newFiftyMovesTracker: number
+  if (shouldUpdateFiftyMovesTracker) {
+    newFiftyMovesTracker = 0
   } else {
-    setKingInCheck({ color: opponentColor, validCheckMoves })
+    newFiftyMovesTracker = fiftyMovesTracker + 1
   }
-} else {
-  setKingInCheck({ color: null, validCheckMoves: {} })
-  const oppPinnedSquares = generatePinnedSquares(
+  setFiftyMovesTracker(newFiftyMovesTracker)
+  const kingInCheckDetails = evaluateKingInCheck(
     updatedKingSquare[opponentColor],
     newBoardState,
     opponentColor
   )
-  const validOppMoves = allValidMoves(
-    opponentColor,
-    newBoardState,
-    oppPinnedSquares,
-    updatedMovesHistory,
-    newOccupiedSquares
-  )
-  const gameEndsInDraw = evaluateDraw(
-    validOppMoves,
-    newOccupiedSquares,
-    newBoardState,
-    updatedMovesHistory,
-    newFiftyMovesTracker
-  )
-  if (gameEndsInDraw) {
-    setStaleMate(true)
+  if (Object.keys(kingInCheckDetails).length) {
+    const validCheckMoves = validMovesWhenInCheck(
+      opponentColor,
+      kingInCheckDetails,
+      newBoardState,
+      updatedKingSquare[opponentColor],
+      newOccupiedSquares
+    )
+    if (!Object.keys(validCheckMoves).length) {
+      setCheckMate(colorState)
+    } else {
+      setKingInCheck({ color: opponentColor, validCheckMoves })
+    }
+  } else {
+    setKingInCheck({ color: null, validCheckMoves: {} })
+    const oppPinnedSquares = generatePinnedSquares(
+      updatedKingSquare[opponentColor],
+      newBoardState,
+      opponentColor
+    )
+    const validOppMoves = allValidMoves(
+      opponentColor,
+      newBoardState,
+      oppPinnedSquares,
+      updatedMovesHistory,
+      newOccupiedSquares
+    )
+    const gameEndsInDraw = evaluateDraw(
+      validOppMoves,
+      newOccupiedSquares,
+      newBoardState,
+      updatedMovesHistory,
+      newFiftyMovesTracker
+    )
+    if (gameEndsInDraw) {
+      setStaleMate(true)
+    }
+    setValidMoves(validOppMoves)
   }
-  setValidMoves(validOppMoves)
-}
-setMoveHistory(updatedMovesHistory)
-setColorState(colorState === 'w' ? 'b' : 'w')
-//This is going to be the fallback message if there are no other messages such as "Check!" etc
-setAlertMessage('')
+  setMoveHistory(updatedMovesHistory)
+  setColorState(colorState === 'w' ? 'b' : 'w')
+  //This is going to be the fallback message if there are no other messages such as "Check!" etc
+  setAlertMessage('')
 }
 
 export const executeValidMove = (
@@ -127,7 +127,7 @@ export const executeValidMove = (
   fiftyMovesTracker: number,
   setFiftyMovesTracker: SetFiftyMovesTrackerType,
   setOpenPromotionModal: SetOpenPromotionModalType,
-  setPromotionSquaresInfo: SetPromotionSquaresInfoType,
+  setPromotionSquaresInfo: SetPromotionSquaresInfoType
 ) => {
   //Execute valid moves and update appropriate states
   const lastGameMove = movesHistory[movesHistory.length - 1]
@@ -146,7 +146,9 @@ export const executeValidMove = (
       colorState
     )
   const PROMOTION_RANK_MAP = { b: 0, w: 7 }
-  const isPromotionMove = pieceId[1] === 'p' && currentBoard[targetSquareId].loc[1] === PROMOTION_RANK_MAP[colorState]
+  const isPromotionMove =
+    pieceId[1] === 'p' &&
+    currentBoard[targetSquareId].loc[1] === PROMOTION_RANK_MAP[colorState]
   const castlingRookInfo = grabCastlingRookAndSquares(
     srcSquareId,
     targetSquareId,
@@ -275,7 +277,7 @@ export const executeValidMove = (
     //When you move the king, update the king square state
     updatedKingSquare = { ...kingSquare, [colorState]: targetSquareId }
     // Not necessarily urgent to ensure that the current color king square state
-    // is updated as we really only care about the oppohnent king square for 
+    // is updated as we really only care about the oppohnent king square for
     // purposes of evaluating check, checkmate or draw, but who knows, down the line
     // the current color state may become useful
     setKingSquare(updatedKingSquare)
@@ -299,6 +301,6 @@ export const executeValidMove = (
     setValidMoves,
     setMoveHistory,
     setColorState,
-    setAlertMessage,
+    setAlertMessage
   )
 }

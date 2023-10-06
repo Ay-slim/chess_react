@@ -27,7 +27,10 @@ import {
   SourceSquareAndValidMovesType,
 } from '../types'
 import { moveValidityCheck } from './moveValidity'
-import { evaluateOpponentKingAndNextTurn, executeValidMove } from './executeMove'
+import {
+  evaluateOpponentKingAndNextTurn,
+  executeValidMove,
+} from './executeMove'
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault()
@@ -67,7 +70,7 @@ export const drop =
     fiftyMovesTracker: number,
     setFiftyMovesTracker: SetFiftyMovesTrackerType,
     setOpenPromotionModal: SetOpenPromotionModalType,
-    setPromotionSquaresInfo: SetPromotionSquaresInfoType,
+    setPromotionSquaresInfo: SetPromotionSquaresInfoType
   ) =>
   (ev: React.DragEvent) => {
     ev.preventDefault()
@@ -102,7 +105,7 @@ export const drop =
         fiftyMovesTracker,
         setFiftyMovesTracker,
         setOpenPromotionModal,
-        setPromotionSquaresInfo,
+        setPromotionSquaresInfo
       )
       return
     }
@@ -110,42 +113,45 @@ export const drop =
   }
 
 export const onPromotionClick = (
-    fiftyMovesTracker: number,
-    setFiftyMovesTracker: SetFiftyMovesTrackerType,
-    occupiedSquares: OccupiedSquaresType,
-    setOccupiedSquares: SetOccupiedScaresType,
-    colorState: PlayerColor,
-    setBoardState: SetBoardStateType,
-    pieceId: 'b' | 'n' | 'q' | 'r',
-    promotedPiecesTracker: PromotedPiecesTrackerType,
-    setPromotedPiecesTracker: SetPromotedPiecesTrackerType,
-    promotionSquaresInfo: PromotionSquaresInfoType,
-    currentBoard: BoardState,
-    capturedPieces: CapturedPiecesType,
-    setCapturedPiece: SetCapturedPieceType,
-    movesHistory: MoveHistoryType[],
-    setMoveHistory: SetMoveHistoryType,
-    setColor: SetColorStateType,
-    kingSquare: KingSquareType,
-    setCheckMate: SetCheckMateType,
-    setKingInCheck: SetKingInCheckType,
-    setStaleMate: SetStaleMateType,
-    setValidMoves: SetValidMovesType,
-    setAlertMessage: GenericStringSetStateType,
-    setOpenPromotionModal: SetOpenPromotionModalType
-  ) => {
+  fiftyMovesTracker: number,
+  setFiftyMovesTracker: SetFiftyMovesTrackerType,
+  occupiedSquares: OccupiedSquaresType,
+  setOccupiedSquares: SetOccupiedScaresType,
+  colorState: PlayerColor,
+  setBoardState: SetBoardStateType,
+  pieceId: 'b' | 'n' | 'q' | 'r',
+  promotedPiecesTracker: PromotedPiecesTrackerType,
+  setPromotedPiecesTracker: SetPromotedPiecesTrackerType,
+  promotionSquaresInfo: PromotionSquaresInfoType,
+  currentBoard: BoardState,
+  capturedPieces: CapturedPiecesType,
+  setCapturedPiece: SetCapturedPieceType,
+  movesHistory: MoveHistoryType[],
+  setMoveHistory: SetMoveHistoryType,
+  setColor: SetColorStateType,
+  kingSquare: KingSquareType,
+  setCheckMate: SetCheckMateType,
+  setKingInCheck: SetKingInCheckType,
+  setStaleMate: SetStaleMateType,
+  setValidMoves: SetValidMovesType,
+  setAlertMessage: GenericStringSetStateType,
+  setOpenPromotionModal: SetOpenPromotionModalType
+) => {
   const newPieceCount = promotedPiecesTracker[pieceId] + 1
   const promotedPiece = `${colorState}${pieceId}${newPieceCount}`
-  setPromotedPiecesTracker({...promotedPiecesTracker, [pieceId]: newPieceCount})
+  setPromotedPiecesTracker({
+    ...promotedPiecesTracker,
+    [pieceId]: newPieceCount,
+  })
   const srcSquareId = promotionSquaresInfo.src
   const targetSquareId = promotionSquaresInfo.dest
   const srcSquareUpdated = {
     ...currentBoard[srcSquareId],
-    piece: ''
+    piece: '',
   }
   const destSquareUpdated = {
     ...currentBoard[targetSquareId],
-    piece: promotedPiece
+    piece: promotedPiece,
   }
   const newBoardState = {
     ...currentBoard,
@@ -173,16 +179,16 @@ export const onPromotionClick = (
     )
   }
   const newOccupiedSquares = {
-      [colorState]: occupiedSquaresCurrColor,
-      [opponentColor]: occupiedSquaresOppColor,
-    }
+    [colorState]: occupiedSquaresCurrColor,
+    [opponentColor]: occupiedSquaresOppColor,
+  }
   setOccupiedSquares(newOccupiedSquares)
   const move: MoveHistoryType = {
     srcSquare: srcSquareId,
     destSquare: targetSquareId,
     piece: pieceId,
     boardBefore: currentBoard,
-    occupiedSquares
+    occupiedSquares,
   }
   const updatedMovesHistory = [...movesHistory, move]
   evaluateOpponentKingAndNextTurn(
@@ -206,6 +212,8 @@ export const onPromotionClick = (
   setOpenPromotionModal(false)
 }
 
-export const closePromotionModal = (setOpenPromotionModal: SetOpenPromotionModalType) => (event: React.MouseEvent<HTMLButtonElement>) => {
-  setOpenPromotionModal(false)
-}
+export const closePromotionModal =
+  (setOpenPromotionModal: SetOpenPromotionModalType) =>
+  (event: React.MouseEvent<HTMLButtonElement>) => {
+    setOpenPromotionModal(false)
+  }

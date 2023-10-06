@@ -160,12 +160,13 @@ const Board = () => {
   })
   const [fiftyMovesTracker, setFiftyMovesTracker] = useState<number>(0)
   const [openPromotionModal, setOpenPromotionModal] = useState<boolean>(false)
-  const [promotionSquaresInfo, setPromotionSquaresInfo] = useState<PromotionSquaresInfoType>({src: '', dest: ''}) 
-  const [promotedPiecesTracker, setPromotedPiecesTracker] = useState<PromotedPiecesTrackerType>({ q: 1, r: 2, b: 2, n: 2 })
+  const [promotionSquaresInfo, setPromotionSquaresInfo] =
+    useState<PromotionSquaresInfoType>({ src: '', dest: '' })
+  const [promotedPiecesTracker, setPromotedPiecesTracker] =
+    useState<PromotedPiecesTrackerType>({ q: 1, r: 2, b: 2, n: 2 })
   return (
     <div>
-      {
-        openPromotionModal ? 
+      {openPromotionModal ? (
         <PromotionModal
           colorState={currentPlayerColor}
           setOpenPromotionModal={setOpenPromotionModal}
@@ -189,85 +190,88 @@ const Board = () => {
           setStalemate={setStaleMate}
           setValidMoves={setValidMoves}
           setAlertMessage={setAlertMessage}
-        /> :
-        <div className="container">
-      {!checkMate && !staleMate ? (
-        <div className="turn">
-          <p>
-            Current player turn:{' '}
-            <strong>{`${
-              currentPlayerColor === 'w' ? 'White' : 'Black'
-            }`}</strong>
-          </p>
-          <p>
-            |:{' '}
-            <strong style={{ color: 'red' }}>
-              {kingInCheck?.color
-                ? `Check! ${
-                    kingInCheck.color === 'w' ? 'White' : 'Black'
-                  } king is under attack!`
-                : ''}
-            </strong>
-          </p>
-          <p>
-            |: <strong style={{ color: 'red' }}>{alertMessage}</strong>
-          </p>
-        </div>
+        />
       ) : (
-        <div className="turn">
-          <p>
-            <strong style={{ color: 'red' }}>
-              {staleMate
-                ? `Stalemate! Game ends in a draw.`
-                : `Checkmate! ${checkMate === 'w' ? 'White' : 'Black'} wins`}
-            </strong>
-          </p>
+        <div className="container">
+          {!checkMate && !staleMate ? (
+            <div className="turn">
+              <p>
+                Current player turn:{' '}
+                <strong>{`${
+                  currentPlayerColor === 'w' ? 'White' : 'Black'
+                }`}</strong>
+              </p>
+              <p>
+                |:{' '}
+                <strong style={{ color: 'red' }}>
+                  {kingInCheck?.color
+                    ? `Check! ${
+                        kingInCheck.color === 'w' ? 'White' : 'Black'
+                      } king is under attack!`
+                    : ''}
+                </strong>
+              </p>
+              <p>
+                |: <strong style={{ color: 'red' }}>{alertMessage}</strong>
+              </p>
+            </div>
+          ) : (
+            <div className="turn">
+              <p>
+                <strong style={{ color: 'red' }}>
+                  {staleMate
+                    ? `Stalemate! Game ends in a draw.`
+                    : `Checkmate! ${
+                        checkMate === 'w' ? 'White' : 'Black'
+                      } wins`}
+                </strong>
+              </p>
+            </div>
+          )}
+          <table className="board">
+            {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
+              <tr key={`row-${row}`}>
+                {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
+                  const id = col + row
+                  return (
+                    <Square
+                      key={id}
+                      id={id}
+                      onDragOver={allowDrop}
+                      pieceId={boardState[id].piece}
+                      currentColor={currentPlayerColor}
+                      setColor={setCurrentPlayerColor}
+                      currentBoard={boardState}
+                      setBoardState={setBoardState}
+                      setAlertMessage={setAlertMessage}
+                      movesHistory={movesHistory}
+                      setMoveHistory={setMovesHistory}
+                      capturedPieces={capturedPieces}
+                      setCapturedPiece={setCapturedPiece}
+                      kingSquare={kingSquare}
+                      setKingSquare={setKingSquare}
+                      kingInCheck={kingInCheck}
+                      setKingInCheck={setKingInCheck}
+                      checkMate={checkMate}
+                      setCheckMate={setCheckMate}
+                      staleMate={staleMate}
+                      setStaleMate={setStaleMate}
+                      validMoves={validMoves}
+                      setValidMoves={setValidMoves}
+                      occupiedSquares={occupiedSquares}
+                      setOccupiedSquares={setOccupiedSquares}
+                      fiftyMovesTracker={fiftyMovesTracker}
+                      setFiftyMovesTracker={setFiftyMovesTracker}
+                      setOpenPromotionModal={setOpenPromotionModal}
+                      setPromotionSquaresInfo={setPromotionSquaresInfo}
+                    />
+                  )
+                })}
+              </tr>
+            ))}
+          </table>
         </div>
       )}
-      <table className="board">
-        {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
-          <tr key={`row-${row}`}>
-            {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
-              const id = col + row
-              return (
-                <Square
-                  key={id}
-                  id={id}
-                  onDragOver={allowDrop}
-                  pieceId={boardState[id].piece}
-                  currentColor={currentPlayerColor}
-                  setColor={setCurrentPlayerColor}
-                  currentBoard={boardState}
-                  setBoardState={setBoardState}
-                  setAlertMessage={setAlertMessage}
-                  movesHistory={movesHistory}
-                  setMoveHistory={setMovesHistory}
-                  capturedPieces={capturedPieces}
-                  setCapturedPiece={setCapturedPiece}
-                  kingSquare={kingSquare}
-                  setKingSquare={setKingSquare}
-                  kingInCheck={kingInCheck}
-                  setKingInCheck={setKingInCheck}
-                  checkMate={checkMate}
-                  setCheckMate={setCheckMate}
-                  staleMate={staleMate}
-                  setStaleMate={setStaleMate}
-                  validMoves={validMoves}
-                  setValidMoves={setValidMoves}
-                  occupiedSquares={occupiedSquares}
-                  setOccupiedSquares={setOccupiedSquares}
-                  fiftyMovesTracker={fiftyMovesTracker}
-                  setFiftyMovesTracker={setFiftyMovesTracker}
-                  setOpenPromotionModal={setOpenPromotionModal}
-                  setPromotionSquaresInfo={setPromotionSquaresInfo}
-                />
-              )
-            })}
-          </tr>
-        ))}
-      </table>
-    </div>
-      }
     </div>
   )
 }
