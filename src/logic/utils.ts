@@ -91,7 +91,6 @@ export const INVERTED_SQUARES = {
   '6,7': 'g8',
   '7,7': 'h8',
 }
-export const VALID_PROMOTION_OFFICIALS = ['q', 'r', 'b', 'n']
 export const CASTLING_ROOKS_MAP = {
   'w+ve': { rookId: 'wr1', rookSrc: 'h1', rookDest: 'f1' },
   'w-ve': { rookId: 'wr2', rookSrc: 'a1', rookDest: 'd1' },
