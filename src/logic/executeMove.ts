@@ -190,15 +190,16 @@ export const executeValidMove = (
   if (pieceId[1] === 'k') {
     //When you move the king, update the king square state
     updatedKingSquare = { ...kingSquare, [colorState]: targetSquareId }
-    // Not necessarily urgent to uensure that the current color king square state
+    // Not necessarily urgent to ensure that the current color king square state
     // is updated as we really only care about the oppohnent king square for 
     // purposes of evaluating check, checkmate or draw, but who knows, down the line
-    // The current color state may become useful
+    // the current color state may become useful
     setKingSquare(updatedKingSquare)
   } else {
     updatedKingSquare = kingSquare
   }
-  if (pieceId[1] === 'p' || aPieceWasCaptured) {
+  const shouldUpdateFiftyMovesTracker = pieceId[1] === 'p' || aPieceWasCaptured
+  if (shouldUpdateFiftyMovesTracker) {
     newFiftyMovesTracker = 0
   } else {
     newFiftyMovesTracker = fiftyMovesTracker + 1
