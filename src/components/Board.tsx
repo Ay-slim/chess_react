@@ -229,46 +229,48 @@ const Board = () => {
             </div>
           )}
           <table className="board">
-            {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
-              <tr key={`row-${row}`}>
-                {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
-                  const id = col + row
-                  return (
-                    <Square
-                      key={id}
-                      id={id}
-                      onDragOver={allowDrop}
-                      pieceId={boardState[id].piece}
-                      currentColor={currentPlayerColor}
-                      setColor={setCurrentPlayerColor}
-                      currentBoard={boardState}
-                      setBoardState={setBoardState}
-                      setAlertMessage={setAlertMessage}
-                      movesHistory={movesHistory}
-                      setMoveHistory={setMovesHistory}
-                      capturedPieces={capturedPieces}
-                      setCapturedPiece={setCapturedPiece}
-                      kingSquare={kingSquare}
-                      setKingSquare={setKingSquare}
-                      kingInCheck={kingInCheck}
-                      setKingInCheck={setKingInCheck}
-                      checkMate={checkMate}
-                      setCheckMate={setCheckMate}
-                      staleMate={staleMate}
-                      setStaleMate={setStaleMate}
-                      validMoves={validMoves}
-                      setValidMoves={setValidMoves}
-                      occupiedSquares={occupiedSquares}
-                      setOccupiedSquares={setOccupiedSquares}
-                      fiftyMovesTracker={fiftyMovesTracker}
-                      setFiftyMovesTracker={setFiftyMovesTracker}
-                      setOpenPromotionModal={setOpenPromotionModal}
-                      setPromotionSquaresInfo={setPromotionSquaresInfo}
-                    />
-                  )
-                })}
-              </tr>
-            ))}
+            <tbody>
+              {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
+                <tr key={`row-${row}`}>
+                  {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
+                    const id = col + row
+                    return (
+                      <Square
+                        key={id}
+                        id={id}
+                        onDragOver={allowDrop}
+                        pieceId={boardState[id].piece}
+                        currentColor={currentPlayerColor}
+                        setColor={setCurrentPlayerColor}
+                        currentBoard={boardState}
+                        setBoardState={setBoardState}
+                        setAlertMessage={setAlertMessage}
+                        movesHistory={movesHistory}
+                        setMoveHistory={setMovesHistory}
+                        capturedPieces={capturedPieces}
+                        setCapturedPiece={setCapturedPiece}
+                        kingSquare={kingSquare}
+                        setKingSquare={setKingSquare}
+                        kingInCheck={kingInCheck}
+                        setKingInCheck={setKingInCheck}
+                        checkMate={checkMate}
+                        setCheckMate={setCheckMate}
+                        staleMate={staleMate}
+                        setStaleMate={setStaleMate}
+                        validMoves={validMoves}
+                        setValidMoves={setValidMoves}
+                        occupiedSquares={occupiedSquares}
+                        setOccupiedSquares={setOccupiedSquares}
+                        fiftyMovesTracker={fiftyMovesTracker}
+                        setFiftyMovesTracker={setFiftyMovesTracker}
+                        setOpenPromotionModal={setOpenPromotionModal}
+                        setPromotionSquaresInfo={setPromotionSquaresInfo}
+                      />
+                    )
+                  })}
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       )}
