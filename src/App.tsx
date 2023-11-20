@@ -1,6 +1,6 @@
-import Board from './components/Board'
+import MultiplayerBoard from './components/MultiplayerBoard'
 const App = () => {
-  return <Board />
+  return <MultiplayerBoard />
 }
 
 export default App
