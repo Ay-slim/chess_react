@@ -183,4 +183,7 @@ export type WebSocketMessageType = {
   targetSquareId: string;
   pieceId: string;
   opponentId: string;
+  promotionSquaresInfo?: PromotionSquaresInfoType;
 }
+
+export type PromotedOfficialsType = 'b' | 'n' | 'q' | 'r'

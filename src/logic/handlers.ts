@@ -8,6 +8,7 @@ import {
   MoveHistoryType,
   OccupiedSquaresType,
   PlayerColor,
+  PromotedOfficialsType,
   PromotedPiecesTrackerType,
   PromotionSquaresInfoType,
   SetBoardStateType,
@@ -25,6 +26,7 @@ import {
   SetStaleMateType,
   SetValidMovesType,
   SourceSquareAndValidMovesType,
+  WebSocketMessageType,
 } from '../types'
 import { moveValidityCheck } from './moveValidity'
 import {
@@ -82,13 +84,20 @@ export const drop =
     if (
       moveValidityCheck(srcSquareId, targetSquareId, kingInCheck, validMoves)
     ) {
-      const opponentId = sessionStorage.getItem('opponentId')!
-      socket.emit('validMove', {
-        srcSquareId,
-        targetSquareId,
-        pieceId,
-        opponentId,
-      })
+      const PROMOTION_RANK_MAP = { b: 0, w: 7 }
+      const isPromotionMove =
+        pieceId[1] === 'p' &&
+        currentBoard[targetSquareId].loc[1] === PROMOTION_RANK_MAP[colorState]
+      if (!isPromotionMove) {
+        const opponentId = sessionStorage.getItem('opponentId')!
+        const opponentMoveMessage: WebSocketMessageType = {
+          srcSquareId,
+          targetSquareId,
+          pieceId,
+          opponentId,
+        }
+        socket.emit('validMove', opponentMoveMessage)
+      }
       executeValidMove(
         srcSquareId,
         targetSquareId,
@@ -113,7 +122,8 @@ export const drop =
         fiftyMovesTracker,
         setFiftyMovesTracker,
         setOpenPromotionModal,
-        setPromotionSquaresInfo
+        setPromotionSquaresInfo,
+        isPromotionMove
       )
       return
     }
@@ -127,7 +137,7 @@ export const onPromotionClick = (
   setOccupiedSquares: SetOccupiedScaresType,
   colorState: PlayerColor,
   setBoardState: SetBoardStateType,
-  pieceId: 'b' | 'n' | 'q' | 'r',
+  pieceId: PromotedOfficialsType,
   promotedPiecesTracker: PromotedPiecesTrackerType,
   setPromotedPiecesTracker: SetPromotedPiecesTrackerType,
   promotionSquaresInfo: PromotionSquaresInfoType,

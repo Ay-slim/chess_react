@@ -127,7 +127,8 @@ export const executeValidMove = (
   fiftyMovesTracker: number,
   setFiftyMovesTracker: SetFiftyMovesTrackerType,
   setOpenPromotionModal: SetOpenPromotionModalType,
-  setPromotionSquaresInfo: SetPromotionSquaresInfoType
+  setPromotionSquaresInfo: SetPromotionSquaresInfoType,
+  isPromotionMove: boolean = false
 ) => {
   //Execute valid moves and update appropriate states
   const lastGameMove = movesHistory[movesHistory.length - 1]
@@ -145,10 +146,7 @@ export const executeValidMove = (
       lastGameMove,
       colorState
     )
-  const PROMOTION_RANK_MAP = { b: 0, w: 7 }
-  const isPromotionMove =
-    pieceId[1] === 'p' &&
-    currentBoard[targetSquareId].loc[1] === PROMOTION_RANK_MAP[colorState]
+
   const castlingRookInfo = grabCastlingRookAndSquares(
     srcSquareId,
     targetSquareId,
@@ -171,7 +169,13 @@ export const executeValidMove = (
     occupiedSquares,
   }
   const updatedMovesHistory = [...movesHistory, move]
-  //console.log(updatedMovesHistory)
+
+  if (isPromotionMove) {
+    setOpenPromotionModal(true)
+    setPromotionSquaresInfo({ src: srcSquareId, dest: targetSquareId })
+    return
+  }
+
   if (isValidEnpassant) {
     const newCurrentColorOccupiedSquares = [...occupiedSquares[colorState]]
     newCurrentColorOccupiedSquares.splice(
@@ -237,10 +241,6 @@ export const executeValidMove = (
       [castlingRookInfo.rookDest]: castlingRookDestUpdated,
     }
     setBoardState(newBoardState)
-  } else if (isPromotionMove) {
-    setOpenPromotionModal(true)
-    setPromotionSquaresInfo({ src: srcSquareId, dest: targetSquareId })
-    return
   } else {
     newBoardState = {
       ...currentBoard,

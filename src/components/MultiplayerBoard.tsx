@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import Square from './Square'
-import { allowDrop } from '../logic/handlers'
+import { allowDrop, onPromotionClick } from '../logic/handlers'
 import {
   BoardState,
   CapturedPiecesType,
@@ -10,6 +10,7 @@ import {
   MoveHistoryType,
   OccupiedSquaresType,
   PlayerColor,
+  PromotedOfficialsType,
   PromotedPiecesTrackerType,
   PromotionSquaresInfoType,
   SourceSquareAndValidMovesType,
@@ -184,35 +185,63 @@ const MultiplayerBoard = () => {
 
   useEffect(()=> {
     const {
-      srcSquareId, targetSquareId, pieceId
+      srcSquareId, targetSquareId, pieceId, opponentId
     } = webSocketMessage
-    if (srcSquareId && targetSquareId) {
-      executeValidMove(
-        srcSquareId,
-        targetSquareId,
-        pieceId,
-        currentPlayerColor,
-        setCurrentPlayerColor,
-        boardState,
-        setBoardState,
-        setAlertMessage,
-        movesHistory,
-        setMovesHistory,
-        capturedPieces,
-        setCapturedPiece,
-        kingSquare,
-        setKingSquare,
-        setKingInCheck,
-        setCheckMate,
-        setStaleMate,
-        setValidMoves,
-        occupiedSquares,
-        setOccupiedSquares,
-        fiftyMovesTracker,
-        setFiftyMovesTracker,
-        setOpenPromotionModal,
-        setPromotionSquaresInfo
-      )
+    if (opponentId) {
+      if (webSocketMessage?.promotionSquaresInfo) {
+        onPromotionClick(
+          fiftyMovesTracker,
+          setFiftyMovesTracker,
+          occupiedSquares,
+          setOccupiedSquares,
+          currentPlayerColor,
+          setBoardState,
+          webSocketMessage.pieceId as PromotedOfficialsType,
+          promotedPiecesTracker,
+          setPromotedPiecesTracker,
+          webSocketMessage.promotionSquaresInfo,
+          boardState,
+          capturedPieces,
+          setCapturedPiece,
+          movesHistory,
+          setMovesHistory,
+          setCurrentPlayerColor,
+          kingSquare,
+          setCheckMate,
+          setKingInCheck,
+          setStaleMate,
+          setValidMoves,
+          setAlertMessage,
+          setOpenPromotionModal,
+        )
+      } else {
+        executeValidMove(
+          srcSquareId,
+          targetSquareId,
+          pieceId,
+          currentPlayerColor,
+          setCurrentPlayerColor,
+          boardState,
+          setBoardState,
+          setAlertMessage,
+          movesHistory,
+          setMovesHistory,
+          capturedPieces,
+          setCapturedPiece,
+          kingSquare,
+          setKingSquare,
+          setKingInCheck,
+          setCheckMate,
+          setStaleMate,
+          setValidMoves,
+          occupiedSquares,
+          setOccupiedSquares,
+          fiftyMovesTracker,
+          setFiftyMovesTracker,
+          setOpenPromotionModal,
+          setPromotionSquaresInfo
+        )
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webSocketMessage])
