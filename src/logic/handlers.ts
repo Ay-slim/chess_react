@@ -31,6 +31,7 @@ import {
   evaluateOpponentKingAndNextTurn,
   executeValidMove,
 } from './executeMove'
+import { socket } from './utils'
 
 export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault()
@@ -81,6 +82,13 @@ export const drop =
     if (
       moveValidityCheck(srcSquareId, targetSquareId, kingInCheck, validMoves)
     ) {
+      const opponentId = sessionStorage.getItem('opponentId')!
+      socket.emit('validMove', {
+        srcSquareId,
+        targetSquareId,
+        pieceId,
+        opponentId,
+      })
       executeValidMove(
         srcSquareId,
         targetSquareId,
