@@ -1,4 +1,13 @@
 import { OperationType, PlayerColor } from '../types'
+import { io } from 'socket.io-client'
+
+/**
+ * Session storage items:
+  * opponentId
+  * multiPlayerColor
+  * playerId
+ */
+export const socket = io('http://localhost:1337')
 
 export const normalizedArithmetic = (
   color: PlayerColor,
