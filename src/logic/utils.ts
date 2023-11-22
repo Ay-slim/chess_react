@@ -7,7 +7,7 @@ import { io } from 'socket.io-client'
   * multiPlayerColor
   * playerId
  */
-export const socket = io('http://localhost:1337')
+export const socket = io(process.env.REACT_APP_WEBSOCKET_URL!)
 
 export const normalizedArithmetic = (
   color: PlayerColor,
