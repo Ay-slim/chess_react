@@ -19,9 +19,18 @@ import {
 import '../App.css'
 import PromotionModal from './PromotionModal'
 import { executeValidMove } from '../logic/executeMove'
-import { socket } from '../logic/utils' 
+import { socket } from '../logic/utils'
+import { useParams } from 'react-router-dom'
 
 const MultiplayerBoard = () => {
+  const { gameIds } = useParams()
+  if (gameIds) {
+    const [opponentId, playerId] = gameIds.split('+')
+    sessionStorage.setItem('playerId', playerId)
+    sessionStorage.setItem('opponentId', opponentId)
+    sessionStorage.setItem('multiPlayerColor', 'b')
+    socket.emit('joinedGame', opponentId)
+  }
   const [boardState, setBoardState] = useState<BoardState>({
     a1: { loc: [0, 0], piece: 'wr2' },
     b1: { loc: [1, 0], piece: 'wn2' },
