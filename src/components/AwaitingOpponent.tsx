@@ -3,6 +3,8 @@ import { v4 as uuid } from 'uuid'
 import { useNavigate } from 'react-router-dom'
 import { socket } from '../logic/utils'
 import { useEffect, useState } from 'react'
+import { FaCopy } from "react-icons/fa";
+import LoadingSpin from "react-loading-spin";
 
 const AwaitingOpponent = () => {
   const navigate = useNavigate()
@@ -27,19 +29,39 @@ const AwaitingOpponent = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opponentJoined])
 
+  const [copiedToClipboard, setCopiedToClipboard] = useState<boolean>(false)
+  const copyToClipboard = () => {
+    if ('clipboard' in navigator) {
+      navigator.clipboard.writeText(gameLink).then(() => setCopiedToClipboard(true)).catch((e) => console.error(e));
+    } else {
+      return document.execCommand('copy', true, gameLink);
+    }
+  }
+
   return (
-    <div>
-      <div className='mainPageTitle'>
-        <h1>Railway Chess</h1>
+    <div className='awaitingContainer'>
+      <div className='awaitingPageTitle'>
+        <h1><strong>Basic Chess</strong></h1>
         <h4>Play, learn, live...</h4>
       </div>
-      <div>
-        <h2>You have created a new game!</h2>
-        <p><strong>Share the link below with anyone you would like to play with and keep this browser tab open!</strong></p>
-        <p>Link: {gameLink}</p>
+      <div className='awaitingPageBody'>
+        <h2><strong>You have created a new game!</strong></h2>
+        <p><strong>Share the link below with anyone you would like to play with and keep this browser tab open</strong></p>
+        <div className='linkWithCopy'>
+          <div className='linkBox'>
+            <div className='linkTextContainer'><strong>{gameLink}</strong></div>
+            <div className='copyIcon' onClick={copyToClipboard}>
+              <FaCopy />
+            </div>
+          </div>
+          <div className='copyIndicator'>
+            {copiedToClipboard ? <p>Copied!</p>: <p>Copy to clipboard</p>}
+          </div>
+        </div>
       </div>
-      <div>
-        <p>Waiting for your opponent to join</p>
+      <div className='awaitingPageSpinner'>
+        <div className='spinnerText'><h3>Waiting for your opponent to join...</h3></div>
+        <div className='spinnerIcon'><LoadingSpin primaryColor='indigo'/></div>
       </div>
     </div>
   )
