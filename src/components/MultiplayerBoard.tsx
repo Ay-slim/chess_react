@@ -19,7 +19,7 @@ import {
 import '../App.css'
 import PromotionModal from './PromotionModal'
 import { executeValidMove } from '../logic/executeMove'
-import { socket } from '../logic/utils'
+import { decideCheckmate, decideTurn, socket } from '../logic/utils'
 import { useParams } from 'react-router-dom'
 
 const MultiplayerBoard = () => {
@@ -287,10 +287,7 @@ const MultiplayerBoard = () => {
           {!checkMate && !staleMate ? (
             <div className="turn">
               <p>
-                Current player turn:{' '}
-                <strong>{`${
-                  currentPlayerColor === 'w' ? 'White' : 'Black'
-                }`}</strong>
+                <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
               </p>
               <p>
                 |:{' '}
@@ -312,9 +309,7 @@ const MultiplayerBoard = () => {
                 <strong style={{ color: 'red' }}>
                   {staleMate
                     ? `Stalemate! Game ends in a draw.`
-                    : `Checkmate! ${
-                        checkMate === 'w' ? 'White' : 'Black'
-                      } wins`}
+                    : decideCheckmate(multiPlayerColor as PlayerColor, checkMate!)}
                 </strong>
               </p>
             </div>
