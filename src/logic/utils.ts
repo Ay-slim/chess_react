@@ -1,4 +1,13 @@
 import { OperationType, PlayerColor } from '../types'
+import { io } from 'socket.io-client'
+
+/**
+ * Session storage items:
+  * opponentId
+  * multiPlayerColor
+  * playerId
+ */
+export const socket = io(process.env.REACT_APP_WEBSOCKET_URL!)
 
 export const normalizedArithmetic = (
   color: PlayerColor,
@@ -118,3 +127,19 @@ export const VALID_CASTLING_SQUARES = {
 export const ENPASSANT_ATTACKING_COLUMNS = { w: 4, b: 3 }
 export const ENPASSANT_PAWN_MOVE_DIFF = { w: 2, b: -2 }
 export const BASE_ROW_MAP = { w: 1, b: 6 }
+
+export const decideTurn = (playerColor: PlayerColor, colorState: PlayerColor) => {
+  if (playerColor === colorState)
+    return 'Your turn'
+  if (playerColor === 'w')
+    return "Black's turn"
+  return "White's turn"
+}
+
+export const decideCheckmate = (playerColor: PlayerColor, checkMateColor: PlayerColor) => {
+  if (playerColor === checkMateColor)
+    return 'Checkmate! You win.'
+  if (playerColor === 'w')
+    return "Checkmate! Black wins (better luck next time)"
+  return "Checkmate! White wins (better luck next time)"
+}

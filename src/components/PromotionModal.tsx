@@ -1,6 +1,7 @@
 import '../App.css'
-import { PromotionProps } from '../types'
+import { PromotedOfficialsType, PromotionProps, WebSocketMessageType } from '../types'
 import { closePromotionModal, onPromotionClick } from '../logic/handlers'
+import { socket } from '../logic/utils'
 
 const PromotionModal = (props: PromotionProps) => {
   const {
@@ -29,9 +30,9 @@ const PromotionModal = (props: PromotionProps) => {
   } = props
   type PromotionPieceType = 'Bishop' | 'Knight' | 'Rook' | 'Queen'
   const pieces = ['Bishop', 'Knight', 'Rook', 'Queen']
-  const getPieceId = (piece: PromotionPieceType): 'b' | 'n' | 'q' | 'r' => {
+  const getPieceId = (piece: PromotionPieceType): PromotedOfficialsType => {
     const id = piece === 'Knight' ? 'n' : piece[0].toLowerCase()
-    return id as 'b' | 'n' | 'q' | 'r'
+    return id as PromotedOfficialsType
   }
   return (
     <div className="prom-container">
@@ -48,7 +49,16 @@ const PromotionModal = (props: PromotionProps) => {
             id={getPieceId(piece as PromotionPieceType)}
             key={index}
             className="prom-image-item"
-            onClick={() =>
+            onClick={() => {
+              const opponentId = sessionStorage.getItem('opponentId')!
+              const opponentMoveMessage: WebSocketMessageType = {
+                srcSquareId: '',
+                targetSquareId: '',
+                pieceId: getPieceId(piece as PromotionPieceType), //BAD PRACTICE: pieceId here represents the first letter of the official to which the piece has been promoted. Everywhere else, it refers to the actual id of the piece that was moved which is being propagated to the opponent browser.
+                opponentId,
+                promotionSquaresInfo
+              }
+              socket.emit('validMove', opponentMoveMessage)
               onPromotionClick(
                 fiftyMovesTracker,
                 setFiftyMovesTracker,
@@ -73,7 +83,7 @@ const PromotionModal = (props: PromotionProps) => {
                 setValidMoves,
                 setAlertMessage,
                 setOpenPromotionModal
-              )
+              )}
             }
           >
             <img

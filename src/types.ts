@@ -177,3 +177,13 @@ export type PromotionSquaresInfoType = {
   src: string
   dest: string
 }
+
+export type WebSocketMessageType = {
+  srcSquareId: string;
+  targetSquareId: string;
+  pieceId: string;
+  opponentId: string;
+  promotionSquaresInfo?: PromotionSquaresInfoType;
+}
+
+export type PromotedOfficialsType = 'b' | 'n' | 'q' | 'r'
