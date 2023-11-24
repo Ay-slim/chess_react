@@ -5,20 +5,21 @@
 }
 
 .container {
-  padding-top: 140px;
+  padding-top: 20px;
 }
 .board {
   border: 2px solid;
   margin: auto;
 }
+.info {
+  margin: auto;
+  font-size: 25px;
+  text-align: center;
+}
 .turn {
-  margin: auto;
-  width: 25%;
+  flex: 50%;
 }
-.alert {
-  margin: auto;
-  width: 25%;
-}
+
 th {
   width: 40px;
   height: 40px;
@@ -55,9 +56,9 @@ th {
 .h4,
 .h6,
 .h8 {
-  background-color: brown;
-  width: 80px;
-  height: 80px;
+  background-color: #C19A6B;
+  width: 70px;
+  height: 70px;
   position: relative;
 }
 .b1,
@@ -93,13 +94,31 @@ th {
 .g6,
 .g8 {
   background-color: white;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   position: relative;
 }
 .board-image {
   width: 60px;
   height: 60px;
+}
+
+.alphabetLabel {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  transform: translate(-50%, 50%);
+  font-size: 10px;
+  color: black;
+}
+
+.numberLabel {
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  transform: translate(-50%, 50%);
+  font-size: 10px;
+  color: black;
 }
 
 .eligibilityCircle {
@@ -112,6 +131,15 @@ th {
   width: 20px;
   height: 20px;
   transform: translate(-50%, -50%); 
+}
+
+
+.kingAttack {
+  background-color: red;
+}
+
+.clickKingInCheck {
+  background-color: #FF6347;
 }
 
 .clickedSquare {
