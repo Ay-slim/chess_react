@@ -44,6 +44,14 @@ const validSquares = (
     if (targetPiece[0] !== color) {
       //Enemy piece, Rook can capture, and no need to keep checking down this path. Our watch is ended
       bishopThreats.push(targetSquare)
+      if (targetPiece[1] === 'k') {
+        const xCoordKingExtraUpRight = normalizedArithmetic(color, 'sum', xCoord, dzUpRight + 1)
+        const yCoordKingExtraUpRight = normalizedArithmetic(color, 'sum', yCoord, dzUpRight + 1)
+        if (isValidBoardCoordinates(xCoordKingExtraUpRight, yCoordKingExtraUpRight)) {
+          const extraKingSquare = INVERTED_SQUARES[`${xCoordKingExtraUpRight as BoardNumbers},${yCoordKingExtraUpRight as BoardNumbers}`]
+          bishopThreats.push(extraKingSquare)
+        }
+      }
       break
     }
   }
@@ -86,6 +94,14 @@ const validSquares = (
     if (targetPiece[0] !== color) {
       //Enemy piece, Rook can capture, and no need to keep checking down this path. Our watch is ended
       bishopThreats.push(targetSquare)
+      if (targetPiece[1] === 'k') {
+        const xCoordKingExtraDownRight = normalizedArithmetic(color, 'sum', xCoord, dzDownRight + 1)
+        const yCoordKingExtraDownRight = normalizedArithmetic(color, 'diff', yCoord, dzDownRight + 1)
+        if (isValidBoardCoordinates(xCoordKingExtraDownRight, yCoordKingExtraDownRight)) {
+          const extraKingSquare = INVERTED_SQUARES[`${xCoordKingExtraDownRight as BoardNumbers},${yCoordKingExtraDownRight as BoardNumbers}`]
+          bishopThreats.push(extraKingSquare)
+        }
+      }
       break
     }
   }
@@ -118,6 +134,14 @@ const validSquares = (
     if (targetPiece[0] !== color) {
       //Enemy piece, Rook can capture, and no need to keep checking down this path. Our watch is ended
       bishopThreats.push(targetSquare)
+      if (targetPiece[1] === 'k') {
+        const xCoordKingExtraUpLeft = normalizedArithmetic(color, 'diff', xCoord, dzUpLeft + 1)
+        const yCoordKingExtraUpLeft = normalizedArithmetic(color, 'sum', yCoord, dzUpLeft + 1)
+        if (isValidBoardCoordinates(xCoordKingExtraUpLeft, yCoordKingExtraUpLeft)) {
+          const extraKingSquare = INVERTED_SQUARES[`${xCoordKingExtraUpLeft as BoardNumbers},${yCoordKingExtraUpLeft as BoardNumbers}`]
+          bishopThreats.push(extraKingSquare)
+        }
+      }
       break
     }
   }
@@ -157,6 +181,14 @@ const validSquares = (
     }
     if (targetPiece[0] !== color) {
       bishopThreats.push(targetSquare)
+      if (targetPiece[1] === 'k') {
+        const xCoordKingExtraDownLeft = normalizedArithmetic(color, 'diff', xCoord, dzDownLeft + 1)
+        const yCoordKingExtraDownLeft = normalizedArithmetic(color, 'diff', yCoord, dzDownLeft + 1)
+        if (isValidBoardCoordinates(xCoordKingExtraDownLeft, yCoordKingExtraDownLeft)) {
+          const extraKingSquare = INVERTED_SQUARES[`${xCoordKingExtraDownLeft as BoardNumbers},${yCoordKingExtraDownLeft as BoardNumbers}`]
+          bishopThreats.push(extraKingSquare)
+        }
+      }
       break
     }
   }
