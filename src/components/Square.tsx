@@ -75,6 +75,8 @@ const Square = (props: SquareProps) => {
   const isEligibleToMoveTo = validMovesToCheck?.includes(id)
   const hasBeenClicked = clickedSquare === id
   const kingUnderAttack = pieceId?.[1] === 'k' && (kingInCheck?.color === pieceId?.[0] || checkMate === (pieceId?.[0] === 'w' ? 'b' : 'w'))
+  const numberLabelCheck = multiPlayerColor === 'b' ? '8' : '1'
+  const alphabetLabelCheck = multiPlayerColor === 'b' ? 'h' : 'a'
   const handleClick = clickSquare(
     currentColor,
     pieceId,
@@ -111,8 +113,8 @@ const Square = (props: SquareProps) => {
   return (
     <th id={id} className={`${id} ${kingUnderAttack && hasBeenClicked ? "clickKingInCheck" : hasBeenClicked ? "clickedSquare" : ""} ${isLastMoveSrc ? "clickedSquare" : ""} ${isLastMoveDest ? "lastMoveDest" : ""} ${kingUnderAttack ? "kingAttack" : ""}`} onDrop={handleDrop} onDragOver={onDragOver} onClick={handleClick}>
         {isEligibleToMoveTo ? (<div className='eligibilityCircle'></div>) : (null)}
-        {id[1] === '1' ? (<span className='alphabetLabel'>{id[0]}</span>) : (null)}
-        {id[0] === 'a' ? (<span className='numberLabel'>{id[1]}</span>) : (null)}
+        {id[1] === numberLabelCheck ? (<span className='alphabetLabel'>{id[0]}</span>) : (null)}
+        {id[0] === alphabetLabelCheck ? (<span className='numberLabel'>{id[1]}</span>) : (null)}
         {pieceId ? (
           <Piece
             id={pieceId}
