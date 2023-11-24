@@ -187,6 +187,7 @@ const MultiplayerBoard = () => {
     pieceId: '',
     opponentId: '',
   })
+  const [clickedSquare, setClickedSquare] = useState<string>('')
 
   socket.on(browserUuid, (opponentMove) => {
     setWebSocketMessage(opponentMove)
@@ -351,6 +352,8 @@ const MultiplayerBoard = () => {
                         setFiftyMovesTracker={setFiftyMovesTracker}
                         setOpenPromotionModal={setOpenPromotionModal}
                         setPromotionSquaresInfo={setPromotionSquaresInfo}
+                        clickedSquare={clickedSquare}
+                        setClickedSquare={setClickedSquare}
                       />
                     )
                   })}

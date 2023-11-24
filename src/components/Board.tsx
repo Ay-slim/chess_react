@@ -164,6 +164,7 @@ const Board = () => {
     useState<PromotionSquaresInfoType>({ src: '', dest: '' })
   const [promotedPiecesTracker, setPromotedPiecesTracker] =
     useState<PromotedPiecesTrackerType>({ q: 1, r: 2, b: 2, n: 2 })
+  const [clickedSquare, setClickedSquare] = useState<string>('')
   return (
     <div>
       {openPromotionModal ? (
@@ -265,6 +266,8 @@ const Board = () => {
                         setFiftyMovesTracker={setFiftyMovesTracker}
                         setOpenPromotionModal={setOpenPromotionModal}
                         setPromotionSquaresInfo={setPromotionSquaresInfo}
+                        clickedSquare={clickedSquare}
+                        setClickedSquare={setClickedSquare}
                       />
                     )
                   })}
