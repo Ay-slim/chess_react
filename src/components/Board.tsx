@@ -195,29 +195,15 @@ const Board = () => {
       ) : (
         <div className="container">
           {!checkMate && !staleMate ? (
-            <div className="turn">
+            <div className="info">
               <p>
-                Current player turn:{' '}
                 <strong>{`${
-                  currentPlayerColor === 'w' ? 'White' : 'Black'
-                }`}</strong>
-              </p>
-              <p>
-                |:{' '}
-                <strong style={{ color: 'red' }}>
-                  {kingInCheck?.color
-                    ? `Check! ${
-                        kingInCheck.color === 'w' ? 'White' : 'Black'
-                      } king is under attack!`
-                    : ''}
-                </strong>
-              </p>
-              <p>
-                |: <strong style={{ color: 'red' }}>{alertMessage}</strong>
+                  currentPlayerColor === 'w' ? "White's " : "Black's "
+                }turn`}</strong>
               </p>
             </div>
           ) : (
-            <div className="turn">
+            <div className="info">
               <p>
                 <strong style={{ color: 'red' }}>
                   {staleMate

@@ -286,26 +286,13 @@ const MultiplayerBoard = () => {
       ) : (
         <div className="container">
           {!checkMate && !staleMate ? (
-            <div className="turn">
+            <div className="info">
               <p>
                 <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
               </p>
-              <p>
-                |:{' '}
-                <strong style={{ color: 'red' }}>
-                  {kingInCheck?.color
-                    ? `Check! ${
-                        kingInCheck.color === 'w' ? 'White' : 'Black'
-                      } king is under attack!`
-                    : ''}
-                </strong>
-              </p>
-              <p>
-                |: <strong style={{ color: 'red' }}>{alertMessage}</strong>
-              </p>
             </div>
           ) : (
-            <div className="turn">
+            <div className="info">
               <p>
                 <strong style={{ color: 'red' }}>
                   {staleMate
