@@ -10,7 +10,6 @@
 .board {
   border: 2px solid;
   margin: auto;
-  width: 25%;
 }
 .turn {
   margin: auto;
@@ -57,6 +56,9 @@ th {
 .h6,
 .h8 {
   background-color: brown;
+  width: 80px;
+  height: 80px;
+  position: relative;
 }
 .b1,
 .b3,
@@ -91,10 +93,33 @@ th {
 .g6,
 .g8 {
   background-color: white;
+  width: 80px;
+  height: 80px;
+  position: relative;
 }
 .board-image {
-  width: 35px;
-  height: 35px;
+  width: 60px;
+  height: 60px;
+}
+
+.eligibilityCircle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background-color: darkcyan;
+  z-index: 5;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%); 
+}
+
+.clickedSquare {
+  background-color: darkolivegreen;
+}
+
+.lastMoveDest {
+  background-color: darkseagreen;
 }
 
 /* PromotionModal.css */
