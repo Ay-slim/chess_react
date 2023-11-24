@@ -74,7 +74,7 @@ const Square = (props: SquareProps) => {
   const validMovesToCheck = kingInCheck?.color === currentColor ? kingInCheck.validCheckMoves?.[clickedSquare] : validMoves[clickedSquare]?.validSquares
   const isEligibleToMoveTo = validMovesToCheck?.includes(id)
   const hasBeenClicked = clickedSquare === id
-  const kingUnderAttack = pieceId?.[1] === 'k' && (kingInCheck?.color === pieceId?.[0] || checkMate === pieceId?.[0])
+  const kingUnderAttack = pieceId?.[1] === 'k' && (kingInCheck?.color === pieceId?.[0] || checkMate === (pieceId?.[0] === 'w' ? 'b' : 'w'))
   const handleClick = clickSquare(
     currentColor,
     pieceId,
