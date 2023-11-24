@@ -81,6 +81,8 @@ export type SquareProps = {
   setFiftyMovesTracker: SetFiftyMovesTrackerType
   setOpenPromotionModal: SetOpenPromotionModalType
   setPromotionSquaresInfo: SetPromotionSquaresInfoType
+  clickedSquare: string
+  setClickedSquare: GenericStringSetStateType
 }
 
 export type PieceProps = {
@@ -89,6 +91,7 @@ export type PieceProps = {
   squareId: string
   checkMate: CheckMateType
   staleMate: Boolean
+  setClickedSquare: GenericStringSetStateType
 }
 
 export type PromotionProps = {
