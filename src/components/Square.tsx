@@ -108,7 +108,7 @@ const Square = (props: SquareProps) => {
     staleMate
   )
   return (
-    <th id={id} className={`${id} ${kingUnderAttack && hasBeenClicked ? "clickKingInCheck" : hasBeenClicked ? "clickedSquare" : ""} ${isLastMoveSrc ? "clickedSquare" : ""} ${isLastMoveDest ? "lastMoveDest" : ""} ${kingUnderAttack ? "kingAttack" : ""}`} onDrop={handleDrop} onDragOver={onDragOver} onClick={handleClick}>
+    <th id={id} className={`${id} ${kingUnderAttack && hasBeenClicked ? "clickKingInCheck" : hasBeenClicked ? "clickedSquare" : ""} ${isLastMoveSrc ? "lastMoveMarker" : ""} ${isLastMoveDest ? "lastMoveMarker" : ""} ${kingUnderAttack ? "kingAttack" : ""}`} onDrop={handleDrop} onDragOver={onDragOver} onClick={handleClick}>
         {isEligibleToMoveTo ? (<div className='eligibilityCircle'></div>) : (null)}
         {id[1] === numberLabelCheck ? (<span className='alphabetLabel'>{id[0]}</span>) : (null)}
         {id[0] === alphabetLabelCheck ? (<span className='numberLabel'>{id[1]}</span>) : (null)}
