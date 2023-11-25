@@ -19,6 +19,7 @@
     "react-scripts": "5.0.1",
     "socket.io-client": "^4.7.2",
     "typescript": "^4.9.5",
+    "use-sound": "^4.0.1",
     "uuidv4": "^6.2.13",
     "web-vitals": "^2.1.4"
   },
