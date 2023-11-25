@@ -26,7 +26,6 @@ const PromotionModal = (props: PromotionProps) => {
     setKingInCheck,
     setStalemate,
     setValidMoves,
-    setAlertMessage,
   } = props
   type PromotionPieceType = 'Bishop' | 'Knight' | 'Rook' | 'Queen'
   const pieces = ['Bishop', 'Knight', 'Rook', 'Queen']
@@ -84,7 +83,6 @@ const PromotionModal = (props: PromotionProps) => {
                 setKingInCheck,
                 setStalemate,
                 setValidMoves,
-                setAlertMessage,
                 setOpenPromotionModal
               )}
             }

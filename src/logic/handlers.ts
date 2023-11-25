@@ -59,7 +59,6 @@ const validateMoveAndExecute = (
   setColorState: SetColorStateType,
   currentBoard: BoardState,
   setBoardState: SetBoardStateType,
-  setAlertMessage: GenericStringSetStateType,
   movesHistory: MoveHistoryType[],
   setMoveHistory: SetMoveHistoryType,
   capturedPieces: CapturedPiecesType,
@@ -106,7 +105,6 @@ const validateMoveAndExecute = (
       setColorState,
       currentBoard,
       setBoardState,
-      setAlertMessage,
       movesHistory,
       setMoveHistory,
       capturedPieces,
@@ -139,7 +137,6 @@ export const clickSquare = (
     setColorState: SetColorStateType,
     currentBoard: BoardState,
     setBoardState: SetBoardStateType,
-    setAlertMessage: GenericStringSetStateType,
     movesHistory: MoveHistoryType[],
     setMoveHistory: SetMoveHistoryType,
     capturedPieces: CapturedPiecesType,
@@ -181,7 +178,6 @@ export const clickSquare = (
       setColorState,
       currentBoard,
       setBoardState,
-      setAlertMessage,
       movesHistory,
       setMoveHistory,
       capturedPieces,
@@ -212,7 +208,6 @@ export const drop =
     setColorState: SetColorStateType,
     currentBoard: BoardState,
     setBoardState: SetBoardStateType,
-    setAlertMessage: GenericStringSetStateType,
     movesHistory: MoveHistoryType[],
     setMoveHistory: SetMoveHistoryType,
     capturedPieces: CapturedPiecesType,
@@ -248,7 +243,6 @@ export const drop =
       setColorState,
       currentBoard,
       setBoardState,
-      setAlertMessage,
       movesHistory,
       setMoveHistory,
       capturedPieces,
@@ -294,7 +288,6 @@ export const onPromotionClick = (
   setKingInCheck: SetKingInCheckType,
   setStaleMate: SetStaleMateType,
   setValidMoves: SetValidMovesType,
-  setAlertMessage: GenericStringSetStateType,
   setOpenPromotionModal: SetOpenPromotionModalType
 ) => {
   const newPieceCount = promotedPiecesTracker[pieceId] + 1
@@ -366,8 +359,7 @@ export const onPromotionClick = (
     setStaleMate,
     setValidMoves,
     setMoveHistory,
-    setColor,
-    setAlertMessage
+    setColor
   )
   setOpenPromotionModal(false)
 }

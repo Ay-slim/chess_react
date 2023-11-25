@@ -60,7 +60,6 @@ export type SquareProps = {
   setColor: SetColorStateType
   currentBoard: BoardState
   setBoardState: SetBoardStateType
-  setAlertMessage: GenericStringSetStateType
   movesHistory: MoveHistoryType[]
   setMoveHistory: SetMoveHistoryType
   capturedPieces: CapturedPiecesType
@@ -116,7 +115,6 @@ export type PromotionProps = {
   setKingInCheck: SetKingInCheckType
   setStalemate: SetStaleMateType
   setValidMoves: SetValidMovesType
-  setAlertMessage: GenericStringSetStateType
 }
 
 export type SquareInfoType = {

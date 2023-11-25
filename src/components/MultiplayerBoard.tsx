@@ -101,7 +101,6 @@ const MultiplayerBoard = () => {
     h8: { loc: [7, 7], piece: 'br1' },
   })
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w')
-  const [alertMessage, setAlertMessage] = useState('')
   const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([])
   const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({
     w: [],
@@ -232,7 +231,6 @@ const MultiplayerBoard = () => {
           setKingInCheck,
           setStaleMate,
           setValidMoves,
-          setAlertMessage,
           setOpenPromotionModal,
         )
       } else {
@@ -244,7 +242,6 @@ const MultiplayerBoard = () => {
           setCurrentPlayerColor,
           boardState,
           setBoardState,
-          setAlertMessage,
           movesHistory,
           setMovesHistory,
           capturedPieces,
@@ -292,7 +289,6 @@ const MultiplayerBoard = () => {
           setKingInCheck={setKingInCheck}
           setStalemate={setStaleMate}
           setValidMoves={setValidMoves}
-          setAlertMessage={setAlertMessage}
         />
       ) : (
         <div className="container">
@@ -330,7 +326,6 @@ const MultiplayerBoard = () => {
                         setColor={setCurrentPlayerColor}
                         currentBoard={boardState}
                         setBoardState={setBoardState}
-                        setAlertMessage={setAlertMessage}
                         movesHistory={movesHistory}
                         setMoveHistory={setMovesHistory}
                         capturedPieces={capturedPieces}

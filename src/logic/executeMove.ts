@@ -3,7 +3,6 @@ import {
   SetColorStateType,
   BoardState,
   SetBoardStateType,
-  GenericStringSetStateType,
   MoveHistoryType,
   SetMoveHistoryType,
   CapturedPiecesType,
@@ -43,8 +42,7 @@ export const evaluateOpponentKingAndNextTurn = (
   setStaleMate: SetStaleMateType,
   setValidMoves: SetValidMovesType,
   setMoveHistory: SetMoveHistoryType,
-  setColorState: SetColorStateType,
-  setAlertMessage: GenericStringSetStateType
+  setColorState: SetColorStateType
 ) => {
   let newFiftyMovesTracker: number
   if (shouldUpdateFiftyMovesTracker) {
@@ -99,8 +97,6 @@ export const evaluateOpponentKingAndNextTurn = (
   }
   setMoveHistory(updatedMovesHistory)
   setColorState(colorState === 'w' ? 'b' : 'w')
-  //This is going to be the fallback message if there are no other messages such as "Check!" etc
-  setAlertMessage('')
 }
 
 export const executeValidMove = (
@@ -111,7 +107,6 @@ export const executeValidMove = (
   setColorState: SetColorStateType,
   currentBoard: BoardState,
   setBoardState: SetBoardStateType,
-  setAlertMessage: GenericStringSetStateType,
   movesHistory: MoveHistoryType[],
   setMoveHistory: SetMoveHistoryType,
   capturedPieces: CapturedPiecesType,
@@ -300,7 +295,6 @@ export const executeValidMove = (
     setStaleMate,
     setValidMoves,
     setMoveHistory,
-    setColorState,
-    setAlertMessage
+    setColorState
   )
 }
