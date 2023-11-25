@@ -43,9 +43,7 @@ export const evaluateKingInCheck = (
     const ROOK_DIR =
       (dir[0] === 0 && [-1, 1].includes(dir[1])) ||
       (dir[1] === 0 && [-1, 1].includes(dir[0]))
-    const BISHOP_DIR =
-      (dir[0] === 1 && [-1, 1].includes(dir[1])) ||
-      (dir[1] === 1 && [-1, 1].includes(dir[0]))
+    const BISHOP_DIR = [-1, 1].includes(dir[1]) && [-1, 1].includes(dir[0])
     const PAWN_DIR = dir[1] === 1 && [-1, 1].includes(dir[0])
     const squaresAlongTheline: string[] = []
     for (let i = 1; i < 8; i++) {
@@ -142,9 +140,7 @@ const piecesAttackingMe = (
     const ROOK_DIR =
       (dir[0] === 0 && [-1, 1].includes(dir[1])) ||
       (dir[1] === 0 && [-1, 1].includes(dir[0]))
-    const BISHOP_DIR =
-      (dir[0] === 1 && [-1, 1].includes(dir[1])) ||
-      (dir[1] === 1 && [-1, 1].includes(dir[0]))
+    const BISHOP_DIR = [-1, 1].includes(dir[1]) && [-1, 1].includes(dir[0])
     const PAWN_CAPTURE_DIR = dir[1] === 1 && [-1, 1].includes(dir[0])
     const PAWN_BLOCK_DIR = dir[1] === 1 && dir[0] === 0
     for (let i = 1; i < 8; i++) {
@@ -284,7 +280,7 @@ export const validMovesWhenInCheck = (
     [-1, 1],
     [1, -1],
   ]
-
+  
   for (const dir of SURROUNDING_DIRECTIONS) {
     const [xCoord, yCoord] = boardState[kingSquare].loc
     const targXCoord = normalizedArithmetic(color, 'sum', xCoord, dir[0])

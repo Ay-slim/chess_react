@@ -26,7 +26,6 @@ const PromotionModal = (props: PromotionProps) => {
     setKingInCheck,
     setStalemate,
     setValidMoves,
-    setAlertMessage,
   } = props
   type PromotionPieceType = 'Bishop' | 'Knight' | 'Rook' | 'Queen'
   const pieces = ['Bishop', 'Knight', 'Rook', 'Queen']
@@ -50,15 +49,18 @@ const PromotionModal = (props: PromotionProps) => {
             key={index}
             className="prom-image-item"
             onClick={() => {
-              const opponentId = sessionStorage.getItem('opponentId')!
-              const opponentMoveMessage: WebSocketMessageType = {
-                srcSquareId: '',
-                targetSquareId: '',
-                pieceId: getPieceId(piece as PromotionPieceType), //BAD PRACTICE: pieceId here represents the first letter of the official to which the piece has been promoted. Everywhere else, it refers to the actual id of the piece that was moved which is being propagated to the opponent browser.
-                opponentId,
-                promotionSquaresInfo
+              const multiPlayerColor = sessionStorage.getItem('multiPlayerColor')
+              if (multiPlayerColor) {
+                const opponentId = sessionStorage.getItem('opponentId')!
+                const opponentMoveMessage: WebSocketMessageType = {
+                  srcSquareId: '',
+                  targetSquareId: '',
+                  pieceId: getPieceId(piece as PromotionPieceType), //BAD PRACTICE: pieceId here represents the first letter of the official to which the piece has been promoted. Everywhere else, it refers to the actual id of the piece that was moved which is being propagated to the opponent browser.
+                  opponentId,
+                  promotionSquaresInfo
+                }
+                socket.emit('validMove', opponentMoveMessage)
               }
-              socket.emit('validMove', opponentMoveMessage)
               onPromotionClick(
                 fiftyMovesTracker,
                 setFiftyMovesTracker,
@@ -81,13 +83,12 @@ const PromotionModal = (props: PromotionProps) => {
                 setKingInCheck,
                 setStalemate,
                 setValidMoves,
-                setAlertMessage,
                 setOpenPromotionModal
               )}
             }
           >
             <img
-              src={`${colorState}${getPieceId(
+              src={`${process.env.REACT_APP_BASE_URL}${colorState}${getPieceId(
                 piece as PromotionPieceType
               )}.png`}
               alt={piece}

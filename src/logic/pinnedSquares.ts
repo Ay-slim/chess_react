@@ -35,9 +35,7 @@ const pinnedSquares = (
     const ROOK_DIR =
       (dir[0] === 0 && [-1, 1].includes(dir[1])) ||
       (dir[1] === 0 && [-1, 1].includes(dir[0]))
-    const BISHOP_DIR =
-      (dir[0] === 1 && [-1, 1].includes(dir[1])) ||
-      (dir[1] === 1 && [-1, 1].includes(dir[0]))
+    const BISHOP_DIR = [-1, 1].includes(dir[1]) && [-1, 1].includes(dir[0])
     const restrictedValidMoveSquares = [] //Even when pinned, pieces like bishop, rook, queen, and pawn can still move along a restricted axis, this array holds those valid squares
     for (let i = 1; i < 8; i++) {
       const targXCoord = normalizedArithmetic(color, 'sum', xCoord, i * dir[0])

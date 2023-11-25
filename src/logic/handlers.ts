@@ -2,6 +2,7 @@ import React from 'react'
 import {
   BoardState,
   CapturedPiecesType,
+  CheckMateType,
   GenericStringSetStateType,
   KingCheckType,
   KingSquareType,
@@ -39,7 +40,8 @@ export const allowDrop = (ev: React.DragEvent) => {
   ev.preventDefault()
 }
 
-export const drag = (squareId: string) => (ev: React.DragEvent) => {
+export const drag = (squareId: string, setClickedSquare: GenericStringSetStateType) => (ev: React.DragEvent) => {
+  setClickedSquare(squareId)
   ev.dataTransfer.setData(
     'drag_info',
     JSON.stringify({
@@ -49,13 +51,92 @@ export const drag = (squareId: string) => (ev: React.DragEvent) => {
   )
 }
 
-export const drop =
-  (
+const validateMoveAndExecute = (
+  srcSquareId: string,
+  targetSquareId: string,
+  pieceId: string,
+  colorState: PlayerColor,
+  setColorState: SetColorStateType,
+  currentBoard: BoardState,
+  setBoardState: SetBoardStateType,
+  movesHistory: MoveHistoryType[],
+  setMoveHistory: SetMoveHistoryType,
+  capturedPieces: CapturedPiecesType,
+  setCapturedPiece: SetCapturedPieceType,
+  kingSquare: KingSquareType,
+  setKingSquare: SetKingSquareType,
+  kingInCheck: KingCheckType,
+  setKingInCheck: SetKingInCheckType,
+  setCheckMate: SetCheckMateType,
+  setStaleMate: SetStaleMateType,
+  validMoves: SourceSquareAndValidMovesType,
+  setValidMoves: SetValidMovesType,
+  occupiedSquares: OccupiedSquaresType,
+  setOccupiedSquares: SetOccupiedScaresType,
+  fiftyMovesTracker: number,
+  setFiftyMovesTracker: SetFiftyMovesTrackerType,
+  setOpenPromotionModal: SetOpenPromotionModalType,
+  setPromotionSquaresInfo: SetPromotionSquaresInfoType,
+  multiplayerColor: PlayerColor | null,
+  setClickedSquare: GenericStringSetStateType
+) => {
+  if (
+    moveValidityCheck(srcSquareId, targetSquareId, kingInCheck, validMoves)
+  ) {
+    const PROMOTION_RANK_MAP = { b: 0, w: 7 }
+    const isPromotionMove =
+      pieceId[1] === 'p' &&
+      currentBoard[targetSquareId].loc[1] === PROMOTION_RANK_MAP[colorState]
+    if (!isPromotionMove && multiplayerColor) {
+      const opponentId = sessionStorage.getItem('opponentId')!
+      const opponentMoveMessage: WebSocketMessageType = {
+        srcSquareId,
+        targetSquareId,
+        pieceId,
+        opponentId,
+      }
+      socket.emit('validMove', opponentMoveMessage)
+    }
+    executeValidMove(
+      srcSquareId,
+      targetSquareId,
+      pieceId,
+      colorState,
+      setColorState,
+      currentBoard,
+      setBoardState,
+      movesHistory,
+      setMoveHistory,
+      capturedPieces,
+      setCapturedPiece,
+      kingSquare,
+      setKingSquare,
+      setKingInCheck,
+      setCheckMate,
+      setStaleMate,
+      setValidMoves,
+      occupiedSquares,
+      setOccupiedSquares,
+      fiftyMovesTracker,
+      setFiftyMovesTracker,
+      setOpenPromotionModal,
+      setPromotionSquaresInfo,
+      isPromotionMove
+    )
+  }
+  setClickedSquare('')
+}
+
+export const clickSquare = (
     colorState: PlayerColor,
+    pieceId: string | undefined,
+    id: string,
+    clickedSquare: string,
+    setClickedSquare: GenericStringSetStateType,
+    multiPlayerColor: PlayerColor|null = null,
     setColorState: SetColorStateType,
     currentBoard: BoardState,
     setBoardState: SetBoardStateType,
-    setAlertMessage: GenericStringSetStateType,
     movesHistory: MoveHistoryType[],
     setMoveHistory: SetMoveHistoryType,
     capturedPieces: CapturedPiecesType,
@@ -73,7 +154,80 @@ export const drop =
     fiftyMovesTracker: number,
     setFiftyMovesTracker: SetFiftyMovesTrackerType,
     setOpenPromotionModal: SetOpenPromotionModalType,
-    setPromotionSquaresInfo: SetPromotionSquaresInfoType
+    setPromotionSquaresInfo: SetPromotionSquaresInfoType,
+    multiplayerColor: PlayerColor | null,
+    checkMate: CheckMateType,
+    staleMate: Boolean
+  ) => (event: React.MouseEvent<HTMLElement>) => {
+  const multiPlayerBoolean = multiPlayerColor ? multiPlayerColor === colorState : true //If multiplayer, ensure it's the player in this browser's turn
+  if (pieceId && pieceId[0] === colorState && multiPlayerBoolean) {
+    if (clickedSquare === id) {
+      setClickedSquare('')
+      return
+    }
+    if (!checkMate && !staleMate)
+      setClickedSquare(id)
+    return
+  }
+  if (multiPlayerBoolean && pieceId?.[0] !== colorState && clickedSquare) {
+    validateMoveAndExecute(
+      clickedSquare,
+      id,
+      currentBoard[clickedSquare].piece,
+      colorState,
+      setColorState,
+      currentBoard,
+      setBoardState,
+      movesHistory,
+      setMoveHistory,
+      capturedPieces,
+      setCapturedPiece,
+      kingSquare,
+      setKingSquare,
+      kingInCheck,
+      setKingInCheck,
+      setCheckMate,
+      setStaleMate,
+      validMoves,
+      setValidMoves,
+      occupiedSquares,
+      setOccupiedSquares,
+      fiftyMovesTracker,
+      setFiftyMovesTracker,
+      setOpenPromotionModal,
+      setPromotionSquaresInfo,
+      multiplayerColor,
+      setClickedSquare
+    )
+  }
+}
+
+export const drop =
+  (
+    colorState: PlayerColor,
+    setColorState: SetColorStateType,
+    currentBoard: BoardState,
+    setBoardState: SetBoardStateType,
+    movesHistory: MoveHistoryType[],
+    setMoveHistory: SetMoveHistoryType,
+    capturedPieces: CapturedPiecesType,
+    setCapturedPiece: SetCapturedPieceType,
+    kingSquare: KingSquareType,
+    setKingSquare: SetKingSquareType,
+    kingInCheck: KingCheckType,
+    setKingInCheck: SetKingInCheckType,
+    setCheckMate: SetCheckMateType,
+    setStaleMate: SetStaleMateType,
+    validMoves: SourceSquareAndValidMovesType,
+    setValidMoves: SetValidMovesType,
+    occupiedSquares: OccupiedSquaresType,
+    setOccupiedSquares: SetOccupiedScaresType,
+    fiftyMovesTracker: number,
+    setFiftyMovesTracker: SetFiftyMovesTrackerType,
+    setOpenPromotionModal: SetOpenPromotionModalType,
+    setPromotionSquaresInfo: SetPromotionSquaresInfoType,
+    multiplayerColor: PlayerColor | null,
+    setClickedSquare: GenericStringSetStateType
   ) =>
   (ev: React.DragEvent) => {
     ev.preventDefault()
@@ -81,53 +235,35 @@ export const drop =
       JSON.parse(ev.dataTransfer.getData('drag_info'))
     const targetSquareId = ev.currentTarget.id
 
-    if (
-      moveValidityCheck(srcSquareId, targetSquareId, kingInCheck, validMoves)
-    ) {
-      const PROMOTION_RANK_MAP = { b: 0, w: 7 }
-      const isPromotionMove =
-        pieceId[1] === 'p' &&
-        currentBoard[targetSquareId].loc[1] === PROMOTION_RANK_MAP[colorState]
-      if (!isPromotionMove) {
-        const opponentId = sessionStorage.getItem('opponentId')!
-        const opponentMoveMessage: WebSocketMessageType = {
-          srcSquareId,
-          targetSquareId,
-          pieceId,
-          opponentId,
-        }
-        socket.emit('validMove', opponentMoveMessage)
-      }
-      executeValidMove(
-        srcSquareId,
-        targetSquareId,
-        pieceId,
-        colorState,
-        setColorState,
-        currentBoard,
-        setBoardState,
-        setAlertMessage,
-        movesHistory,
-        setMoveHistory,
-        capturedPieces,
-        setCapturedPiece,
-        kingSquare,
-        setKingSquare,
-        setKingInCheck,
-        setCheckMate,
-        setStaleMate,
-        setValidMoves,
-        occupiedSquares,
-        setOccupiedSquares,
-        fiftyMovesTracker,
-        setFiftyMovesTracker,
-        setOpenPromotionModal,
-        setPromotionSquaresInfo,
-        isPromotionMove
-      )
-      return
-    }
-    setAlertMessage('Illegal move!')
+    validateMoveAndExecute(
+      srcSquareId,
+      targetSquareId,
+      pieceId,
+      colorState,
+      setColorState,
+      currentBoard,
+      setBoardState,
+      movesHistory,
+      setMoveHistory,
+      capturedPieces,
+      setCapturedPiece,
+      kingSquare,
+      setKingSquare,
+      kingInCheck,
+      setKingInCheck,
+      setCheckMate,
+      setStaleMate,
+      validMoves,
+      setValidMoves,
+      occupiedSquares,
+      setOccupiedSquares,
+      fiftyMovesTracker,
+      setFiftyMovesTracker,
+      setOpenPromotionModal,
+      setPromotionSquaresInfo,
+      multiplayerColor,
+      setClickedSquare
+    )
   }
 
 export const onPromotionClick = (
@@ -152,7 +288,6 @@ export const onPromotionClick = (
   setKingInCheck: SetKingInCheckType,
   setStaleMate: SetStaleMateType,
   setValidMoves: SetValidMovesType,
-  setAlertMessage: GenericStringSetStateType,
   setOpenPromotionModal: SetOpenPromotionModalType
 ) => {
   const newPieceCount = promotedPiecesTracker[pieceId] + 1
@@ -224,8 +359,7 @@ export const onPromotionClick = (
     setStaleMate,
     setValidMoves,
     setMoveHistory,
-    setColor,
-    setAlertMessage
+    setColor
   )
   setOpenPromotionModal(false)
 }

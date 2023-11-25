@@ -45,6 +45,10 @@ export type GenericStringSetStateType = React.Dispatch<
   React.SetStateAction<string>
 >
 
+export type GenericBooleanSetStateType = React.Dispatch<
+  React.SetStateAction<boolean>
+>
+
 export type PlayerColor = 'w' | 'b'
 export type PieceValidityTypes = 'n' | 'r' | 'b' | 'q'
 export type BoardNumbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
@@ -60,7 +64,6 @@ export type SquareProps = {
   setColor: SetColorStateType
   currentBoard: BoardState
   setBoardState: SetBoardStateType
-  setAlertMessage: GenericStringSetStateType
   movesHistory: MoveHistoryType[]
   setMoveHistory: SetMoveHistoryType
   capturedPieces: CapturedPiecesType
@@ -81,6 +84,8 @@ export type SquareProps = {
   setFiftyMovesTracker: SetFiftyMovesTrackerType
   setOpenPromotionModal: SetOpenPromotionModalType
   setPromotionSquaresInfo: SetPromotionSquaresInfoType
+  clickedSquare: string
+  setClickedSquare: GenericStringSetStateType
 }
 
 export type PieceProps = {
@@ -89,6 +94,7 @@ export type PieceProps = {
   squareId: string
   checkMate: CheckMateType
   staleMate: Boolean
+  setClickedSquare: GenericStringSetStateType
 }
 
 export type PromotionProps = {
@@ -113,7 +119,6 @@ export type PromotionProps = {
   setKingInCheck: SetKingInCheckType
   setStalemate: SetStaleMateType
   setValidMoves: SetValidMovesType
-  setAlertMessage: GenericStringSetStateType
 }
 
 export type SquareInfoType = {
@@ -187,3 +192,7 @@ export type WebSocketMessageType = {
 }
 
 export type PromotedOfficialsType = 'b' | 'n' | 'q' | 'r'
+
+export type CapturedPiecesContainerType = {
+  capturedPieces: string[]
+}

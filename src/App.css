@@ -5,21 +5,65 @@
 }
 
 .container {
-  padding-top: 140px;
+  padding-top: 5px;
 }
 .board {
   border: 2px solid;
-  margin: auto;
-  width: 25%;
+  margin: 10px auto;
 }
+.info {
+  margin: auto;
+  display: flex;
+  font-size: 25px;
+  justify-content: center;
+  border: 1px solid;
+  border-color: lightgrey;
+  background-color: lightgrey;
+  width: 594px;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.resignButton {
+  position: relative;
+  flex: 20%;
+  margin: auto 4px;
+  height: 40px;
+}
+
+.resignButton:hover {
+  background-color: lightcoral;
+}
+
+.resignButton:disabled {
+  background-color: lightgrey;
+}
+
+.soundButton {
+  position: relative;
+  flex: 20%;
+  margin: auto 2px;
+  height: 40px;
+}
+
+.soundButtonOn {
+  background-color: lightgreen;
+  border: solid 1px;
+  border-radius: 2px;
+}
+
+.soundButton:disabled {
+  background-color: lightgrey;
+}
+
+.info p {
+  flex: 60%;
+}
+
 .turn {
-  margin: auto;
-  width: 25%;
+  flex: 50%;
 }
-.alert {
-  margin: auto;
-  width: 25%;
-}
+
 th {
   width: 40px;
   height: 40px;
@@ -56,7 +100,10 @@ th {
 .h4,
 .h6,
 .h8 {
-  background-color: brown;
+  background-color: #C19A6B;
+  width: 70px;
+  height: 70px;
+  position: relative;
 }
 .b1,
 .b3,
@@ -91,10 +138,74 @@ th {
 .g6,
 .g8 {
   background-color: white;
+  width: 70px;
+  height: 70px;
+  position: relative;
 }
 .board-image {
-  width: 35px;
-  height: 35px;
+  width: 60px;
+  height: 60px;
+}
+
+.alphabetLabel {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  transform: translate(-50%, 50%);
+  font-size: 10px;
+  color: black;
+}
+
+.numberLabel {
+  position: absolute;
+  top: 0px;
+  left: 10px;
+  transform: translate(-50%, 50%);
+  font-size: 10px;
+  color: black;
+}
+
+.eligibilityCircle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  background-color: darkcyan;
+  z-index: 5;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%); 
+}
+
+.capturedPieces {
+  display: flex;
+  max-width: 40%;
+  height: 50px;
+  margin: auto;
+  flex-flow: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.capturedPieces img {
+  width: 40px;
+  height: 40px;
+}
+
+.kingAttack {
+  background-color: red;
+}
+
+.clickKingInCheck {
+  background-color: #FF6347;
+}
+
+.clickedSquare {
+  background-color: darkolivegreen;
+}
+
+.lastMoveMarker {
+  background-color: darkseagreen;
 }
 
 /* PromotionModal.css */

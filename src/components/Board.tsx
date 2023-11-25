@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Square from './Square'
 import { allowDrop } from '../logic/handlers'
 import {
@@ -16,8 +16,12 @@ import {
 } from '../types'
 import '../App.css'
 import PromotionModal from './PromotionModal'
+import CapturedPiecesContainer from './CapturedPiecesContainer'
+import useSound from 'use-sound'
+import { toggleSound } from '../logic/utils'
 
 const Board = () => {
+  localStorage.clear()
   const [boardState, setBoardState] = useState<BoardState>({
     a1: { loc: [0, 0], piece: 'wr2' },
     b1: { loc: [1, 0], piece: 'wn2' },
@@ -85,7 +89,6 @@ const Board = () => {
     h8: { loc: [7, 7], piece: 'br1' },
   })
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w')
-  const [alertMessage, setAlertMessage] = useState('')
   const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([])
   const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({
     w: [],
@@ -164,6 +167,24 @@ const Board = () => {
     useState<PromotionSquaresInfoType>({ src: '', dest: '' })
   const [promotedPiecesTracker, setPromotedPiecesTracker] =
     useState<PromotedPiecesTrackerType>({ q: 1, r: 2, b: 2, n: 2 })
+  const [clickedSquare, setClickedSquare] = useState<string>('')
+  const [soundOn, setSoundOn] = useState<boolean>(true)
+  const soundHandler = toggleSound(soundOn, setSoundOn)
+  //https://www.chess.com/forum/view/general/chessboard-sound-files
+  const [playMoveSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
+  const [playNotificationSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3')
+
+  useEffect(() => {
+    if (movesHistory.length && soundOn) {
+      if (kingInCheck.color || staleMate || checkMate) {
+        playNotificationSound()
+      } else {
+        playMoveSound()
+      }   
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [occupiedSquares])
+
   return (
     <div>
       {openPromotionModal ? (
@@ -189,45 +210,26 @@ const Board = () => {
           setKingInCheck={setKingInCheck}
           setStalemate={setStaleMate}
           setValidMoves={setValidMoves}
-          setAlertMessage={setAlertMessage}
         />
-      ) : (
+      ) : ( 
         <div className="container">
-          {!checkMate && !staleMate ? (
-            <div className="turn">
-              <p>
-                Current player turn:{' '}
+            <div className="info">
+              {!checkMate && !staleMate ? (
+                <p>
                 <strong>{`${
-                  currentPlayerColor === 'w' ? 'White' : 'Black'
-                }`}</strong>
+                  currentPlayerColor === 'w' ? "White's " : "Black's "
+                }turn`}</strong>
               </p>
-              <p>
-                |:{' '}
-                <strong style={{ color: 'red' }}>
-                  {kingInCheck?.color
-                    ? `Check! ${
-                        kingInCheck.color === 'w' ? 'White' : 'Black'
-                      } king is under attack!`
-                    : ''}
+              ): (
+                <p>
+                <strong>
+                  {staleMate ? 'Draw!' : `Checkmate!`}
                 </strong>
               </p>
-              <p>
-                |: <strong style={{ color: 'red' }}>{alertMessage}</strong>
-              </p>
+              )}
+              <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
             </div>
-          ) : (
-            <div className="turn">
-              <p>
-                <strong style={{ color: 'red' }}>
-                  {staleMate
-                    ? `Stalemate! Game ends in a draw.`
-                    : `Checkmate! ${
-                        checkMate === 'w' ? 'White' : 'Black'
-                      } wins`}
-                </strong>
-              </p>
-            </div>
-          )}
+          <CapturedPiecesContainer capturedPieces={capturedPieces.b}/>
           <table className="board">
             <tbody>
               {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
@@ -244,7 +246,6 @@ const Board = () => {
                         setColor={setCurrentPlayerColor}
                         currentBoard={boardState}
                         setBoardState={setBoardState}
-                        setAlertMessage={setAlertMessage}
                         movesHistory={movesHistory}
                         setMoveHistory={setMovesHistory}
                         capturedPieces={capturedPieces}
@@ -265,6 +266,8 @@ const Board = () => {
                         setFiftyMovesTracker={setFiftyMovesTracker}
                         setOpenPromotionModal={setOpenPromotionModal}
                         setPromotionSquaresInfo={setPromotionSquaresInfo}
+                        clickedSquare={clickedSquare}
+                        setClickedSquare={setClickedSquare}
                       />
                     )
                   })}
@@ -272,6 +275,7 @@ const Board = () => {
               ))}
             </tbody>
           </table>
+          <CapturedPiecesContainer capturedPieces={capturedPieces.w}/>
         </div>
       )}
     </div>

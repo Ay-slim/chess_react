@@ -19,8 +19,10 @@ import {
 import '../App.css'
 import PromotionModal from './PromotionModal'
 import { executeValidMove } from '../logic/executeMove'
-import { decideCheckmate, decideTurn, socket } from '../logic/utils'
+import { decideCheckmate, decideTurn, resignGame, socket, toggleSound } from '../logic/utils'
 import { useParams } from 'react-router-dom'
+import CapturedPiecesContainer from './CapturedPiecesContainer'
+import useSound from 'use-sound'
 
 const MultiplayerBoard = () => {
   const { gameIds } = useParams()
@@ -98,7 +100,6 @@ const MultiplayerBoard = () => {
     h8: { loc: [7, 7], piece: 'br1' },
   })
   const [currentPlayerColor, setCurrentPlayerColor] = useState<PlayerColor>('w')
-  const [alertMessage, setAlertMessage] = useState('')
   const [movesHistory, setMovesHistory] = useState<MoveHistoryType[]>([])
   const [capturedPieces, setCapturedPiece] = useState<CapturedPiecesType>({
     w: [],
@@ -187,6 +188,25 @@ const MultiplayerBoard = () => {
     pieceId: '',
     opponentId: '',
   })
+  const [clickedSquare, setClickedSquare] = useState<string>('')
+  const [resign, setResign] = useState<PlayerColor|null>(null)
+  const handleResign = resignGame(setCheckMate, setResign, multiPlayerColor as PlayerColor)
+  const [soundOn, setSoundOn] = useState<boolean>(true)
+  const soundHandler = toggleSound(soundOn, setSoundOn)
+  //https://www.chess.com/forum/view/general/chessboard-sound-files
+  const [playMoveSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
+  const [playNotificationSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3')
+
+  useEffect(() => {
+    if (movesHistory.length && soundOn) {
+      if (kingInCheck.color || staleMate || checkMate) {
+        playNotificationSound()
+      } else {
+        playMoveSound()
+      }   
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [occupiedSquares])
 
   socket.on(browserUuid, (opponentMove) => {
     setWebSocketMessage(opponentMove)
@@ -220,7 +240,6 @@ const MultiplayerBoard = () => {
           setKingInCheck,
           setStaleMate,
           setValidMoves,
-          setAlertMessage,
           setOpenPromotionModal,
         )
       } else {
@@ -232,7 +251,6 @@ const MultiplayerBoard = () => {
           setCurrentPlayerColor,
           boardState,
           setBoardState,
-          setAlertMessage,
           movesHistory,
           setMovesHistory,
           capturedPieces,
@@ -254,6 +272,12 @@ const MultiplayerBoard = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webSocketMessage])
+
+  socket.on(`${browserUuid}-resignation`, () => {
+    const quitter = multiPlayerColor === 'w' ? 'b' : 'w'
+    setResign(quitter)
+    setCheckMate(multiPlayerColor as PlayerColor)
+  })
 
   return (
     <div>
@@ -280,40 +304,25 @@ const MultiplayerBoard = () => {
           setKingInCheck={setKingInCheck}
           setStalemate={setStaleMate}
           setValidMoves={setValidMoves}
-          setAlertMessage={setAlertMessage}
         />
       ) : (
         <div className="container">
-          {!checkMate && !staleMate ? (
-            <div className="turn">
+          <div className="info">
+            {!checkMate && !staleMate ? (
               <p>
-                <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
-              </p>
+              <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
+            </p>
+            ): (
               <p>
-                |:{' '}
-                <strong style={{ color: 'red' }}>
-                  {kingInCheck?.color
-                    ? `Check! ${
-                        kingInCheck.color === 'w' ? 'White' : 'Black'
-                      } king is under attack!`
-                    : ''}
-                </strong>
-              </p>
-              <p>
-                |: <strong style={{ color: 'red' }}>{alertMessage}</strong>
-              </p>
-            </div>
-          ) : (
-            <div className="turn">
-              <p>
-                <strong style={{ color: 'red' }}>
-                  {staleMate
-                    ? `Stalemate! Game ends in a draw.`
-                    : decideCheckmate(multiPlayerColor as PlayerColor, checkMate!)}
-                </strong>
-              </p>
-            </div>
-          )}
+              <strong>
+                {staleMate ? `Draw!`: decideCheckmate(multiPlayerColor as PlayerColor, checkMate!, resign!)}
+              </strong>
+            </p>
+            )}
+            <button className='resignButton' onClick={handleResign} disabled={multiPlayerColor !== currentPlayerColor || !!checkMate || !!staleMate}>RESIGN</button>
+            <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
+          </div>
+          <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['w'] : capturedPieces['b']}/>
           <table className="board">
             <tbody>
               {ranks.map((row) => (
@@ -330,7 +339,6 @@ const MultiplayerBoard = () => {
                         setColor={setCurrentPlayerColor}
                         currentBoard={boardState}
                         setBoardState={setBoardState}
-                        setAlertMessage={setAlertMessage}
                         movesHistory={movesHistory}
                         setMoveHistory={setMovesHistory}
                         capturedPieces={capturedPieces}
@@ -351,6 +359,8 @@ const MultiplayerBoard = () => {
                         setFiftyMovesTracker={setFiftyMovesTracker}
                         setOpenPromotionModal={setOpenPromotionModal}
                         setPromotionSquaresInfo={setPromotionSquaresInfo}
+                        clickedSquare={clickedSquare}
+                        setClickedSquare={setClickedSquare}
                       />
                     )
                   })}
@@ -358,6 +368,7 @@ const MultiplayerBoard = () => {
               ))}
             </tbody>
           </table>
+          <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['b'] : capturedPieces['w']}/>
         </div>
       )}
     </div>

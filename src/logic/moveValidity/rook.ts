@@ -15,7 +15,7 @@ const validSquares = (
   const [xCoord, yCoord] = boardState[squareId].loc
 
   //Compute all allowed squares across the 4 directions the rook can move
-
+  
   //+x direction
   for (let dxRight = 1; dxRight < 8; dxRight++) {
     const xCoordRight = normalizedArithmetic(color, 'sum', xCoord, dxRight)
@@ -40,7 +40,14 @@ const validSquares = (
     }
     if (targetPiece[0] !== color) {
       //Enemy piece, Rook can capture, and no need to keep checking down this path. Our watch is ended
-      rookThreats.push(targetSquare)
+      rookThreats.push(targetSquare)        
+      if (targetPiece[1] === 'k') {
+          const xCoordKingExtraRight = normalizedArithmetic(color, 'sum', xCoord, dxRight + 1)
+          if (isValidBoardCoordinates(xCoordKingExtraRight, yCoord)) {
+            const extraKingSquare = INVERTED_SQUARES[`${xCoordKingExtraRight as BoardNumbers},${yCoord}`]
+            rookThreats.push(extraKingSquare)
+          }
+        }
       break
     }
   }
@@ -60,13 +67,20 @@ const validSquares = (
     }
     if (targetPiece[0] === color) {
       if (allThreatenedSquares) {
-        //We are interested in getting all the squares this piece attacks or protects, so color doesn't matter here. All lives matter, or so they say
+                //We are interested in getting all the squares this piece attacks or protects, so color doesn't matter here. All lives matter, or so they say
         rookThreats.push(targetSquare)
       }
       break
     }
     if (targetPiece[0] !== color) {
-      rookThreats.push(targetSquare)
+            rookThreats.push(targetSquare)
+      if (targetPiece[1] === 'k') {
+        const xCoordKingExtraLeft = normalizedArithmetic(color, 'diff', xCoord, dxLeft + 1)
+        if (isValidBoardCoordinates(xCoordKingExtraLeft, yCoord)) {
+          const extraKingSquare = INVERTED_SQUARES[`${xCoordKingExtraLeft as BoardNumbers},${yCoord}`]
+          rookThreats.push(extraKingSquare)
+        }
+      }
       break
     }
   }
@@ -93,6 +107,13 @@ const validSquares = (
     }
     if (targetPiece[0] !== color) {
       rookThreats.push(targetSquare)
+      if (targetPiece[1] === 'k') {
+        const yCoordKingExtraUp = normalizedArithmetic(color, 'sum', yCoord, dyUp + 1)
+        if (isValidBoardCoordinates(xCoord, yCoordKingExtraUp)) {
+          const extraKingSquare = INVERTED_SQUARES[`${xCoord},${yCoordKingExtraUp as BoardNumbers}`]
+          rookThreats.push(extraKingSquare)
+        }
+      }
       break
     }
   }
@@ -111,18 +132,25 @@ const validSquares = (
       continue
     }
     if (targetPiece[0] === color) {
-      if (allThreatenedSquares) {
+            if (allThreatenedSquares) {
         //We are interested in getting all the squares this piece attacks or protects, so color doesn't matter here. All lives matter, or so they say
         rookThreats.push(targetSquare)
       }
       break
     }
     if (targetPiece[0] !== color) {
-      rookThreats.push(targetSquare)
+            rookThreats.push(targetSquare)
+      if (targetPiece[1] === 'k') {
+        const yCoordKingExtraDown = normalizedArithmetic(color, 'diff', yCoord, dyDown + 1)
+        if (isValidBoardCoordinates(xCoord, yCoordKingExtraDown)) {
+          const extraKingSquare = INVERTED_SQUARES[`${xCoord},${yCoordKingExtraDown as BoardNumbers}`]
+          rookThreats.push(extraKingSquare)
+        }
+      }
       break
     }
   }
-
+  
   return rookThreats
 }
 
