@@ -13,9 +13,53 @@
 }
 .info {
   margin: auto;
+  display: flex;
   font-size: 25px;
-  text-align: center;
+  justify-content: center;
+  border: 1px solid;
+  border-color: lightgrey;
+  background-color: lightgrey;
+  width: 594px;
+  padding: 2px;
+  border-radius: 4px;
 }
+
+.resignButton {
+  position: relative;
+  flex: 20%;
+  margin: auto 4px;
+  height: 40px;
+}
+
+.resignButton:hover {
+  background-color: lightcoral;
+}
+
+.resignButton:disabled {
+  background-color: lightgrey;
+}
+
+.soundButton {
+  position: relative;
+  flex: 20%;
+  margin: auto 2px;
+  height: 40px;
+}
+
+.soundButtonOn {
+  background-color: lightgreen;
+  border: solid 1px;
+  border-radius: 2px;
+}
+
+.soundButton:disabled {
+  background-color: lightgrey;
+}
+
+.info p {
+  flex: 60%;
+}
+
 .turn {
   flex: 50%;
 }
@@ -160,7 +204,7 @@ th {
   background-color: darkolivegreen;
 }
 
-.lastMoveDest {
+.lastMoveMarker {
   background-color: darkseagreen;
 }
 
