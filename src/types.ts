@@ -45,6 +45,10 @@ export type GenericStringSetStateType = React.Dispatch<
   React.SetStateAction<string>
 >
 
+export type GenericBooleanSetStateType = React.Dispatch<
+  React.SetStateAction<boolean>
+>
+
 export type PlayerColor = 'w' | 'b'
 export type PieceValidityTypes = 'n' | 'r' | 'b' | 'q'
 export type BoardNumbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
