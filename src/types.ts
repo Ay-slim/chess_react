@@ -190,3 +190,7 @@ export type WebSocketMessageType = {
 }
 
 export type PromotedOfficialsType = 'b' | 'n' | 'q' | 'r'
+
+export type CapturedPiecesContainerType = {
+  capturedPieces: string[]
+}

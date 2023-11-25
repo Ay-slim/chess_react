@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Square from './Square'
 import { allowDrop } from '../logic/handlers'
 import {
@@ -16,6 +16,9 @@ import {
 } from '../types'
 import '../App.css'
 import PromotionModal from './PromotionModal'
+import CapturedPiecesContainer from './CapturedPiecesContainer'
+import useSound from 'use-sound'
+const moveSound = require('../sounds/moveSound.mp3')
 
 const Board = () => {
   const [boardState, setBoardState] = useState<BoardState>({
@@ -165,6 +168,14 @@ const Board = () => {
   const [promotedPiecesTracker, setPromotedPiecesTracker] =
     useState<PromotedPiecesTrackerType>({ q: 1, r: 2, b: 2, n: 2 })
   const [clickedSquare, setClickedSquare] = useState<string>('')
+  const [play] = useSound(moveSound);
+
+  useEffect(() => {
+    if (movesHistory.length)
+      play()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [occupiedSquares])
+
   return (
     <div>
       {openPromotionModal ? (
@@ -192,7 +203,7 @@ const Board = () => {
           setValidMoves={setValidMoves}
           setAlertMessage={setAlertMessage}
         />
-      ) : (
+      ) : ( 
         <div className="container">
           {!checkMate && !staleMate ? (
             <div className="info">
@@ -215,6 +226,7 @@ const Board = () => {
               </p>
             </div>
           )}
+          <CapturedPiecesContainer capturedPieces={capturedPieces.b}/>
           <table className="board">
             <tbody>
               {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
@@ -261,6 +273,7 @@ const Board = () => {
               ))}
             </tbody>
           </table>
+          <CapturedPiecesContainer capturedPieces={capturedPieces.w}/>
         </div>
       )}
     </div>

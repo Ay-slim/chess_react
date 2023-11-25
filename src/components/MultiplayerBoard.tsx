@@ -21,6 +21,9 @@ import PromotionModal from './PromotionModal'
 import { executeValidMove } from '../logic/executeMove'
 import { decideCheckmate, decideTurn, socket } from '../logic/utils'
 import { useParams } from 'react-router-dom'
+import CapturedPiecesContainer from './CapturedPiecesContainer'
+import useSound from 'use-sound'
+const moveSound = require('../sounds/moveSound.mp3')
 
 const MultiplayerBoard = () => {
   const { gameIds } = useParams()
@@ -193,6 +196,14 @@ const MultiplayerBoard = () => {
     setWebSocketMessage(opponentMove)
   })
 
+  const [play] = useSound(moveSound);
+
+  useEffect(() => {
+    if (movesHistory.length)
+      play()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [occupiedSquares])
+
   useEffect(()=> {
     const {
       srcSquareId, targetSquareId, pieceId, opponentId
@@ -302,6 +313,7 @@ const MultiplayerBoard = () => {
               </p>
             </div>
           )}
+          <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['w'] : capturedPieces['b']}/>
           <table className="board">
             <tbody>
               {ranks.map((row) => (
@@ -348,6 +360,7 @@ const MultiplayerBoard = () => {
               ))}
             </tbody>
           </table>
+          <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['b'] : capturedPieces['w']}/>
         </div>
       )}
     </div>

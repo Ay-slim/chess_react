@@ -5,11 +5,11 @@
 }
 
 .container {
-  padding-top: 20px;
+  padding-top: 5px;
 }
 .board {
   border: 2px solid;
-  margin: auto;
+  margin: 10px auto;
 }
 .info {
   margin: auto;
@@ -133,6 +133,20 @@ th {
   transform: translate(-50%, -50%); 
 }
 
+.capturedPieces {
+  display: flex;
+  max-width: 40%;
+  height: 50px;
+  margin: auto;
+  flex-flow: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.capturedPieces img {
+  width: 40px;
+  height: 40px;
+}
 
 .kingAttack {
   background-color: red;
