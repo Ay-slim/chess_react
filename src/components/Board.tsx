@@ -18,9 +18,10 @@ import '../App.css'
 import PromotionModal from './PromotionModal'
 import CapturedPiecesContainer from './CapturedPiecesContainer'
 import useSound from 'use-sound'
-const moveSound = require('../sounds/moveSound.mp3')
+import { toggleSound } from '../logic/utils'
 
 const Board = () => {
+  localStorage.clear()
   const [boardState, setBoardState] = useState<BoardState>({
     a1: { loc: [0, 0], piece: 'wr2' },
     b1: { loc: [1, 0], piece: 'wn2' },
@@ -167,11 +168,20 @@ const Board = () => {
   const [promotedPiecesTracker, setPromotedPiecesTracker] =
     useState<PromotedPiecesTrackerType>({ q: 1, r: 2, b: 2, n: 2 })
   const [clickedSquare, setClickedSquare] = useState<string>('')
-  const [play] = useSound(moveSound);
+  const [soundOn, setSoundOn] = useState<boolean>(true)
+  const soundHandler = toggleSound(soundOn, setSoundOn)
+  //https://www.chess.com/forum/view/general/chessboard-sound-files
+  const [playMoveSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
+  const [playNotificationSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3')
 
   useEffect(() => {
-    if (movesHistory.length)
-      play()
+    if (movesHistory.length && soundOn) {
+      if (kingInCheck.color || staleMate || checkMate) {
+        playNotificationSound()
+      } else {
+        playMoveSound()
+      }   
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [occupiedSquares])
 
@@ -203,27 +213,22 @@ const Board = () => {
         />
       ) : ( 
         <div className="container">
-          {!checkMate && !staleMate ? (
             <div className="info">
-              <p>
+              {!checkMate && !staleMate ? (
+                <p>
                 <strong>{`${
                   currentPlayerColor === 'w' ? "White's " : "Black's "
                 }turn`}</strong>
               </p>
-            </div>
-          ) : (
-            <div className="info">
-              <p>
-                <strong style={{ color: 'red' }}>
-                  {staleMate
-                    ? `Stalemate! Game ends in a draw.`
-                    : `Checkmate! ${
-                        checkMate === 'w' ? 'White' : 'Black'
-                      } wins`}
+              ): (
+                <p>
+                <strong>
+                  {staleMate ? 'Draw!' : `Checkmate!`}
                 </strong>
               </p>
+              )}
+              <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
             </div>
-          )}
           <CapturedPiecesContainer capturedPieces={capturedPieces.b}/>
           <table className="board">
             <tbody>

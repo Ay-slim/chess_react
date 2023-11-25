@@ -1,4 +1,4 @@
-import { OperationType, PlayerColor } from '../types'
+import { GenericBooleanSetStateType, OperationType, PlayerColor, SetCheckMateType } from '../types'
 import { io } from 'socket.io-client'
 
 /**
@@ -136,10 +136,31 @@ export const decideTurn = (playerColor: PlayerColor, colorState: PlayerColor) =>
   return "White's turn"
 }
 
-export const decideCheckmate = (playerColor: PlayerColor, checkMateColor: PlayerColor) => {
-  if (playerColor === checkMateColor)
-    return 'Checkmate! You win.'
-  if (playerColor === 'w')
-    return "Checkmate! Black wins (better luck next time)"
-  return "Checkmate! White wins (better luck next time)"
+export const decideCheckmate = (playerColor: PlayerColor, checkMateColor: PlayerColor, resignColor: PlayerColor) => {
+  const opponentColor = playerColor === 'w' ? 'b' : 'w'
+  const colorMap = {
+    'w': 'White',
+    'b': 'Black'
+  }
+  if (resignColor) {
+    if (resignColor === playerColor)
+      return `You resigned. ${colorMap[opponentColor]} wins.`
+    return `${colorMap[opponentColor]} resigned. You win!`
+  } else {
+    if (playerColor === checkMateColor)
+      return 'Checkmate! You win.'
+    return `${colorMap[opponentColor]} wins.`
+  }
+
+}
+
+export const toggleSound = (soundOn: boolean, setSoundOn: GenericBooleanSetStateType) => () => {
+  soundOn ? setSoundOn(false) : setSoundOn(true)
+}
+
+export const resignGame = (setCheckMate: SetCheckMateType, setResign: SetCheckMateType, quitter: PlayerColor) => () => {
+  setResign(quitter)
+  setCheckMate(quitter === 'w' ? 'b' : 'w') //WRONGGGG. This is basically piggybacking on using Checkmate to determine game end(because the checkMate state is used in multiple places to signify game end). Need a proper frame work that evaluates game end as the truthiness of checkmate, stalemate or resign
+  const opponentId = sessionStorage.getItem('opponentId')
+  socket.emit('resignation', opponentId)
 }
