@@ -33,7 +33,9 @@ const Square = (props: SquareProps) => {
     setOpenPromotionModal,
     setPromotionSquaresInfo,
     clickedSquare,
-    setClickedSquare
+    setClickedSquare,
+    movesNotation,
+    setMovesNotation
   } = props
 
   const multiPlayerColor = sessionStorage.getItem('multiPlayerColor')
@@ -61,7 +63,9 @@ const Square = (props: SquareProps) => {
     setOpenPromotionModal,
     setPromotionSquaresInfo,
     multiPlayerColor as PlayerColor,
-    setClickedSquare
+    setClickedSquare,
+    movesNotation,
+    setMovesNotation
   )
   const {
     srcSquare,
@@ -105,7 +109,9 @@ const Square = (props: SquareProps) => {
     setPromotionSquaresInfo,
     multiPlayerColor as PlayerColor,
     checkMate,
-    staleMate
+    staleMate,
+    movesNotation,
+    setMovesNotation
   )
   return (
     <th id={id} className={`${id} ${kingUnderAttack && hasBeenClicked ? "clickKingInCheck" : hasBeenClicked ? "clickedSquare" : ""} ${isLastMoveSrc ? "lastMoveMarker" : ""} ${isLastMoveDest ? "lastMoveMarker" : ""} ${kingUnderAttack ? "kingAttack" : ""}`} onDrop={handleDrop} onDragOver={onDragOver} onClick={handleClick}>
