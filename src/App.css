@@ -6,6 +6,7 @@
 
 .container {
   padding-top: 5px;
+  flex: 40%;
 }
 .board {
   border: 2px solid;
@@ -493,4 +494,82 @@ th {
   width: 25%;
   text-align: left;
   padding-left: 5px;
+}
+
+.fullBoardContainer {
+  position: relative;
+  display: flex;
+}
+
+.videoContainer {
+  position: relative;
+  flex: 40%;
+}
+
+.movesHistoryContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 594px;
+  max-height: 594px;
+  justify-content: flex-start;
+  margin: auto 10px;
+  flex: 20%;
+  border: solid 2px;
+  top: 45px;
+  text-align: center;
+}
+
+
+.nonTitleMovesHistoryItems {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: scroll;
+  font-size: 12px;
+  text-align: center;
+}
+
+.movesHistoryTitle {
+  position: sticky;
+  width: 100%;
+  top: 0px;
+  background-color: darkslategrey;
+  height: 40px;
+  text-align: center;
+  color: white;
+  vertical-align: middle;
+}
+
+.moveHistoryRow {
+  position: relative;
+  display: flex;
+  height: 30px;
+  color: white;
+  text-align: center;
+}
+
+.moveHistoryLabel {
+  flex: 10%;
+  background-color: darkslategray;
+  border: solid 1px;
+  border-color: white;
+  border-right: none;
+  border-bottom: none;
+  vertical-align: middle;
+}
+
+.moveHistoryButton {
+  flex: 45%;
+  background-color: darkslategray;
+  color: white;
+  border: solid 1px;
+  border-color: white;
+  border-right: none;
+  border-bottom: none;
+}
+
+.moveHistoryButton:disabled {
+  background-color: darkslategray;
 }
