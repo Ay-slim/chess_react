@@ -1,4 +1,5 @@
-import { GenericBooleanSetStateType, OperationType, PlayerColor, SetCheckMateType } from '../types'
+import { PlayOptions } from 'use-sound/dist/types'
+import { GenericBooleanSetStateType, MoveHistoryType, MovesNotationType, OperationType, PlayerColor, SetBoardStateType, SetCheckMateType, SetMovesNotationType, SetPostGameTrackerType } from '../types'
 import { io } from 'socket.io-client'
 
 /**
@@ -101,10 +102,10 @@ export const INVERTED_SQUARES = {
   '7,7': 'h8',
 }
 export const CASTLING_ROOKS_MAP = {
-  'w+ve': { rookId: 'wr1', rookSrc: 'h1', rookDest: 'f1' },
-  'w-ve': { rookId: 'wr2', rookSrc: 'a1', rookDest: 'd1' },
-  'b+ve': { rookId: 'br1', rookSrc: 'h8', rookDest: 'f8' },
-  'b-ve': { rookId: 'br2', rookSrc: 'a8', rookDest: 'd8' },
+  'w+ve': { rookId: 'wr1', rookSrc: 'h1', rookDest: 'f1', side: 'king' },
+  'w-ve': { rookId: 'wr2', rookSrc: 'a1', rookDest: 'd1', side: 'queen' },
+  'b+ve': { rookId: 'br1', rookSrc: 'h8', rookDest: 'f8', side: 'king' },
+  'b-ve': { rookId: 'br2', rookSrc: 'a8', rookDest: 'd8', side: 'queen' },
 }
 export const CASTLING_ROOKS_DICT = {
   'w+ve': 'wr1',
@@ -158,9 +159,42 @@ export const toggleSound = (soundOn: boolean, setSoundOn: GenericBooleanSetState
   soundOn ? setSoundOn(false) : setSoundOn(true)
 }
 
-export const resignGame = (setCheckMate: SetCheckMateType, setResign: SetCheckMateType, quitter: PlayerColor) => () => {
+export const resignGame = (
+  setCheckMate: SetCheckMateType,
+  setResign: SetCheckMateType,
+  quitter: PlayerColor,
+  notificationSound: (options?: PlayOptions | undefined) => void,
+  soundOn: boolean,
+  movesNotation: MovesNotationType[][],
+  setMovesNotation: SetMovesNotationType,
+  historyLength: number
+) => () => {
   setResign(quitter)
   setCheckMate(quitter === 'w' ? 'b' : 'w') //WRONGGGG. This is basically piggybacking on using Checkmate to determine game end(because the checkMate state is used in multiple places to signify game end). Need a proper frame work that evaluates game end as the truthiness of checkmate, stalemate or resign
+  
+  const resignNotation = quitter === 'w' ? '0-1' : '1-0'
+  updateMovesNotationState(resignNotation, movesNotation, setMovesNotation, historyLength)
+
+  if (soundOn)
+    notificationSound()
   const opponentId = sessionStorage.getItem('opponentId')
   socket.emit('resignation', opponentId)
+}
+
+export const updateMovesNotationState = (finalMoveNotation: string, movesNotation: MovesNotationType[][], setMovesNotation: SetMovesNotationType, movesHistoryLength: number) => {
+  const lastMoveArrayHasLen1 = movesNotation.length && movesNotation[movesNotation.length - 1].length === 1
+  const lastNotationArray = lastMoveArrayHasLen1 ? [...movesNotation[movesNotation.length - 1]] : []
+  lastNotationArray.push({
+    notation: finalMoveNotation,
+    tracker: movesHistoryLength - 1
+  })
+  const arraySegmentToSpreadIndex = lastMoveArrayHasLen1 ? movesNotation.length - 1 : movesNotation.length
+  setMovesNotation([...movesNotation.slice(0, arraySegmentToSpreadIndex), lastNotationArray])
+}
+
+export const handlePostGameClick = (setPostGameTracker: SetPostGameTrackerType, setBoardState: SetBoardStateType, postGameTracker: number | null, gameMovesHistory: MoveHistoryType[]) => {
+  const postGameValueToSet = postGameTracker === -1 ? null : postGameTracker
+  setPostGameTracker(postGameValueToSet)
+  if (postGameValueToSet)
+    setBoardState(gameMovesHistory[postGameValueToSet].boardAfter)
 }

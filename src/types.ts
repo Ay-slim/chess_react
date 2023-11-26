@@ -41,12 +41,19 @@ export type SetPromotedPiecesTrackerType = React.Dispatch<
 export type SetPromotionSquaresInfoType = React.Dispatch<
   React.SetStateAction<PromotionSquaresInfoType>
 >
+export type SetMovesNotationType = React.Dispatch<
+  React.SetStateAction<MovesNotationType[][]>
+>
 export type GenericStringSetStateType = React.Dispatch<
   React.SetStateAction<string>
 >
 
 export type GenericBooleanSetStateType = React.Dispatch<
   React.SetStateAction<boolean>
+>
+
+export type SetPostGameTrackerType = React.Dispatch<
+  React.SetStateAction<number | null>
 >
 
 export type PlayerColor = 'w' | 'b'
@@ -86,6 +93,9 @@ export type SquareProps = {
   setPromotionSquaresInfo: SetPromotionSquaresInfoType
   clickedSquare: string
   setClickedSquare: GenericStringSetStateType
+  movesNotation: MovesNotationType[][]
+  setMovesNotation: SetMovesNotationType
+  postGameTracker: number | null
 }
 
 export type PieceProps = {
@@ -119,6 +129,8 @@ export type PromotionProps = {
   setKingInCheck: SetKingInCheckType
   setStalemate: SetStaleMateType
   setValidMoves: SetValidMovesType
+  movesNotation: MovesNotationType[][]
+  setMovesNotation: SetMovesNotationType
 }
 
 export type SquareInfoType = {
@@ -135,6 +147,7 @@ export type MoveHistoryType = {
   destSquare: string
   piece: string
   boardBefore: BoardState
+  boardAfter: BoardState
   occupiedSquares: OccupiedSquaresType
 }
 
@@ -195,4 +208,18 @@ export type PromotedOfficialsType = 'b' | 'n' | 'q' | 'r'
 
 export type CapturedPiecesContainerType = {
   capturedPieces: string[]
+}
+
+export type MovesNotationType = {
+  notation: string;
+  tracker: number;
+}
+
+export type MovesHistoryPropType = {
+  moves: MovesNotationType[][]
+  stalemate: Boolean
+  checkmate: CheckMateType
+  setPostGameTracker: SetPostGameTrackerType
+  setBoardState: SetBoardStateType
+  gameMovesHistory: MoveHistoryType[]
 }

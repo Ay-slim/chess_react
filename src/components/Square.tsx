@@ -33,7 +33,10 @@ const Square = (props: SquareProps) => {
     setOpenPromotionModal,
     setPromotionSquaresInfo,
     clickedSquare,
-    setClickedSquare
+    setClickedSquare,
+    movesNotation,
+    setMovesNotation,
+    postGameTracker
   } = props
 
   const multiPlayerColor = sessionStorage.getItem('multiPlayerColor')
@@ -61,18 +64,20 @@ const Square = (props: SquareProps) => {
     setOpenPromotionModal,
     setPromotionSquaresInfo,
     multiPlayerColor as PlayerColor,
-    setClickedSquare
+    setClickedSquare,
+    movesNotation,
+    setMovesNotation
   )
   const {
     srcSquare,
     destSquare
-  } = movesHistory.length ? movesHistory[movesHistory.length - 1] : {srcSquare: 'null', destSquare: 'null'}
+  } = postGameTracker !== null ? movesHistory[postGameTracker] : movesHistory.length ? movesHistory[movesHistory.length - 1] : {srcSquare: 'null', destSquare: 'null'}
   const isLastMoveSrc = srcSquare === id
   const isLastMoveDest = destSquare === id
   const validMovesToCheck = kingInCheck?.color === currentColor ? kingInCheck.validCheckMoves?.[clickedSquare] : validMoves[clickedSquare]?.validSquares
   const isEligibleToMoveTo = validMovesToCheck?.includes(id)
   const hasBeenClicked = clickedSquare === id
-  const kingUnderAttack = pieceId?.[1] === 'k' && (kingInCheck?.color === pieceId?.[0] || checkMate === (pieceId?.[0] === 'w' ? 'b' : 'w'))
+  const kingUnderAttack = pieceId?.[1] === 'k' && (kingInCheck?.color === pieceId?.[0] || checkMate === (pieceId?.[0] === 'w' ? 'b' : 'w')) && (postGameTracker === null || postGameTracker === movesHistory.length - 1) //After attaching king in check and captured pieces to gameMovesHistory, remove the final and here and just do a direct or with the state in moves history
   const numberLabelCheck = multiPlayerColor === 'b' ? '8' : '1'
   const alphabetLabelCheck = multiPlayerColor === 'b' ? 'h' : 'a'
   const handleClick = clickSquare(
@@ -105,7 +110,9 @@ const Square = (props: SquareProps) => {
     setPromotionSquaresInfo,
     multiPlayerColor as PlayerColor,
     checkMate,
-    staleMate
+    staleMate,
+    movesNotation,
+    setMovesNotation
   )
   return (
     <th id={id} className={`${id} ${kingUnderAttack && hasBeenClicked ? "clickKingInCheck" : hasBeenClicked ? "clickedSquare" : ""} ${isLastMoveSrc ? "lastMoveMarker" : ""} ${isLastMoveDest ? "lastMoveMarker" : ""} ${kingUnderAttack ? "kingAttack" : ""}`} onDrop={handleDrop} onDragOver={onDragOver} onClick={handleClick}>

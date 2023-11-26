@@ -111,6 +111,7 @@ export const evaluateDraw = (
       destSquare: '',
       piece: '',
       boardBefore: newBoardState,
+      boardAfter: newBoardState,
       occupiedSquares: newOccupiedSquares,
     },
   ]
