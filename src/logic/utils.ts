@@ -186,7 +186,7 @@ export const updateMovesNotationState = (finalMoveNotation: string, movesNotatio
   const lastNotationArray = lastMoveArrayHasLen1 ? [...movesNotation[movesNotation.length - 1]] : []
   lastNotationArray.push({
     notation: finalMoveNotation,
-    tracker: movesHistoryLength
+    tracker: movesHistoryLength - 1
   })
   const arraySegmentToSpreadIndex = lastMoveArrayHasLen1 ? movesNotation.length - 1 : movesNotation.length
   setMovesNotation([...movesNotation.slice(0, arraySegmentToSpreadIndex), lastNotationArray])

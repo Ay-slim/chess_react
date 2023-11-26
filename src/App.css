@@ -539,7 +539,10 @@ th {
   height: 40px;
   text-align: center;
   color: white;
-  vertical-align: middle;
+}
+
+.movesHistoryTitle p {
+  padding-left: 20px;
 }
 
 .moveHistoryRow {
@@ -553,11 +556,10 @@ th {
 .moveHistoryLabel {
   flex: 10%;
   background-color: darkslategray;
-  border: solid 1px;
+  border-top: solid 1px;
   border-color: white;
-  border-right: none;
-  border-bottom: none;
-  vertical-align: middle;
+  padding: auto;
+  color: white;
 }
 
 .moveHistoryButton {
