@@ -358,6 +358,7 @@ export const onPromotionClick = (
     destSquare: targetSquareId,
     piece: oldPiece,
     boardBefore: currentBoard,
+    boardAfter: newBoardState,
     occupiedSquares,
   }
   const updatedMovesHistory = [...movesHistory, move]

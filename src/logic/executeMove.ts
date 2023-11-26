@@ -169,14 +169,6 @@ export const executeValidMove = (
     ...currentBoard[targetSquareId],
     piece: pieceId,
   }
-  const move: MoveHistoryType = {
-    srcSquare: srcSquareId,
-    destSquare: targetSquareId,
-    piece: pieceId,
-    boardBefore: currentBoard,
-    occupiedSquares,
-  }
-  const updatedMovesHistory = [...movesHistory, move]
 
   if (isPromotionMove) {
     setOpenPromotionModal(true)
@@ -295,6 +287,15 @@ export const executeValidMove = (
     updatedKingSquare = kingSquare
   }
   const shouldUpdateFiftyMovesTracker = pieceId[1] === 'p' || aPieceWasCaptured
+  const move: MoveHistoryType = {
+    srcSquare: srcSquareId,
+    destSquare: targetSquareId,
+    piece: pieceId,
+    boardBefore: currentBoard,
+    boardAfter: newBoardState,
+    occupiedSquares,
+  }
+  const updatedMovesHistory = [...movesHistory, move]
   moveNotation = isPromotionMove ? '' : moveNotation
   evaluateOpponentKingAndNextTurn(
     shouldUpdateFiftyMovesTracker,

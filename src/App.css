@@ -518,6 +518,15 @@ th {
   border-bottom: none;
 }
 
-.moveHistoryButton:disabled {
+.moveHistoryButton :disabled {
   background-color: darkslategray;
+}
+
+.moveHistoryButton:not(:disabled) {
+  background-color: lightgreen;
+  color: black
+}
+
+.moveHistoryButton:not(:disabled):hover {
+  background-color: darkseagreen;
 }

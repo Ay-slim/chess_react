@@ -175,6 +175,7 @@ const Board = () => {
   //https://www.chess.com/forum/view/general/chessboard-sound-files
   const [playMoveSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
   const [playNotificationSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3')
+  const [postGameTracker, setPostGameTracker] = useState<number | null>(null)
 
   useEffect(() => {
     if (movesHistory.length && soundOn) {
@@ -219,7 +220,7 @@ const Board = () => {
         />
       ) : (
         <div className="fullBoardContainer">
-          <MovesHistory moves={movesNotation}/>
+          <MovesHistory moves={movesNotation} stalemate={staleMate} checkmate={checkMate} setPostGameTracker={setPostGameTracker} setBoardState={setBoardState} gameMovesHistory={movesHistory}/>
           <div className="container">
               <div className="info">
                 {!checkMate && !staleMate ? (
@@ -278,6 +279,7 @@ const Board = () => {
                           setClickedSquare={setClickedSquare}
                           movesNotation={movesNotation}
                           setMovesNotation={setMovesNotation}
+                          postGameTracker={postGameTracker}
                         />
                       )
                     })}

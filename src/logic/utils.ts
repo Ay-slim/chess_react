@@ -1,5 +1,5 @@
 import { PlayOptions } from 'use-sound/dist/types'
-import { GenericBooleanSetStateType, MovesNotationType, OperationType, PlayerColor, SetCheckMateType, SetMovesNotationType } from '../types'
+import { GenericBooleanSetStateType, MoveHistoryType, MovesNotationType, OperationType, PlayerColor, SetBoardStateType, SetCheckMateType, SetMovesNotationType, SetPostGameTrackerType } from '../types'
 import { io } from 'socket.io-client'
 
 /**
@@ -190,4 +190,11 @@ export const updateMovesNotationState = (finalMoveNotation: string, movesNotatio
   })
   const arraySegmentToSpreadIndex = lastMoveArrayHasLen1 ? movesNotation.length - 1 : movesNotation.length
   setMovesNotation([...movesNotation.slice(0, arraySegmentToSpreadIndex), lastNotationArray])
+}
+
+export const handlePostGameClick = (setPostGameTracker: SetPostGameTrackerType, setBoardState: SetBoardStateType, postGameTracker: number | null, gameMovesHistory: MoveHistoryType[]) => {
+  const postGameValueToSet = postGameTracker === -1 ? null : postGameTracker
+  setPostGameTracker(postGameValueToSet)
+  if (postGameValueToSet)
+    setBoardState(gameMovesHistory[postGameValueToSet].boardAfter)
 }

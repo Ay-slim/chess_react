@@ -52,6 +52,10 @@ export type GenericBooleanSetStateType = React.Dispatch<
   React.SetStateAction<boolean>
 >
 
+export type SetPostGameTrackerType = React.Dispatch<
+  React.SetStateAction<number | null>
+>
+
 export type PlayerColor = 'w' | 'b'
 export type PieceValidityTypes = 'n' | 'r' | 'b' | 'q'
 export type BoardNumbers = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
@@ -91,6 +95,7 @@ export type SquareProps = {
   setClickedSquare: GenericStringSetStateType
   movesNotation: MovesNotationType[][]
   setMovesNotation: SetMovesNotationType
+  postGameTracker: number | null
 }
 
 export type PieceProps = {
@@ -142,6 +147,7 @@ export type MoveHistoryType = {
   destSquare: string
   piece: string
   boardBefore: BoardState
+  boardAfter: BoardState
   occupiedSquares: OccupiedSquaresType
 }
 
@@ -211,4 +217,9 @@ export type MovesNotationType = {
 
 export type MovesHistoryPropType = {
   moves: MovesNotationType[][]
+  stalemate: Boolean
+  checkmate: CheckMateType
+  setPostGameTracker: SetPostGameTrackerType
+  setBoardState: SetBoardStateType
+  gameMovesHistory: MoveHistoryType[]
 }
