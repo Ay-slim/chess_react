@@ -41,6 +41,9 @@ export type SetPromotedPiecesTrackerType = React.Dispatch<
 export type SetPromotionSquaresInfoType = React.Dispatch<
   React.SetStateAction<PromotionSquaresInfoType>
 >
+export type SetMovesNotationType = React.Dispatch<
+  React.SetStateAction<MovesNotationType[][]>
+>
 export type GenericStringSetStateType = React.Dispatch<
   React.SetStateAction<string>
 >
@@ -86,6 +89,8 @@ export type SquareProps = {
   setPromotionSquaresInfo: SetPromotionSquaresInfoType
   clickedSquare: string
   setClickedSquare: GenericStringSetStateType
+  movesNotation: MovesNotationType[][]
+  setMovesNotation: SetMovesNotationType
 }
 
 export type PieceProps = {
@@ -119,6 +124,8 @@ export type PromotionProps = {
   setKingInCheck: SetKingInCheckType
   setStalemate: SetStaleMateType
   setValidMoves: SetValidMovesType
+  movesNotation: MovesNotationType[][]
+  setMovesNotation: SetMovesNotationType
 }
 
 export type SquareInfoType = {
@@ -195,4 +202,13 @@ export type PromotedOfficialsType = 'b' | 'n' | 'q' | 'r'
 
 export type CapturedPiecesContainerType = {
   capturedPieces: string[]
+}
+
+export type MovesNotationType = {
+  notation: string;
+  tracker: number;
+}
+
+export type MovesHistoryPropType = {
+  moves: MovesNotationType[][]
 }
