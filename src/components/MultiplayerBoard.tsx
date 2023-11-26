@@ -8,6 +8,7 @@ import {
   KingCheckType,
   KingSquareType,
   MoveHistoryType,
+  MovesNotationType,
   OccupiedSquaresType,
   PlayerColor,
   PromotedOfficialsType,
@@ -19,10 +20,11 @@ import {
 import '../App.css'
 import PromotionModal from './PromotionModal'
 import { executeValidMove } from '../logic/executeMove'
-import { decideCheckmate, decideTurn, resignGame, socket, toggleSound } from '../logic/utils'
+import { decideCheckmate, decideTurn, resignGame, socket, toggleSound, updateMovesNotationState } from '../logic/utils'
 import { useParams } from 'react-router-dom'
 import CapturedPiecesContainer from './CapturedPiecesContainer'
 import useSound from 'use-sound'
+import MovesHistory from './MovesHistory'
 
 const MultiplayerBoard = () => {
   const { gameIds } = useParams()
@@ -195,7 +197,6 @@ const MultiplayerBoard = () => {
   //https://www.chess.com/forum/view/general/chessboard-sound-files
   const [playMoveSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
   const [playNotificationSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3')
-  const handleResign = resignGame(setCheckMate, setResign, multiPlayerColor as PlayerColor, playNotificationSound, soundOn)
 
   useEffect(() => {
     if (movesHistory.length && soundOn) {
@@ -241,6 +242,8 @@ const MultiplayerBoard = () => {
           setStaleMate,
           setValidMoves,
           setOpenPromotionModal,
+          movesNotation,
+          setMovesNotation
         )
       } else {
         executeValidMove(
@@ -266,7 +269,10 @@ const MultiplayerBoard = () => {
           fiftyMovesTracker,
           setFiftyMovesTracker,
           setOpenPromotionModal,
-          setPromotionSquaresInfo
+          setPromotionSquaresInfo,
+          false,
+          movesNotation,
+          setMovesNotation
         )
       }
     }
@@ -277,10 +283,16 @@ const MultiplayerBoard = () => {
     const quitter = multiPlayerColor === 'w' ? 'b' : 'w'
     setResign(quitter)
     setCheckMate(multiPlayerColor as PlayerColor)
+
+    const resignNotation = quitter === 'w' ? '0-1' : '1-0'
+    updateMovesNotationState(resignNotation, movesNotation, setMovesNotation, 0)
+
     if (soundOn)
       playNotificationSound()
   })
 
+  const [movesNotation, setMovesNotation] = useState<MovesNotationType[][]>([])
+  const handleResign = resignGame(setCheckMate, setResign, multiPlayerColor as PlayerColor, playNotificationSound, soundOn, movesNotation, setMovesNotation, 0)
   return (
     <div>
       {openPromotionModal ? (
@@ -306,71 +318,79 @@ const MultiplayerBoard = () => {
           setKingInCheck={setKingInCheck}
           setStalemate={setStaleMate}
           setValidMoves={setValidMoves}
+          movesNotation={movesNotation}
+          setMovesNotation={setMovesNotation}
         />
       ) : (
-        <div className="container">
-          <div className="info">
-            {!checkMate && !staleMate ? (
-              <p>
-              <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
-            </p>
-            ): (
-              <p>
-              <strong style={{color: 'red'}}>
-                {staleMate ? `Draw!`: decideCheckmate(multiPlayerColor as PlayerColor, checkMate!, resign!)}
-              </strong>
-            </p>
-            )}
-            <button className='resignButton' onClick={handleResign} disabled={multiPlayerColor !== currentPlayerColor || !!checkMate || !!staleMate}>RESIGN</button>
-            <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
+        <div className="fullBoardContainer">
+          <MovesHistory moves={movesNotation}/>
+          <div className="container">
+            <div className="info">
+              {!checkMate && !staleMate ? (
+                <p>
+                <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
+              </p>
+              ): (
+                <p>
+                <strong style={{color: 'red'}}>
+                  {staleMate ? `Draw!`: decideCheckmate(multiPlayerColor as PlayerColor, checkMate!, resign!)}
+                </strong>
+              </p>
+              )}
+              <button className='resignButton' onClick={handleResign} disabled={multiPlayerColor !== currentPlayerColor || !!checkMate || !!staleMate}>RESIGN</button>
+              <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
+            </div>
+            <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['w'] : capturedPieces['b']}/>
+            <table className="board">
+              <tbody>
+                {ranks.map((row) => (
+                  <tr key={`row-${row}`}>
+                    {files.map((col) => {
+                      const id = col + row
+                      return (
+                        <Square
+                          key={id}
+                          id={id}
+                          onDragOver={allowDrop}
+                          pieceId={boardState[id].piece}
+                          currentColor={currentPlayerColor}
+                          setColor={setCurrentPlayerColor}
+                          currentBoard={boardState}
+                          setBoardState={setBoardState}
+                          movesHistory={movesHistory}
+                          setMoveHistory={setMovesHistory}
+                          capturedPieces={capturedPieces}
+                          setCapturedPiece={setCapturedPiece}
+                          kingSquare={kingSquare}
+                          setKingSquare={setKingSquare}
+                          kingInCheck={kingInCheck}
+                          setKingInCheck={setKingInCheck}
+                          checkMate={checkMate}
+                          setCheckMate={setCheckMate}
+                          staleMate={staleMate}
+                          setStaleMate={setStaleMate}
+                          validMoves={validMoves}
+                          setValidMoves={setValidMoves}
+                          occupiedSquares={occupiedSquares}
+                          setOccupiedSquares={setOccupiedSquares}
+                          fiftyMovesTracker={fiftyMovesTracker}
+                          setFiftyMovesTracker={setFiftyMovesTracker}
+                          setOpenPromotionModal={setOpenPromotionModal}
+                          setPromotionSquaresInfo={setPromotionSquaresInfo}
+                          clickedSquare={clickedSquare}
+                          setClickedSquare={setClickedSquare}
+                          movesNotation={movesNotation}
+                          setMovesNotation={setMovesNotation}
+                        />
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['b'] : capturedPieces['w']}/>
           </div>
-          <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['w'] : capturedPieces['b']}/>
-          <table className="board">
-            <tbody>
-              {ranks.map((row) => (
-                <tr key={`row-${row}`}>
-                  {files.map((col) => {
-                    const id = col + row
-                    return (
-                      <Square
-                        key={id}
-                        id={id}
-                        onDragOver={allowDrop}
-                        pieceId={boardState[id].piece}
-                        currentColor={currentPlayerColor}
-                        setColor={setCurrentPlayerColor}
-                        currentBoard={boardState}
-                        setBoardState={setBoardState}
-                        movesHistory={movesHistory}
-                        setMoveHistory={setMovesHistory}
-                        capturedPieces={capturedPieces}
-                        setCapturedPiece={setCapturedPiece}
-                        kingSquare={kingSquare}
-                        setKingSquare={setKingSquare}
-                        kingInCheck={kingInCheck}
-                        setKingInCheck={setKingInCheck}
-                        checkMate={checkMate}
-                        setCheckMate={setCheckMate}
-                        staleMate={staleMate}
-                        setStaleMate={setStaleMate}
-                        validMoves={validMoves}
-                        setValidMoves={setValidMoves}
-                        occupiedSquares={occupiedSquares}
-                        setOccupiedSquares={setOccupiedSquares}
-                        fiftyMovesTracker={fiftyMovesTracker}
-                        setFiftyMovesTracker={setFiftyMovesTracker}
-                        setOpenPromotionModal={setOpenPromotionModal}
-                        setPromotionSquaresInfo={setPromotionSquaresInfo}
-                        clickedSquare={clickedSquare}
-                        setClickedSquare={setClickedSquare}
-                      />
-                    )
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['b'] : capturedPieces['w']}/>
+          <div className='videoContainer'></div>
         </div>
       )}
     </div>

@@ -8,6 +8,7 @@ import {
   KingCheckType,
   KingSquareType,
   MoveHistoryType,
+  MovesNotationType,
   OccupiedSquaresType,
   PlayerColor,
   PromotedPiecesTrackerType,
@@ -19,6 +20,7 @@ import PromotionModal from './PromotionModal'
 import CapturedPiecesContainer from './CapturedPiecesContainer'
 import useSound from 'use-sound'
 import { toggleSound } from '../logic/utils'
+import MovesHistory from './MovesHistory'
 
 const Board = () => {
   localStorage.clear()
@@ -185,6 +187,8 @@ const Board = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [occupiedSquares])
 
+  const [movesNotation, setMovesNotation] = useState<MovesNotationType[][]>([])
+
   return (
     <div>
       {openPromotionModal ? (
@@ -210,72 +214,80 @@ const Board = () => {
           setKingInCheck={setKingInCheck}
           setStalemate={setStaleMate}
           setValidMoves={setValidMoves}
+          movesNotation={movesNotation}
+          setMovesNotation={setMovesNotation}
         />
-      ) : ( 
-        <div className="container">
-            <div className="info">
-              {!checkMate && !staleMate ? (
-                <p>
-                <strong>{`${
-                  currentPlayerColor === 'w' ? "White's " : "Black's "
-                }turn`}</strong>
-              </p>
-              ): (
-                <p>
-                <strong>
-                  {staleMate ? 'Draw!' : `Checkmate!`}
-                </strong>
-              </p>
-              )}
-              <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
-            </div>
-          <CapturedPiecesContainer capturedPieces={capturedPieces.b}/>
-          <table className="board">
-            <tbody>
-              {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
-                <tr key={`row-${row}`}>
-                  {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
-                    const id = col + row
-                    return (
-                      <Square
-                        key={id}
-                        id={id}
-                        onDragOver={allowDrop}
-                        pieceId={boardState[id].piece}
-                        currentColor={currentPlayerColor}
-                        setColor={setCurrentPlayerColor}
-                        currentBoard={boardState}
-                        setBoardState={setBoardState}
-                        movesHistory={movesHistory}
-                        setMoveHistory={setMovesHistory}
-                        capturedPieces={capturedPieces}
-                        setCapturedPiece={setCapturedPiece}
-                        kingSquare={kingSquare}
-                        setKingSquare={setKingSquare}
-                        kingInCheck={kingInCheck}
-                        setKingInCheck={setKingInCheck}
-                        checkMate={checkMate}
-                        setCheckMate={setCheckMate}
-                        staleMate={staleMate}
-                        setStaleMate={setStaleMate}
-                        validMoves={validMoves}
-                        setValidMoves={setValidMoves}
-                        occupiedSquares={occupiedSquares}
-                        setOccupiedSquares={setOccupiedSquares}
-                        fiftyMovesTracker={fiftyMovesTracker}
-                        setFiftyMovesTracker={setFiftyMovesTracker}
-                        setOpenPromotionModal={setOpenPromotionModal}
-                        setPromotionSquaresInfo={setPromotionSquaresInfo}
-                        clickedSquare={clickedSquare}
-                        setClickedSquare={setClickedSquare}
-                      />
-                    )
-                  })}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <CapturedPiecesContainer capturedPieces={capturedPieces.w}/>
+      ) : (
+        <div className="fullBoardContainer">
+          <MovesHistory moves={movesNotation}/>
+          <div className="container">
+              <div className="info">
+                {!checkMate && !staleMate ? (
+                  <p>
+                  <strong>{`${
+                    currentPlayerColor === 'w' ? "White's " : "Black's "
+                  }turn`}</strong>
+                </p>
+                ): (
+                  <p>
+                  <strong>
+                    {staleMate ? 'Draw!' : `Checkmate!`}
+                  </strong>
+                </p>
+                )}
+                <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
+              </div>
+            <CapturedPiecesContainer capturedPieces={capturedPieces.b}/>
+            <table className="board">
+              <tbody>
+                {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
+                  <tr key={`row-${row}`}>
+                    {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
+                      const id = col + row
+                      return (
+                        <Square
+                          key={id}
+                          id={id}
+                          onDragOver={allowDrop}
+                          pieceId={boardState[id].piece}
+                          currentColor={currentPlayerColor}
+                          setColor={setCurrentPlayerColor}
+                          currentBoard={boardState}
+                          setBoardState={setBoardState}
+                          movesHistory={movesHistory}
+                          setMoveHistory={setMovesHistory}
+                          capturedPieces={capturedPieces}
+                          setCapturedPiece={setCapturedPiece}
+                          kingSquare={kingSquare}
+                          setKingSquare={setKingSquare}
+                          kingInCheck={kingInCheck}
+                          setKingInCheck={setKingInCheck}
+                          checkMate={checkMate}
+                          setCheckMate={setCheckMate}
+                          staleMate={staleMate}
+                          setStaleMate={setStaleMate}
+                          validMoves={validMoves}
+                          setValidMoves={setValidMoves}
+                          occupiedSquares={occupiedSquares}
+                          setOccupiedSquares={setOccupiedSquares}
+                          fiftyMovesTracker={fiftyMovesTracker}
+                          setFiftyMovesTracker={setFiftyMovesTracker}
+                          setOpenPromotionModal={setOpenPromotionModal}
+                          setPromotionSquaresInfo={setPromotionSquaresInfo}
+                          clickedSquare={clickedSquare}
+                          setClickedSquare={setClickedSquare}
+                          movesNotation={movesNotation}
+                          setMovesNotation={setMovesNotation}
+                        />
+                      )
+                    })}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <CapturedPiecesContainer capturedPieces={capturedPieces.w}/>
+          </div>
+          <div className='videoContainer'></div>
         </div>
       )}
     </div>
