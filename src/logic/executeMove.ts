@@ -19,6 +19,8 @@ import {
   SquareInfoType,
   SetOpenPromotionModalType,
   SetPromotionSquaresInfoType,
+  SetMovesNotationType,
+  MovesNotationType,
 } from '../types'
 import { grabCastlingRookAndSquares } from './castling'
 import { evaluateKingInCheck, validMovesWhenInCheck } from './check'
@@ -26,6 +28,7 @@ import { evaluateDraw } from './draw'
 import { isValidEnpassantMove } from './enpassant'
 import { allValidMoves } from './moveValidity'
 import { default as generatePinnedSquares } from './pinnedSquares'
+import { updateMovesNotationState } from './utils'
 
 export const evaluateOpponentKingAndNextTurn = (
   shouldUpdateFiftyMovesTracker: boolean,
@@ -42,7 +45,10 @@ export const evaluateOpponentKingAndNextTurn = (
   setStaleMate: SetStaleMateType,
   setValidMoves: SetValidMovesType,
   setMoveHistory: SetMoveHistoryType,
-  setColorState: SetColorStateType
+  setColorState: SetColorStateType,
+  moveNotation: string,
+  movesNotation: MovesNotationType[][],
+  setMovesNotation: SetMovesNotationType
 ) => {
   let newFiftyMovesTracker: number
   if (shouldUpdateFiftyMovesTracker) {
@@ -65,11 +71,14 @@ export const evaluateOpponentKingAndNextTurn = (
       newOccupiedSquares
     )
     if (!Object.keys(validCheckMoves).length) {
+      updateMovesNotationState(`${moveNotation}#`, movesNotation, setMovesNotation, updatedMovesHistory.length)
       setCheckMate(colorState)
     } else {
+      updateMovesNotationState(`${moveNotation}+`, movesNotation, setMovesNotation, updatedMovesHistory.length)
       setKingInCheck({ color: opponentColor, validCheckMoves })
     }
   } else {
+    updateMovesNotationState(moveNotation, movesNotation, setMovesNotation, updatedMovesHistory.length)
     setKingInCheck({ color: null, validCheckMoves: {} })
     const oppPinnedSquares = generatePinnedSquares(
       updatedKingSquare[opponentColor],
@@ -91,6 +100,7 @@ export const evaluateOpponentKingAndNextTurn = (
       newFiftyMovesTracker
     )
     if (gameEndsInDraw) {
+      updateMovesNotationState('½–½', movesNotation, setMovesNotation, updatedMovesHistory.length)
       setStaleMate(true)
     }
     setValidMoves(validOppMoves)
@@ -123,9 +133,12 @@ export const executeValidMove = (
   setFiftyMovesTracker: SetFiftyMovesTrackerType,
   setOpenPromotionModal: SetOpenPromotionModalType,
   setPromotionSquaresInfo: SetPromotionSquaresInfoType,
-  isPromotionMove: boolean = false
+  isPromotionMove: boolean = false,
+  movesNotation: MovesNotationType[][],
+  setMovesNotation: SetMovesNotationType
 ) => {
   //Execute valid moves and update appropriate states
+  let moveNotation = pieceId[1] === 'p' ? `${targetSquareId}` : `${pieceId[1].toUpperCase()}${targetSquareId}`
   const lastGameMove = movesHistory[movesHistory.length - 1]
   let newBoardState: BoardState
   let newOccupiedSquares: OccupiedSquaresType
@@ -205,6 +218,7 @@ export const executeValidMove = (
       [colorState]: capturedPieces[colorState].concat([lastGameMove['piece']]),
     })
   } else if (castlingRookInfo) {
+    moveNotation = castlingRookInfo.side === 'king' ? 'O-O' : 'O-O-O'
     const newOccupiedSquaresState = [...occupiedSquares[colorState]]
     newOccupiedSquaresState.splice(
       newOccupiedSquaresState.indexOf(srcSquareId),
@@ -252,6 +266,7 @@ export const executeValidMove = (
     const occupiedSquaresOppColor = [...occupiedSquares[opponentColor]]
     const destPiece = currentBoard[targetSquareId]['piece']
     if (destPiece) {
+      moveNotation = pieceId[1] === 'p' ? `${srcSquareId[0]}x${targetSquareId}` : `${pieceId[1].toUpperCase()}x${targetSquareId}`
       aPieceWasCaptured = true
       setCapturedPiece({
         ...capturedPieces,
@@ -280,6 +295,7 @@ export const executeValidMove = (
     updatedKingSquare = kingSquare
   }
   const shouldUpdateFiftyMovesTracker = pieceId[1] === 'p' || aPieceWasCaptured
+  moveNotation = isPromotionMove ? '' : moveNotation
   evaluateOpponentKingAndNextTurn(
     shouldUpdateFiftyMovesTracker,
     fiftyMovesTracker,
@@ -295,6 +311,9 @@ export const executeValidMove = (
     setStaleMate,
     setValidMoves,
     setMoveHistory,
-    setColorState
+    setColorState,
+    moveNotation,
+    movesNotation,
+    setMovesNotation
   )
 }

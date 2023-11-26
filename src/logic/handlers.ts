@@ -7,6 +7,7 @@ import {
   KingCheckType,
   KingSquareType,
   MoveHistoryType,
+  MovesNotationType,
   OccupiedSquaresType,
   PlayerColor,
   PromotedOfficialsType,
@@ -20,6 +21,7 @@ import {
   SetKingInCheckType,
   SetKingSquareType,
   SetMoveHistoryType,
+  SetMovesNotationType,
   SetOccupiedScaresType,
   SetOpenPromotionModalType,
   SetPromotedPiecesTrackerType,
@@ -78,7 +80,9 @@ const validateMoveAndExecute = (
   setOpenPromotionModal: SetOpenPromotionModalType,
   setPromotionSquaresInfo: SetPromotionSquaresInfoType,
   multiplayerColor: PlayerColor | null,
-  setClickedSquare: GenericStringSetStateType
+  setClickedSquare: GenericStringSetStateType,
+  movesNotation: MovesNotationType[][],
+  setMovesNotation: SetMovesNotationType
 ) => {
   if (
     moveValidityCheck(srcSquareId, targetSquareId, kingInCheck, validMoves)
@@ -121,7 +125,9 @@ const validateMoveAndExecute = (
       setFiftyMovesTracker,
       setOpenPromotionModal,
       setPromotionSquaresInfo,
-      isPromotionMove
+      isPromotionMove,
+      movesNotation,
+      setMovesNotation
     )
   }
   setClickedSquare('')
@@ -157,7 +163,9 @@ export const clickSquare = (
     setPromotionSquaresInfo: SetPromotionSquaresInfoType,
     multiplayerColor: PlayerColor | null,
     checkMate: CheckMateType,
-    staleMate: Boolean
+    staleMate: Boolean,
+    movesNotation: MovesNotationType[][],
+    setMovesNotation: SetMovesNotationType
   ) => (event: React.MouseEvent<HTMLElement>) => {
   const multiPlayerBoolean = multiPlayerColor ? multiPlayerColor === colorState : true //If multiplayer, ensure it's the player in this browser's turn
   if (pieceId && pieceId[0] === colorState && multiPlayerBoolean) {
@@ -197,7 +205,9 @@ export const clickSquare = (
       setOpenPromotionModal,
       setPromotionSquaresInfo,
       multiplayerColor,
-      setClickedSquare
+      setClickedSquare,
+      movesNotation,
+      setMovesNotation
     )
   }
 }
@@ -227,7 +237,9 @@ export const drop =
     setOpenPromotionModal: SetOpenPromotionModalType,
     setPromotionSquaresInfo: SetPromotionSquaresInfoType,
     multiplayerColor: PlayerColor | null,
-    setClickedSquare: GenericStringSetStateType
+    setClickedSquare: GenericStringSetStateType,
+    movesNotation: MovesNotationType[][],
+    setMovesNotation: SetMovesNotationType
   ) =>
   (ev: React.DragEvent) => {
     ev.preventDefault()
@@ -262,7 +274,9 @@ export const drop =
       setOpenPromotionModal,
       setPromotionSquaresInfo,
       multiplayerColor,
-      setClickedSquare
+      setClickedSquare,
+      movesNotation,
+      setMovesNotation
     )
   }
 
@@ -288,7 +302,9 @@ export const onPromotionClick = (
   setKingInCheck: SetKingInCheckType,
   setStaleMate: SetStaleMateType,
   setValidMoves: SetValidMovesType,
-  setOpenPromotionModal: SetOpenPromotionModalType
+  setOpenPromotionModal: SetOpenPromotionModalType,
+  movesNotation: MovesNotationType[][],
+  setMovesNotation: SetMovesNotationType
 ) => {
   const newPieceCount = promotedPiecesTracker[pieceId] + 1
   const promotedPiece = `${colorState}${pieceId}${newPieceCount}`
@@ -298,6 +314,7 @@ export const onPromotionClick = (
   })
   const srcSquareId = promotionSquaresInfo.src
   const targetSquareId = promotionSquaresInfo.dest
+  const oldPiece = currentBoard[srcSquareId].piece
   const srcSquareUpdated = {
     ...currentBoard[srcSquareId],
     piece: '',
@@ -339,11 +356,12 @@ export const onPromotionClick = (
   const move: MoveHistoryType = {
     srcSquare: srcSquareId,
     destSquare: targetSquareId,
-    piece: pieceId,
+    piece: oldPiece,
     boardBefore: currentBoard,
     occupiedSquares,
   }
   const updatedMovesHistory = [...movesHistory, move]
+  const moveNotation = `${srcSquareId}=${pieceId.toUpperCase()}`
   evaluateOpponentKingAndNextTurn(
     true,
     fiftyMovesTracker,
@@ -359,7 +377,10 @@ export const onPromotionClick = (
     setStaleMate,
     setValidMoves,
     setMoveHistory,
-    setColor
+    setColor,
+    moveNotation,
+    movesNotation,
+    setMovesNotation
   )
   setOpenPromotionModal(false)
 }
