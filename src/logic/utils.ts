@@ -1,3 +1,4 @@
+import { PlayOptions } from 'use-sound/dist/types'
 import { GenericBooleanSetStateType, OperationType, PlayerColor, SetCheckMateType } from '../types'
 import { io } from 'socket.io-client'
 
@@ -158,9 +159,11 @@ export const toggleSound = (soundOn: boolean, setSoundOn: GenericBooleanSetState
   soundOn ? setSoundOn(false) : setSoundOn(true)
 }
 
-export const resignGame = (setCheckMate: SetCheckMateType, setResign: SetCheckMateType, quitter: PlayerColor) => () => {
+export const resignGame = (setCheckMate: SetCheckMateType, setResign: SetCheckMateType, quitter: PlayerColor, notificationSound: (options?: PlayOptions | undefined) => void, soundOn: boolean) => () => {
   setResign(quitter)
   setCheckMate(quitter === 'w' ? 'b' : 'w') //WRONGGGG. This is basically piggybacking on using Checkmate to determine game end(because the checkMate state is used in multiple places to signify game end). Need a proper frame work that evaluates game end as the truthiness of checkmate, stalemate or resign
+  if (soundOn)
+    notificationSound()
   const opponentId = sessionStorage.getItem('opponentId')
   socket.emit('resignation', opponentId)
 }

@@ -190,12 +190,12 @@ const MultiplayerBoard = () => {
   })
   const [clickedSquare, setClickedSquare] = useState<string>('')
   const [resign, setResign] = useState<PlayerColor|null>(null)
-  const handleResign = resignGame(setCheckMate, setResign, multiPlayerColor as PlayerColor)
   const [soundOn, setSoundOn] = useState<boolean>(true)
   const soundHandler = toggleSound(soundOn, setSoundOn)
   //https://www.chess.com/forum/view/general/chessboard-sound-files
   const [playMoveSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/move-self.mp3');
   const [playNotificationSound] = useSound('http://images.chesscomfiles.com/chess-themes/sounds/_MP3_/default/notify.mp3')
+  const handleResign = resignGame(setCheckMate, setResign, multiPlayerColor as PlayerColor, playNotificationSound, soundOn)
 
   useEffect(() => {
     if (movesHistory.length && soundOn) {
@@ -277,6 +277,8 @@ const MultiplayerBoard = () => {
     const quitter = multiPlayerColor === 'w' ? 'b' : 'w'
     setResign(quitter)
     setCheckMate(multiPlayerColor as PlayerColor)
+    if (soundOn)
+      playNotificationSound()
   })
 
   return (
@@ -314,7 +316,7 @@ const MultiplayerBoard = () => {
             </p>
             ): (
               <p>
-              <strong>
+              <strong style={{color: 'red'}}>
                 {staleMate ? `Draw!`: decideCheckmate(multiPlayerColor as PlayerColor, checkMate!, resign!)}
               </strong>
             </p>
