@@ -8,33 +8,34 @@ const MainPage = () => {
 
   return (
     <div className='mainContainer'>
-      <div className='mainPageTitle'>
-        <h1><strong>Basic Chess</strong></h1>
-        <h3><strong>Play, learn, live...</strong></h3>
-      </div>
-      <div className='features'>
-        <div className='featureContainer'>
-          <div className='featureCard multiplayerCard' onClick={navigateToAwaitingPage}>
-            <h1><strong>Multiplayer</strong></h1>
-            <div className='multiplayerDescription'><p><strong>Create a game and get a shareable link to invite a friend to play</strong></p></div>
+    <div className='mainPageTitle'>
+      <h1>Basic Chess</h1>
+      <h4>Play, learn, live...</h4>
+    </div>
+      <div className='platform'>
+        <div className='features'>
+          <div className='multiplayerCard' onClick={navigateToAwaitingPage}>
+              <div className='multiplayerImg'>
+                <img className='img-size' src={`${process.env.REACT_APP_BASE_URL}People.png`} alt='multiplayer'/>
+              </div>
+              <h1>Multiplayer</h1>
           </div>
-          <div className='featureCard singleplayerCard' onClick={navigateToSinglePlayer}>
-            <h1><strong>Singleplayer</strong></h1>
-            <div className='singleplayerDescription'><p><strong>Play a game against yourself</strong></p></div>
+          <div className='singleplayerCard' onClick={navigateToSinglePlayer}>
+            <div className='singleplayerImg'>
+              <img className='img-size' src={`${process.env.REACT_APP_BASE_URL}Person.png`}  alt='singlePlayer'/>
+            </div>
+            <h1>Singleplayer</h1>
           </div>
         </div>
-      </div>
-      <div className='comingSoonTitle'><h1><strong>Coming Soon</strong></h1></div>
-      <div className='featureContainer comingSoon'>
-        <div className='comingSoonCard'>
-          <h1><strong>Play against an AI</strong></h1>
-          <p><strong>We'll pit you against our cyber overlords and see how that goes</strong></p>
-          <div className='ai'></div>
-        </div>
-        <div className='comingSoonCard'>
-          <h1><strong>Chaos board and notes</strong></h1>
-          <p><strong>The perfect chess study tool</strong></p>
-          <div className='note'>
+        <div className='featureContainer comingSoon'>
+          <p><strong>Coming soon</strong></p>
+          <div className='comingSoonCard'>
+            <img className='img-size' src={`${process.env.REACT_APP_BASE_URL}AI.png`} alt="artificial dumbness" />
+            <h1><strong>Play with AI</strong></h1>
+          </div>
+          <div className='comingSoonCard'>
+            <img className='img-size' src={`${process.env.REACT_APP_BASE_URL}chaos.png`} alt="Chaos" />
+            <h1><strong>Chaos board</strong></h1>
           </div>
         </div>
       </div>

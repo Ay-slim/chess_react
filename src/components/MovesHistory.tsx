@@ -3,7 +3,7 @@ import { MovesHistoryPropType } from "../types"
 const MovesHistory = (props: MovesHistoryPropType) => {
   return (
       <div className="movesHistoryContainer">
-        <div className="movesHistoryTitle"><p>Moves</p></div>
+        <div className="movesHistoryTitle">Moves</div>
         <div className="nonTitleMovesHistoryItems">
         {props.moves.map((move, moveIndex) => {
           return (

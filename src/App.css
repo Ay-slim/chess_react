@@ -235,88 +235,83 @@ th {
   background-color: rgb(255, 254, 240);
 }
 
+
+
 .mainContainer {
-  background: url('../public/mainBg.jpeg');
+  background: url('../public/mainBg.jpg');
+  display: flex;
+  flex-direction: column;
   background-size: cover;
-  position: fixed;
   height: 100vh;
   width: 100vw;
-  position: relative;
   font-family: 'Cormorant Garamond', serif;
-  color: indigo;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .mainPageTitle {
   position: relative;
-  top: 20px;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.05), /* Transparent at the start */
-    rgba(255, 255, 255, 0.9), /* Your original background color in the middle */
-    rgba(255, 255, 255, 0.1) /* Transparent at the end */
-  );
-  width: 20%;
-  margin: auto;
+  top: 0;
   justify-content: center;
+  color: white;
+  font-size: 30px;
+  text-align: center;
 }
 
-.mainPageTitle h1 {
-  font-size: 40px;
+.platform {
+  padding: 20px;
+  width: 80%;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
 }
 
-.mainPageTitle h3 {
-  margin-top: 0px;
-}
-
-.comingSoonTitle {
-  position: relative;
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.05), /* Transparent at the start */
-    rgba(255, 255, 255, 0.9), /* Your original background color in the middle */
-    rgba(255, 255, 255, 0.1) /* Transparent at the end */
-  );
-  width: 20%;
-  margin: auto;
+.features{
+  display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 250px;
+  margin-bottom: 40px;
+}
+
+.singleplayerImg, .multiplayerImg {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.multiplayerCard:hover {
+  background-color: lightgrey;
+}
+
+.multiplayerCard img, .multiplayerCard h1 {
+  pointer-events: none; /* Prevent hover events from affecting child elements */
+}
+
+.singleplayerCard:hover {
+  background-color: lightgrey;
+}
+
+.singleplayerCard img, .singleplayerCard h1 {
+  pointer-events: none; /* Prevent hover events from affecting child elements */
+}
+
+.img-size{
+  width: 80px;
 }
 
 .featureContainer {
   display: flex;
   justify-content: space-evenly;
-}
-
-.featureCard {
-  position: relative;
-  background-color: rgb(255, 255, 255, 0.9);
-  width: 250px;
-  height: 300px;
-  border-radius: 5%;
-  text-align: center;
-  border: solid 5px;
-}
-
-.multiplayerCard {
-  position: relative;
-  background: url('../public/multiplayer.png');
-  background-size: cover;
-  opacity: 0.9;
-}
-
-.singleplayerCard {
-  position: relative;
-  background: url('../public/singleplayer.jpeg');
-  background-size: cover;
-  opacity: 0.9;
+  background-color: lightgray;
+  border-radius: 8px;
+  padding: 0px 50px;
 }
 
 .comingSoonCard {
-  background-color: rgb(128, 128, 128, 0.8);
-  width: 250px;
-  height: 300px;
-  border-radius: 5%;
   text-align: center;
-  border: solid 5px;
 }
 
 .comingSoon {
@@ -324,63 +319,17 @@ th {
   bottom: 20px;
 }
 
-.featureDescription {
-  opacity: 0;
-  transition: opacity 0.3s ease;
+.featureContainer p {
+  position: absolute;
+  top: 50px;
 }
 
-.featureCard:hover {
-  background: #B8AEE9;
-  color: black;
-}
 
-.mainContainer h1 {
-  text-align: center;
-}
 
-.mainContainer h3 {
-  text-align: center;
-}
 
-.featureCard p {
-  padding: 5px;
-}
 
-.multiplayerDescription {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
 
-.multiplayerCard:hover .multiplayerDescription {
-  opacity: 1;
-}
 
-.singleplayerDescription {
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.singleplayerCard:hover .singleplayerDescription {
-  opacity: 1;
-}
-
-.ai {
-  background: url('../public/ai.jpeg');
-  position: relative;
-  width: 100%;
-  height: 50%;
-  background-size: cover;
-  opacity: 0.4;
-}
-
-.note {
-  background: url('../public/note.jpeg');
-  position: relative;
-  width: 100%;
-  height: 50%;
-  background-size: contain;
-  opacity: 0.4;
-}
 
 
 .awaitingContainer {
@@ -388,12 +337,13 @@ th {
   width: 100%;
   position: relative;
   font-family: 'Cormorant Garamond', serif;
-  color: indigo;
+  color: black;
+  font-size: 20px;
 }
 
 .awaitingContainer::before {
   content: "";
-  background-image: url('../public/mainBg.jpeg');
+  background-image: url('../public/mainBg.jpg');
   opacity: 0.1;
   position: fixed;
   height: 100vh;
@@ -408,14 +358,8 @@ th {
 .awaitingPageTitle {
   position: relative;
   height: 20%;
-  margin-left: 20px;
-}
-
-.awaitingPageTitle h1 {
-  font-size: 40px;
-}
-
-.awaitingPageTitle, h1, h4 {
+  font-size: 30px;
+  background-color: lightgrey;
   text-align: center;
 }
 
@@ -468,6 +412,7 @@ th {
   flex: 95%;
   padding-left: 10px;
   border-right: solid 2px;
+  overflow: scroll;
 }
 
 .copyIcon {
@@ -518,6 +463,7 @@ th {
   border: solid 2px;
   top: 45px;
   text-align: center;
+  overflow: scroll;
 }
 
 
@@ -554,7 +500,7 @@ th {
 }
 
 .moveHistoryLabel {
-  flex: 10%;
+  flex: 20%;
   background-color: darkslategray;
   border-top: solid 1px;
   border-color: white;
@@ -563,7 +509,7 @@ th {
 }
 
 .moveHistoryButton {
-  flex: 45%;
+  flex: 40%;
   background-color: darkslategray;
   color: white;
   border: solid 1px;
