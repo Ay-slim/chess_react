@@ -149,6 +149,9 @@ export type MoveHistoryType = {
   boardBefore: BoardState
   boardAfter: BoardState
   occupiedSquares: OccupiedSquaresType
+  capturedPieces: CapturedPiecesType
+  kingInCheck?: PlayerColor
+  checkmate?: PlayerColor
 }
 
 export type CapturedPiecesType = {

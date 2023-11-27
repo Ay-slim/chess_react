@@ -68,6 +68,7 @@ const Square = (props: SquareProps) => {
     movesNotation,
     setMovesNotation
   )
+  const isGameHistoryView = postGameTracker !== null
   const {
     srcSquare,
     destSquare
@@ -77,7 +78,7 @@ const Square = (props: SquareProps) => {
   const validMovesToCheck = kingInCheck?.color === currentColor ? kingInCheck.validCheckMoves?.[clickedSquare] : validMoves[clickedSquare]?.validSquares
   const isEligibleToMoveTo = validMovesToCheck?.includes(id)
   const hasBeenClicked = clickedSquare === id
-  const kingUnderAttack = pieceId?.[1] === 'k' && (kingInCheck?.color === pieceId?.[0] || checkMate === (pieceId?.[0] === 'w' ? 'b' : 'w')) && (postGameTracker === null || postGameTracker === movesHistory.length - 1) //After attaching king in check and captured pieces to gameMovesHistory, remove the final and here and just do a direct or with the state in moves history
+  const kingUnderAttack = pieceId?.[1] === 'k' && ((isGameHistoryView ? movesHistory[postGameTracker]?.kingInCheck === pieceId?.[0] : kingInCheck?.color === pieceId?.[0]) || (isGameHistoryView ? movesHistory?.[postGameTracker]?.checkmate === (pieceId?.[0] === 'w' ? 'b' : 'w') : checkMate === (pieceId?.[0] === 'w' ? 'b' : 'w')))
   const numberLabelCheck = multiPlayerColor === 'b' ? '8' : '1'
   const alphabetLabelCheck = multiPlayerColor === 'b' ? 'h' : 'a'
   const handleClick = clickSquare(

@@ -338,11 +338,13 @@ export const onPromotionClick = (
   const opponentColor = colorState === 'w' ? 'b' : 'w'
   const occupiedSquaresOppColor = [...occupiedSquares[opponentColor]]
   const destPiece = currentBoard[targetSquareId]['piece']
+  let newCapturedPieces = capturedPieces
   if (destPiece) {
-    setCapturedPiece({
+    newCapturedPieces = {
       ...capturedPieces,
       [colorState]: capturedPieces[colorState].concat([destPiece]),
-    })
+    }
+    setCapturedPiece(newCapturedPieces)
     occupiedSquaresOppColor.splice(
       occupiedSquaresOppColor.indexOf(targetSquareId),
       1
@@ -359,7 +361,8 @@ export const onPromotionClick = (
     piece: oldPiece,
     boardBefore: currentBoard,
     boardAfter: newBoardState,
-    occupiedSquares,
+    occupiedSquares: newOccupiedSquares,
+    capturedPieces: newCapturedPieces
   }
   const updatedMovesHistory = [...movesHistory, move]
   const moveNotation = `${srcSquareId}=${pieceId.toUpperCase()}`

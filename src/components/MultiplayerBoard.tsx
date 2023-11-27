@@ -294,6 +294,8 @@ const MultiplayerBoard = () => {
 
   const [movesNotation, setMovesNotation] = useState<MovesNotationType[][]>([])
   const handleResign = resignGame(setCheckMate, setResign, multiPlayerColor as PlayerColor, playNotificationSound, soundOn, movesNotation, setMovesNotation, 0)
+  const topCapturedPiecesColor = multiPlayerColor === 'b' ? 'w' : 'b'
+  const bottomCapturedPiecesColor = multiPlayerColor === 'b' ? 'b' : 'w'
   return (
     <div>
       {openPromotionModal ? (
@@ -341,7 +343,7 @@ const MultiplayerBoard = () => {
               <button className='resignButton' onClick={handleResign} disabled={multiPlayerColor !== currentPlayerColor || !!checkMate || !!staleMate}>RESIGN</button>
               <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
             </div>
-            <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['w'] : capturedPieces['b']}/>
+            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces[topCapturedPiecesColor] : movesHistory[postGameTracker].capturedPieces[topCapturedPiecesColor]}/>
             <table className="board">
               <tbody>
                 {ranks.map((row) => (
@@ -390,7 +392,7 @@ const MultiplayerBoard = () => {
                 ))}
               </tbody>
             </table>
-            <CapturedPiecesContainer capturedPieces={multiPlayerColor === 'b' ? capturedPieces['b'] : capturedPieces['w']}/>
+            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces[bottomCapturedPiecesColor] : movesHistory[postGameTracker].capturedPieces[bottomCapturedPiecesColor]}/>
           </div>
           <div className='videoContainer'></div>
         </div>

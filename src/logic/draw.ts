@@ -113,6 +113,7 @@ export const evaluateDraw = (
       boardBefore: newBoardState,
       boardAfter: newBoardState,
       occupiedSquares: newOccupiedSquares,
+      capturedPieces: {w: [], b: []}
     },
   ]
   const threeFoldRepition =

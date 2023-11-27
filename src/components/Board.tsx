@@ -238,7 +238,7 @@ const Board = () => {
                 )}
                 <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
               </div>
-            <CapturedPiecesContainer capturedPieces={capturedPieces.b}/>
+            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces.b : movesHistory[postGameTracker].capturedPieces.b}/>
             <table className="board">
               <tbody>
                 {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
@@ -287,7 +287,7 @@ const Board = () => {
                 ))}
               </tbody>
             </table>
-            <CapturedPiecesContainer capturedPieces={capturedPieces.w}/>
+            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces.w : movesHistory[postGameTracker].capturedPieces.w}/>
           </div>
           <div className='videoContainer'></div>
         </div>
