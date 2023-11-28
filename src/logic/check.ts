@@ -155,9 +155,11 @@ const piecesAttackingMe = (
         if (currentPiece) {
           const pieceName = currentPiece[1]
           if (
-            currentPiece[0] !== color &&
             ['b', 'q', 'p', 'r'].includes(pieceName)
           ) {
+            if (currentPiece[0] === color || (pieceName === 'r' && !ROOK_DIR) || (pieceName === 'b' && !BISHOP_DIR) || (pieceName === 'p' && (!PAWN_BLOCK_DIR && !PAWN_CAPTURE_DIR))) {
+              break
+            }
             if (pieceName === 'p' && [1, 2].includes(i)) {
               if (i === 1) {
                 const pieceOnSquareToBlockOrCapture = boardState[squareId].piece

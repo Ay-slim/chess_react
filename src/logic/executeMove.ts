@@ -51,6 +51,8 @@ export const evaluateOpponentKingAndNextTurn = (
   setMovesNotation: SetMovesNotationType
 ) => {
   let newFiftyMovesTracker: number
+  let isCheckmateForHistory = undefined
+  let isKingInCheckForHistory = undefined
   if (shouldUpdateFiftyMovesTracker) {
     newFiftyMovesTracker = 0
   } else {
@@ -72,8 +74,10 @@ export const evaluateOpponentKingAndNextTurn = (
     )
     if (!Object.keys(validCheckMoves).length) {
       updateMovesNotationState(`${moveNotation}#`, movesNotation, setMovesNotation, updatedMovesHistory.length)
+      isCheckmateForHistory = colorState
       setCheckMate(colorState)
     } else {
+      isKingInCheckForHistory = opponentColor
       updateMovesNotationState(`${moveNotation}+`, movesNotation, setMovesNotation, updatedMovesHistory.length)
       setKingInCheck({ color: opponentColor, validCheckMoves })
     }
@@ -105,6 +109,8 @@ export const evaluateOpponentKingAndNextTurn = (
     }
     setValidMoves(validOppMoves)
   }
+  updatedMovesHistory[updatedMovesHistory.length - 1]['kingInCheck'] = isKingInCheckForHistory
+  updatedMovesHistory[updatedMovesHistory.length - 1]['checkmate'] = isCheckmateForHistory
   setMoveHistory(updatedMovesHistory)
   setColorState(colorState === 'w' ? 'b' : 'w')
 }
@@ -144,6 +150,7 @@ export const executeValidMove = (
   let newOccupiedSquares: OccupiedSquaresType
   let aPieceWasCaptured = false
   let updatedKingSquare: KingSquareType
+  let newCapturedPieces = capturedPieces
   const opponentColor = colorState === 'w' ? 'b' : 'w'
   const isValidEnpassant =
     pieceId[1] === 'p' &&
@@ -205,10 +212,11 @@ export const executeValidMove = (
     }
     setBoardState(newBoardState)
     aPieceWasCaptured = true
-    setCapturedPiece({
+    newCapturedPieces = {
       ...capturedPieces,
       [colorState]: capturedPieces[colorState].concat([lastGameMove['piece']]),
-    })
+    }
+    setCapturedPiece(newCapturedPieces)
   } else if (castlingRookInfo) {
     moveNotation = castlingRookInfo.side === 'king' ? 'O-O' : 'O-O-O'
     const newOccupiedSquaresState = [...occupiedSquares[colorState]]
@@ -260,10 +268,11 @@ export const executeValidMove = (
     if (destPiece) {
       moveNotation = pieceId[1] === 'p' ? `${srcSquareId[0]}x${targetSquareId}` : `${pieceId[1].toUpperCase()}x${targetSquareId}`
       aPieceWasCaptured = true
-      setCapturedPiece({
+      newCapturedPieces = {
         ...capturedPieces,
         [colorState]: capturedPieces[colorState].concat([destPiece]),
-      })
+      }
+      setCapturedPiece(newCapturedPieces)
       occupiedSquaresOppColor.splice(
         occupiedSquaresOppColor.indexOf(targetSquareId),
         1
@@ -293,7 +302,8 @@ export const executeValidMove = (
     piece: pieceId,
     boardBefore: currentBoard,
     boardAfter: newBoardState,
-    occupiedSquares,
+    occupiedSquares: newOccupiedSquares,
+    capturedPieces: newCapturedPieces,
   }
   const updatedMovesHistory = [...movesHistory, move]
   moveNotation = isPromotionMove ? '' : moveNotation

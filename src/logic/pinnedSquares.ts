@@ -103,7 +103,16 @@ const pinnedSquares = (
                 )
               }
               if (dir[1] === 1 && [-1, 1].includes(dir[0])) {
-                validMovesArr = [currentSquare]
+                const pawnXCoord = normalizedArithmetic(color, 'sum', xCoord, dir[0])
+                const pawnYCoord = normalizedArithmetic(color, 'sum', yCoord, 1)
+                const capturableXCoord = normalizedArithmetic(color, 'sum', pawnXCoord, dir[0])
+                const capturableYCoord = normalizedArithmetic(color, 'sum', pawnYCoord, 1)
+                if (isValidBoardCoordinates(capturableXCoord, capturableYCoord)) {
+                  const capturableSquare = INVERTED_SQUARES[`${capturableXCoord as BoardNumbers},${capturableYCoord as BoardNumbers}`]
+                  const capturablePieceColor = boardState[capturableSquare].piece?.[0]
+                  if (capturablePieceColor && capturablePieceColor !== color)
+                    validMovesArr = [INVERTED_SQUARES[`${capturableXCoord as BoardNumbers},${capturableYCoord as BoardNumbers}`]]
+                }
               }
             }
             if (
