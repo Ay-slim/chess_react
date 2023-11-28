@@ -25,15 +25,18 @@ import { useParams } from 'react-router-dom'
 import CapturedPiecesContainer from './CapturedPiecesContainer'
 import useSound from 'use-sound'
 import MovesHistory from './MovesHistory'
+import VideoPlayer from './VideoPlayer'
 
 const MultiplayerBoard = () => {
   const { gameIds } = useParams()
+  let initiator = false
   if (gameIds) {
     const [opponentId, playerId] = gameIds.split('+')
     sessionStorage.setItem('playerId', playerId)
     sessionStorage.setItem('opponentId', opponentId)
     sessionStorage.setItem('multiPlayerColor', 'b')
     socket.emit('joinedGame', opponentId)
+    initiator = true
   }
   const [boardState, setBoardState] = useState<BoardState>({
     a1: { loc: [0, 0], piece: 'wr2' },
@@ -394,7 +397,7 @@ const MultiplayerBoard = () => {
             </table>
             <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces[bottomCapturedPiecesColor] : movesHistory[postGameTracker].capturedPieces[bottomCapturedPiecesColor]}/>
           </div>
-          <div className='videoContainer'></div>
+          {<VideoPlayer initiator={initiator}/>}
         </div>
       )}
     </div>

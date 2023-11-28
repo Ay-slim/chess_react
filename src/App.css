@@ -441,14 +441,13 @@ th {
   padding-left: 5px;
 }
 
+
+
+
+
 .fullBoardContainer {
   position: relative;
   display: flex;
-}
-
-.videoContainer {
-  position: relative;
-  flex: 40%;
 }
 
 .movesHistoryContainer {
@@ -465,7 +464,6 @@ th {
   text-align: center;
   overflow: scroll;
 }
-
 
 .nonTitleMovesHistoryItems {
   position: relative;
@@ -529,4 +527,122 @@ th {
 
 .moveHistoryButton:not(:disabled):hover {
   background-color: darkseagreen;
+}
+
+.videoContainer {
+  position: relative;
+  flex: 40%;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-top: 5px;
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  border: solid 2px;
+  height: 740px;
+}
+
+.opponentVideo {
+  position: relative;
+  flex: 40%;
+  width: 100%;
+  height: 80%;
+}
+
+.videoButtonsContainer {
+  flex: 10%;
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin: 5px auto;
+}
+
+.videoButtonsOn {
+  height: 70%;
+  flex: 50%;
+  background-color: lightgreen;
+  border: solid 1px;
+}
+
+.videoButtonsOff {
+  height: 70%;
+  flex: 50%;
+  background-color: lightcoral;
+  border: solid 1px;
+}
+
+.localVideo {
+  position: relative;
+  width: 60%;
+  height: 100%;
+  flex: 40%;
+  margin: auto;
+}
+
+.videoDisallowed {
+  position: absolute;
+  color: white;
+  z-index: 10;
+  background-color: black;
+  top: 25%;
+  flex: 40%;
+  display: flex;
+  width: 70%;
+  height: 20px;
+  margin-left: 102px;
+}
+
+
+
+.videoChatOptions {
+  position: absolute;
+  z-index: 5;
+  background-color: white;
+  top: 25%;
+  flex: 40%;
+  margin: auto;
+  border-radius: 4px;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  border: solid 1px;
+  height: 10%;
+}
+
+.chatOptionsCopy {
+  flex: 50%;
+  text-align: center;
+}
+
+.chatOptionsButtonsContainer {
+  flex: 50%;
+  display: flex;
+  justify-content: space-around;
+}
+
+.chatOptionsButtonYes {
+  width: 40%;
+  height: 100%;
+  margin: auto;
+  background-color: lightgreen;
+  border-radius: 3px;
+  border: 1px;
+}
+
+.chatOptionsButtonYes:hover {
+  background-color: darkgrey;
+}
+
+.chatOptionsButtonNo {
+  width: 40%;
+  height: 100%;
+  margin: auto;
+  background-color: lightcoral;
+  border-radius: 3px;
+  border: 1px;
+}
+
+.chatOptionsButtonNo:hover {
+  background-color: darkgrey;
 }
