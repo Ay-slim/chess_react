@@ -42,7 +42,7 @@ const AwaitingOpponent = () => {
     <div className='awaitingContainer'>
       <div className='awaitingPageTitle'>
         <h1><strong>Basic Chess</strong></h1>
-        <h4>Play, learn, live...</h4>
+        <h4>The game you love. With the people you love.</h4>
       </div>
       <div className='awaitingPageBody'>
         <h2><strong>You have created a new game!</strong></h2>
