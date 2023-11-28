@@ -226,3 +226,7 @@ export type MovesHistoryPropType = {
   setBoardState: SetBoardStateType
   gameMovesHistory: MoveHistoryType[]
 }
+
+export type VideoPlayerPropType = {
+  initiator: boolean
+}
