@@ -3,6 +3,7 @@ import Board from './components/Board'
 import AwaitingOpponent from './components/AwaitingOpponent'
 import MultiplayerBoard from './components/MultiplayerBoard'
 import { Routes, Route } from 'react-router-dom'
+import { Analytics } from '@vercel/analytics/react'
 const App = () => {
   return (
     <>
@@ -13,6 +14,7 @@ const App = () => {
         <Route path='/multiboard' Component={MultiplayerBoard} />
         <Route path='/multi/:gameIds' Component={MultiplayerBoard} />
       </Routes>
+      <Analytics/>
     </>
   )
 }
