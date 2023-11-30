@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { VideoPlayerPropType } from "../types";
 import Peer from 'simple-peer'
 import { socket } from "../logic/utils";
+import { IoVideocam, IoVideocamOff } from "react-icons/io5";
+import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai";
 
 const VideoPlayer = (props: VideoPlayerPropType) => {
   const opponentId = sessionStorage.getItem('opponentId')
@@ -16,7 +18,7 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
   const localVideo = useRef<HTMLVideoElement>(null);
   const opponentVideo = useRef<HTMLVideoElement>(null);
   const connectionRef = useRef<Peer.Instance>()
-
+  
   const initializeVideo = async () => {
     try {
       const userMediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
@@ -33,13 +35,13 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
     initializeVideo();
 
     socket.on(`${playerId}-initiateVideoCall`, (signal) => {
-      setCallerSignal(signal)
-      setShowCanJoinVideoChat(true) //Display video call options (when initiator boolean is false) after initiator has emmitted a video call initiation event
+            setCallerSignal(signal)
+            setShowCanJoinVideoChat(true) //Display video call options (when initiator boolean is false) after initiator has emmitted a video call initiation event
     })
 
     if (initiator)
       setShowCanJoinVideoChat(true) //Display video call options when initiator boolean is true
-
+            
     //Cleanup function
     return () => {
       if (localStream) {
@@ -84,37 +86,37 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
 			stream: localStream
 		})
     peer.on("signal", (data) => {
-			socket.emit("initiateVideoCall", {
-				opponentId,
-				signalData: data,
-			})
-		})
+            socket.emit("initiateVideoCall", {
+        opponentId,
+        signalData: data,
+      })
+    })
     peer.on("stream", (stream) => {
-      if (opponentVideo.current)
+            if (opponentVideo.current)
         opponentVideo.current.srcObject = stream
     })
 
     socket.on(`${playerId}-joinVideoCall`, (signal) => {
-			peer.signal(signal)
+      			peer.signal(signal)
 		})
 		connectionRef.current = peer
   }
 
   const acceptVideoCall = () => {
-    setShowCanJoinVideoChat(false)
+        setShowCanJoinVideoChat(false)
     const peer = new Peer({
 			initiator,
 			trickle: false,
 			stream: localStream
 		})
     peer.on("signal", (data) => {
-			socket.emit("joinVideoCall", {
-				opponentId,
-				signalData: data,
-			})
+            socket.emit("joinVideoCall", {
+        opponentId,
+        signalData: data,
+      })
 		})
     peer.on("stream", (stream) => {
-      if (opponentVideo.current)
+            if (opponentVideo.current)
         opponentVideo.current.srcObject = stream
     })
     peer.signal(callerSignal!)
@@ -137,12 +139,8 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
       <div className="videoButtonsContainer">
         {initiator && showCanJoinVideoChat ? (<div className="videoChatOptions"><div className="chatOptionsCopy"><p><strong>Enable video chat?</strong></p></div><div className="chatOptionsButtonsContainer"><button onClick={initiateVideoCall} className="chatOptionsButtonYes">Yes</button><button onClick={disableVideoCall} className="chatOptionsButtonNo">No</button></div></div>) : null}
         {!initiator && showCanJoinVideoChat ? (<div className="videoChatOptions"><div className="chatOptionsCopy"><p><strong>Join video chat?</strong></p></div><div className="chatOptionsButtonsContainer"><button onClick={acceptVideoCall} className="chatOptionsButtonYes">Yes</button><button onClick={disableVideoCall} className="chatOptionsButtonNo">No</button></div></div>) : null}
-        <button onClick={handleToggleCamera} className={isCameraOn ? "videoButtonsOn" : "videoButtonsOff"}>
-          {isCameraOn ? "Turn camera off" : "Turn camera on"}
-        </button>
-        <button onClick={handleToggleMicrophone} className={isMicrophoneOn ? "videoButtonsOn": "videoButtonsOff"}>
-          {isMicrophoneOn ? "Mute mic" : "Unmute mic"}
-        </button>
+        {<div className={isCameraOn ? "videoButtonsIconOn" : "videoButtonsIconOff"} onClick={handleToggleCamera}>{isCameraOn ? <IoVideocam /> : <IoVideocamOff />}</div>}
+        {<div className={isMicrophoneOn ? "audioButtonsIconOn" : "audioButtonsIconOff"} onClick={handleToggleMicrophone}>{isMicrophoneOn ? <AiOutlineAudio /> : <AiOutlineAudioMuted />}</div>}
       </div>
       <video className="localVideo" playsInline autoPlay muted ref={localVideo}></video>
     </div>
