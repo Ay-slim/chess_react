@@ -14,7 +14,9 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
   const [isMicrophoneOn, setIsMicrophoneOn] = useState(true);
   const [callerSignal, setCallerSignal] = useState<Peer.SignalData>()
   const [showCanJoinVideoChat, setShowCanJoinVideoChat] = useState<boolean>(false)
-  const [opponentRejectedVideo, setOpponentRejectedVideo] = useState<boolean>(false)
+  const [initiatorVideoOff, setInitiatorVideoOff] = useState<boolean>(false)
+  const [triggeredCallInitiation, setTriggeredCallInitiation] = useState<boolean>(false)
+  const [startShowingVideo, setStartShowingVideo] = useState<boolean>(false)
   const localVideo = useRef<HTMLVideoElement>(null);
   const opponentVideo = useRef<HTMLVideoElement>(null);
   const connectionRef = useRef<Peer.Instance>()
@@ -35,12 +37,8 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
     initializeVideo();
 
     socket.on(`${playerId}-initiateVideoCall`, (signal) => {
-            setCallerSignal(signal)
-            setShowCanJoinVideoChat(true) //Display video call options (when initiator boolean is false) after initiator has emmitted a video call initiation event
+      setCallerSignal(signal)
     })
-
-    if (initiator)
-      setShowCanJoinVideoChat(true) //Display video call options when initiator boolean is true
             
     //Cleanup function
     return () => {
@@ -52,10 +50,15 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
   }, [])
 
   useEffect(() => {
-    // Turn off the camera
     if (isCameraOn && localStream) {
+      if (initiator) {
+        socket.emit('initiatorVideoOn', opponentId)
+      }
       localStream.getVideoTracks().forEach((track) => (track.enabled = true));
     } else if (localStream) {
+      if (initiator) {
+        socket.emit('initiatorVideoOff', opponentId)
+      }
       localStream.getVideoTracks().forEach((track) => (track.enabled = false));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,6 +73,26 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isMicrophoneOn, localStream]);
 
+  useEffect(() => {
+    if (initiator && localStream && !triggeredCallInitiation) {
+      initiateVideoCall()
+      setTriggeredCallInitiation(true)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [localStream])
+
+  useEffect(() => {
+    if (callerSignal)
+      acceptVideoCall()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [callerSignal])
+
+  useEffect(() => {
+    if (opponentVideo && !startShowingVideo)
+      setShowCanJoinVideoChat(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [opponentVideo])
+
   const handleToggleCamera = () => {
     setIsCameraOn((prevIsCameraOn) => !prevIsCameraOn);
   };
@@ -79,66 +102,72 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
   };
 
   const initiateVideoCall = () => {
-    setShowCanJoinVideoChat(false)
     const peer = new Peer({
 			initiator,
 			trickle: false,
 			stream: localStream
 		})
     peer.on("signal", (data) => {
-            socket.emit("initiateVideoCall", {
+      socket.emit("initiateVideoCall", {
         opponentId,
         signalData: data,
       })
     })
     peer.on("stream", (stream) => {
-            if (opponentVideo.current)
+      if (opponentVideo.current)
         opponentVideo.current.srcObject = stream
     })
 
     socket.on(`${playerId}-joinVideoCall`, (signal) => {
-      			peer.signal(signal)
+      peer.signal(signal)
 		})
 		connectionRef.current = peer
   }
 
   const acceptVideoCall = () => {
-        setShowCanJoinVideoChat(false)
     const peer = new Peer({
 			initiator,
 			trickle: false,
 			stream: localStream
 		})
     peer.on("signal", (data) => {
-            socket.emit("joinVideoCall", {
+      socket.emit("joinVideoCall", {
         opponentId,
         signalData: data,
       })
 		})
     peer.on("stream", (stream) => {
-            if (opponentVideo.current)
+      if (opponentVideo.current)
         opponentVideo.current.srcObject = stream
     })
     peer.signal(callerSignal!)
     connectionRef.current = peer
   }
 
-  socket.on(`${playerId}-opponentRejectedVideo`, (()=> {
-    setOpponentRejectedVideo(true)
+  socket.on(`${playerId}-initiatorVideoOff`, (()=> {
+    setInitiatorVideoOff((prevState) => !prevState)
+  }))
+
+  socket.on(`${playerId}-initiatorVideoOn`, (()=> {
+    setInitiatorVideoOff((prevState) => !prevState)
   }))
 
   const disableVideoCall = () => {
     setShowCanJoinVideoChat(false)
-    socket.emit('opponentRejectedVideo', opponentId)
+    setStartShowingVideo(true)
+    setIsCameraOn(false)
+  }
+
+  const enableVideoCall = () => {
+    setShowCanJoinVideoChat(false)
+    setStartShowingVideo(true)
   }
 
   return (
     <div className="videoContainer">
-      <video className="opponentVideo" playsInline autoPlay ref = {opponentVideo}></video>
-      {opponentRejectedVideo ? (<div className="videoDisallowed">Your opponent has disallowed video sharing</div>): null}
+      <div className="opponentVideoContainer"><video className="opponentVideo" playsInline autoPlay ref={opponentVideo} hidden={!startShowingVideo || initiatorVideoOff}></video></div>
       <div className="videoButtonsContainer">
-        {initiator && showCanJoinVideoChat ? (<div className="videoChatOptions"><div className="chatOptionsCopy"><p><strong>Enable video chat?</strong></p></div><div className="chatOptionsButtonsContainer"><button onClick={initiateVideoCall} className="chatOptionsButtonYes">Yes</button><button onClick={disableVideoCall} className="chatOptionsButtonNo">No</button></div></div>) : null}
-        {!initiator && showCanJoinVideoChat ? (<div className="videoChatOptions"><div className="chatOptionsCopy"><p><strong>Join video chat?</strong></p></div><div className="chatOptionsButtonsContainer"><button onClick={acceptVideoCall} className="chatOptionsButtonYes">Yes</button><button onClick={disableVideoCall} className="chatOptionsButtonNo">No</button></div></div>) : null}
+        {showCanJoinVideoChat ? (<div className="videoChatOptions"><div className="chatOptionsCopy"><p><strong>Enable video sharing?</strong></p></div><div className="chatOptionsButtonsContainer"><button onClick={enableVideoCall} className="chatOptionsButtonYes">Yes</button><button onClick={disableVideoCall} className="chatOptionsButtonNo">No</button></div></div>) : null}
         {<div className={isCameraOn ? "videoButtonsIconOn" : "videoButtonsIconOff"} onClick={handleToggleCamera}>{isCameraOn ? <IoVideocam /> : <IoVideocamOff />}</div>}
         {<div className={isMicrophoneOn ? "audioButtonsIconOn" : "audioButtonsIconOff"} onClick={handleToggleMicrophone}>{isMicrophoneOn ? <AiOutlineAudio /> : <AiOutlineAudioMuted />}</div>}
       </div>
