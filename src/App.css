@@ -553,23 +553,81 @@ th {
 .videoButtonsContainer {
   flex: 10%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 60%;
   margin: 5px auto;
 }
 
-.videoButtonsOn {
-  height: 70%;
-  flex: 50%;
-  background-color: lightgreen;
-  border: solid 1px;
+.videoButtonsIconOn {
+  height: 50px;
+  width: 50px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.videoButtonsOff {
-  height: 70%;
-  flex: 50%;
-  background-color: lightcoral;
-  border: solid 1px;
+.videoButtonsIconOn:hover {
+  background-color: lightgrey;
+}
+
+.videoButtonsIconOn svg {
+  width: 80%;
+  height: 80%;
+  fill: black;
+}
+
+.videoButtonsIconOff {
+  height: 50px;
+  width: 50px;
+  background-color: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.videoButtonsIconOff svg {
+  width: 80%;
+  height: 80%;
+  fill: black;
+}
+
+.audioButtonsIconOn {
+  height: 50px;
+  width: 50px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.audioButtonsIconOn:hover {
+  background-color: lightgrey;
+}
+
+.audioButtonsIconOn svg {
+  width: 80%;
+  height: 80%;
+  fill: black;
+}
+
+.audioButtonsIconOff {
+  height: 50px;
+  width: 50px;
+  background-color: red;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.audioButtonsIconOff svg {
+  width: 80%;
+  height: 80%;
+  fill: black;
 }
 
 .localVideo {
