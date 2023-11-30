@@ -543,11 +543,18 @@ th {
   height: 740px;
 }
 
-.opponentVideo {
+.opponentVideoContainer {
   position: relative;
-  flex: 40%;
+  flex: 50%;
   width: 100%;
-  height: 80%;
+  height: 100%;
+}
+
+.opponentVideo {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .videoButtonsContainer {
@@ -632,7 +639,7 @@ th {
 
 .localVideo {
   position: relative;
-  width: 60%;
+  width: 80%;
   height: 100%;
   flex: 40%;
   margin: auto;
@@ -650,8 +657,6 @@ th {
   height: 20px;
   margin-left: 102px;
 }
-
-
 
 .videoChatOptions {
   position: absolute;
