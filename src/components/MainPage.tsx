@@ -10,7 +10,7 @@ const MainPage = () => {
     <div className='mainContainer'>
     <div className='mainPageTitle'>
       <h1>Basic Chess</h1>
-      <h4>The game you love. With the people you love.</h4>
+      <h4>Online chess... but in person!</h4>
     </div>
       <div className='platform'>
         <div className='features'>
