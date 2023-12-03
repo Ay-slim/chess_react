@@ -221,7 +221,7 @@ const Board = () => {
       ) : (
         <div className="fullBoardContainer">
           <MovesHistory moves={movesNotation} stalemate={staleMate} checkmate={checkMate} setPostGameTracker={setPostGameTracker} setBoardState={setBoardState} gameMovesHistory={movesHistory}/>
-          <div className="container">
+          <div className="containerSingle">
               <div className="info">
                 {!checkMate && !staleMate ? (
                   <p>
@@ -289,7 +289,6 @@ const Board = () => {
             </table>
             <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces.w : movesHistory[postGameTracker].capturedPieces.w}/>
           </div>
-          <div className='videoContainer'></div>
         </div>
       )}
     </div>

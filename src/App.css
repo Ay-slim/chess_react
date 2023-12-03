@@ -8,6 +8,10 @@
   padding-top: 5px;
   flex: 40%;
 }
+.containerSingle {
+  padding-top: 5px;
+  flex: 80%;
+}
 .board {
   border: 2px solid;
   margin: 10px auto;
