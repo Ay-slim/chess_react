@@ -715,3 +715,150 @@ th {
 .chatOptionsButtonNo:hover {
   background-color: darkgrey;
 }
+
+
+
+
+/* Landing page */
+.landingPageContainer {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.landingPageNavBar {
+  display: flex;
+  border-bottom: solid 1px;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  position: fixed;
+  width: 100%;
+  background-color: lightgrey;
+}
+
+.landingPageNavBarLinks {
+  flex: 20%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: space-evenly;
+  text-align: center;
+  margin: auto;
+}
+
+.landingPageNavBarLinks a img {
+  height: 50px;
+  width: 70px;
+}
+
+.landingPageTitle {
+  flex: 60%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.landingPageCta {
+  flex: 20%;
+  justify-content: left;
+  margin: auto;
+}
+
+.landingPageCta button {
+  width: 90%;
+  height: 50px;
+  background-color: black;
+  color: white;
+  border-radius: 25px;
+  border: 0px;
+  font-size: 25px;
+}
+
+.landingPageCta button:hover {
+  background-color: darkblue;
+}
+
+.landingPageMainImg {
+  margin-top: 150px;
+}
+
+.landingPageImages {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+#landingPageFeatures {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.lPAsingPlayerContainer, .lPAmultiPlayerContainer {
+  display: flex;
+  position: relative;
+  justify-content: space-evenly;
+  margin-top: 20px;
+}
+
+.lPAsingImg, .lPAsingText {
+  flex: 40%;
+}
+
+.lPAsingImg {
+  border: solid 1px;
+  margin-left: 10px;
+}
+
+.lPAsingText {
+  position: relative;
+  text-align: center;
+}
+
+.lPAmultiImg {
+  border: solid 1px;
+  margin-left: 10px;
+  flex: 40%
+}
+
+.lPAmultiText {
+  position: relative;
+  text-align: center;
+  flex: 40%;
+}
+
+li {
+  text-align: left;
+}
+
+.landingPageFeatures h3 {
+  position: relative;
+  top: 1px;
+  text-align: center;
+}
+
+#landingPageAbout {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  padding-left: 10px;
+}
+
+.landingPageContainer h2 {
+  background-color: lightgrey;
+}
+
+.linkStyle {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
