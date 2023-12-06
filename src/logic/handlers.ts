@@ -159,6 +159,7 @@ export const clickSquare = (
     setOccupiedSquares: SetOccupiedScaresType,
     fiftyMovesTracker: number,
     setFiftyMovesTracker: SetFiftyMovesTrackerType,
+    openPromotionModal: boolean,
     setOpenPromotionModal: SetOpenPromotionModalType,
     setPromotionSquaresInfo: SetPromotionSquaresInfoType,
     multiplayerColor: PlayerColor | null,
@@ -166,9 +167,9 @@ export const clickSquare = (
     staleMate: Boolean,
     movesNotation: MovesNotationType[][],
     setMovesNotation: SetMovesNotationType
-  ) => (event: React.MouseEvent<HTMLElement>) => {
+  ) => () => {
   const multiPlayerBoolean = multiPlayerColor ? multiPlayerColor === colorState : true //If multiplayer, ensure it's the player in this browser's turn
-  if (pieceId && pieceId[0] === colorState && multiPlayerBoolean) {
+  if (pieceId && pieceId[0] === colorState && multiPlayerBoolean && !openPromotionModal) {
     if (clickedSquare === id) {
       setClickedSquare('')
       return
@@ -177,7 +178,7 @@ export const clickSquare = (
       setClickedSquare(id)
     return
   }
-  if (multiPlayerBoolean && pieceId?.[0] !== colorState && clickedSquare) {
+  if (multiPlayerBoolean && pieceId?.[0] !== colorState && clickedSquare && !openPromotionModal) {
     validateMoveAndExecute(
       clickedSquare,
       id,
@@ -388,9 +389,3 @@ export const onPromotionClick = (
   )
   setOpenPromotionModal(false)
 }
-
-export const closePromotionModal =
-  (setOpenPromotionModal: SetOpenPromotionModalType) =>
-  (event: React.MouseEvent<HTMLButtonElement>) => {
-    setOpenPromotionModal(false)
-  }

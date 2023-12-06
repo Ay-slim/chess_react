@@ -9,13 +9,14 @@ const Piece = (props: PieceProps) => {
     currentColor,
     checkMate,
     staleMate,
-    setClickedSquare
+    setClickedSquare,
+    openPromotionModal
   } = props
   const handleDrag = drag(squareId, setClickedSquare)
   const src = `${process.env.REACT_APP_BASE_URL}${id.substring(0, 2)}.png`
   const multiPlayerColor = sessionStorage.getItem('multiPlayerColor')
   const notMyTurn = multiPlayerColor && multiPlayerColor !== currentColor
-  const draggable = checkMate || staleMate || notMyTurn ? false : currentColor === id[0]
+  const draggable = checkMate || staleMate || notMyTurn || openPromotionModal ? false : currentColor === id[0]
   return (
     <img
       className="board-image"

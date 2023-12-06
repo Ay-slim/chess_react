@@ -191,7 +191,9 @@ const Board = () => {
   const [movesNotation, setMovesNotation] = useState<MovesNotationType[][]>([])
 
   return (
-    <div>
+    <div className="fullBoardContainer">
+      <MovesHistory moves={movesNotation} stalemate={staleMate} checkmate={checkMate} setPostGameTracker={setPostGameTracker} setBoardState={setBoardState} gameMovesHistory={movesHistory}/>
+      <div className="containerSingle">
       {openPromotionModal ? (
         <PromotionModal
           colorState={currentPlayerColor}
@@ -218,81 +220,76 @@ const Board = () => {
           movesNotation={movesNotation}
           setMovesNotation={setMovesNotation}
         />
-      ) : (
-        <div className="fullBoardContainer">
-          <MovesHistory moves={movesNotation} stalemate={staleMate} checkmate={checkMate} setPostGameTracker={setPostGameTracker} setBoardState={setBoardState} gameMovesHistory={movesHistory}/>
-          <div className="containerSingle">
-              <div className="info">
-                {!checkMate && !staleMate ? (
-                  <p>
-                  <strong>{`${
-                    currentPlayerColor === 'w' ? "White's " : "Black's "
-                  }turn`}</strong>
-                </p>
-                ): (
-                  <p>
-                  <strong>
-                    {staleMate ? 'Draw!' : `Checkmate!`}
-                  </strong>
-                </p>
-                )}
-                <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
-              </div>
-            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces.b : movesHistory[postGameTracker].capturedPieces.b}/>
-            <table className="board">
-              <tbody>
-                {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
-                  <tr key={`row-${row}`}>
-                    {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
-                      const id = col + row
-                      return (
-                        <Square
-                          key={id}
-                          id={id}
-                          onDragOver={allowDrop}
-                          pieceId={boardState[id].piece}
-                          currentColor={currentPlayerColor}
-                          setColor={setCurrentPlayerColor}
-                          currentBoard={boardState}
-                          setBoardState={setBoardState}
-                          movesHistory={movesHistory}
-                          setMoveHistory={setMovesHistory}
-                          capturedPieces={capturedPieces}
-                          setCapturedPiece={setCapturedPiece}
-                          kingSquare={kingSquare}
-                          setKingSquare={setKingSquare}
-                          kingInCheck={kingInCheck}
-                          setKingInCheck={setKingInCheck}
-                          checkMate={checkMate}
-                          setCheckMate={setCheckMate}
-                          staleMate={staleMate}
-                          setStaleMate={setStaleMate}
-                          validMoves={validMoves}
-                          setValidMoves={setValidMoves}
-                          occupiedSquares={occupiedSquares}
-                          setOccupiedSquares={setOccupiedSquares}
-                          fiftyMovesTracker={fiftyMovesTracker}
-                          setFiftyMovesTracker={setFiftyMovesTracker}
-                          setOpenPromotionModal={setOpenPromotionModal}
-                          setPromotionSquaresInfo={setPromotionSquaresInfo}
-                          clickedSquare={clickedSquare}
-                          setClickedSquare={setClickedSquare}
-                          movesNotation={movesNotation}
-                          setMovesNotation={setMovesNotation}
-                          postGameTracker={postGameTracker}
-                        />
-                      )
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces.w : movesHistory[postGameTracker].capturedPieces.w}/>
+      ) : null}
+          <div className="info">
+            {!checkMate && !staleMate ? (
+              <p>
+              <strong>{`${
+                currentPlayerColor === 'w' ? "White's " : "Black's "
+              }turn`}</strong>
+            </p>
+            ): (
+              <p>
+              <strong>
+                {staleMate ? 'Draw!' : `Checkmate!`}
+              </strong>
+            </p>
+            )}
+            <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
           </div>
-        </div>
-      )}
+        <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces.b : movesHistory[postGameTracker].capturedPieces.b}/>
+        <table className="board">
+          <tbody>
+            {['8', '7', '6', '5', '4', '3', '2', '1'].map((row) => (
+              <tr key={`row-${row}`}>
+                {['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'].map((col) => {
+                  const id = col + row
+                  return (
+                    <Square
+                      key={id}
+                      id={id}
+                      onDragOver={allowDrop}
+                      pieceId={boardState[id].piece}
+                      currentColor={currentPlayerColor}
+                      setColor={setCurrentPlayerColor}
+                      currentBoard={boardState}
+                      setBoardState={setBoardState}
+                      movesHistory={movesHistory}
+                      setMoveHistory={setMovesHistory}
+                      capturedPieces={capturedPieces}
+                      setCapturedPiece={setCapturedPiece}
+                      kingSquare={kingSquare}
+                      setKingSquare={setKingSquare}
+                      kingInCheck={kingInCheck}
+                      setKingInCheck={setKingInCheck}
+                      checkMate={checkMate}
+                      setCheckMate={setCheckMate}
+                      staleMate={staleMate}
+                      setStaleMate={setStaleMate}
+                      validMoves={validMoves}
+                      setValidMoves={setValidMoves}
+                      occupiedSquares={occupiedSquares}
+                      setOccupiedSquares={setOccupiedSquares}
+                      fiftyMovesTracker={fiftyMovesTracker}
+                      setFiftyMovesTracker={setFiftyMovesTracker}
+                      openPromotionModal={openPromotionModal}
+                      setOpenPromotionModal={setOpenPromotionModal}
+                      setPromotionSquaresInfo={setPromotionSquaresInfo}
+                      clickedSquare={clickedSquare}
+                      setClickedSquare={setClickedSquare}
+                      movesNotation={movesNotation}
+                      setMovesNotation={setMovesNotation}
+                      postGameTracker={postGameTracker}
+                    />
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces.w : movesHistory[postGameTracker].capturedPieces.w}/>
+      </div>
     </div>
-  )
-}
+  )}
 
 export default Board
