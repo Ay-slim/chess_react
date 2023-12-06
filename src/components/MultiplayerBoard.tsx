@@ -300,7 +300,9 @@ const MultiplayerBoard = () => {
   const topCapturedPiecesColor = multiPlayerColor === 'b' ? 'w' : 'b'
   const bottomCapturedPiecesColor = multiPlayerColor === 'b' ? 'b' : 'w'
   return (
-    <div>
+    <div className="fullBoardContainer">
+      <MovesHistory moves={movesNotation} stalemate={staleMate} checkmate={checkMate} setPostGameTracker={setPostGameTracker} setBoardState={setBoardState} gameMovesHistory={movesHistory}/>
+      <div className="container">
       {openPromotionModal ? (
         <PromotionModal
           colorState={currentPlayerColor}
@@ -327,79 +329,75 @@ const MultiplayerBoard = () => {
           movesNotation={movesNotation}
           setMovesNotation={setMovesNotation}
         />
-      ) : (
-        <div className="fullBoardContainer">
-          <MovesHistory moves={movesNotation} stalemate={staleMate} checkmate={checkMate} setPostGameTracker={setPostGameTracker} setBoardState={setBoardState} gameMovesHistory={movesHistory}/>
-          <div className="container">
-            <div className="info">
-              {!checkMate && !staleMate ? (
-                <p>
-                <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
-              </p>
-              ): (
-                <p>
-                <strong style={{color: 'red'}}>
-                  {staleMate ? `Draw!`: decideCheckmate(multiPlayerColor as PlayerColor, checkMate!, resign!)}
-                </strong>
-              </p>
-              )}
-              <button className='resignButton' onClick={handleResign} disabled={multiPlayerColor !== currentPlayerColor || !!checkMate || !!staleMate}>RESIGN</button>
-              <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
-            </div>
-            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces[topCapturedPiecesColor] : movesHistory[postGameTracker].capturedPieces[topCapturedPiecesColor]}/>
-            <table className="board">
-              <tbody>
-                {ranks.map((row) => (
-                  <tr key={`row-${row}`}>
-                    {files.map((col) => {
-                      const id = col + row
-                      return (
-                        <Square
-                          key={id}
-                          id={id}
-                          onDragOver={allowDrop}
-                          pieceId={boardState[id].piece}
-                          currentColor={currentPlayerColor}
-                          setColor={setCurrentPlayerColor}
-                          currentBoard={boardState}
-                          setBoardState={setBoardState}
-                          movesHistory={movesHistory}
-                          setMoveHistory={setMovesHistory}
-                          capturedPieces={capturedPieces}
-                          setCapturedPiece={setCapturedPiece}
-                          kingSquare={kingSquare}
-                          setKingSquare={setKingSquare}
-                          kingInCheck={kingInCheck}
-                          setKingInCheck={setKingInCheck}
-                          checkMate={checkMate}
-                          setCheckMate={setCheckMate}
-                          staleMate={staleMate}
-                          setStaleMate={setStaleMate}
-                          validMoves={validMoves}
-                          setValidMoves={setValidMoves}
-                          occupiedSquares={occupiedSquares}
-                          setOccupiedSquares={setOccupiedSquares}
-                          fiftyMovesTracker={fiftyMovesTracker}
-                          setFiftyMovesTracker={setFiftyMovesTracker}
-                          setOpenPromotionModal={setOpenPromotionModal}
-                          setPromotionSquaresInfo={setPromotionSquaresInfo}
-                          clickedSquare={clickedSquare}
-                          setClickedSquare={setClickedSquare}
-                          movesNotation={movesNotation}
-                          setMovesNotation={setMovesNotation}
-                          postGameTracker={postGameTracker}
-                        />
-                      )
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces[bottomCapturedPiecesColor] : movesHistory[postGameTracker].capturedPieces[bottomCapturedPiecesColor]}/>
-          </div>
-          {<VideoPlayer initiator={initiator}/>}
+      ) : null}
+        <div className="info">
+          {!checkMate && !staleMate ? (
+            <p>
+            <strong>{decideTurn(multiPlayerColor as PlayerColor, currentPlayerColor)}</strong>
+          </p>
+          ): (
+            <p>
+            <strong style={{color: 'red'}}>
+              {staleMate ? `Draw!`: decideCheckmate(multiPlayerColor as PlayerColor, checkMate!, resign!)}
+            </strong>
+          </p>
+          )}
+          <button className='resignButton' onClick={handleResign} disabled={multiPlayerColor !== currentPlayerColor || !!checkMate || !!staleMate}>RESIGN</button>
+          <button className={`soundButton ${soundOn ? "soundButtonOn" : ""}`} onClick={soundHandler} disabled={!!checkMate || !!staleMate}>SOUND</button>
         </div>
-      )}
+        <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces[topCapturedPiecesColor] : movesHistory[postGameTracker].capturedPieces[topCapturedPiecesColor]}/>
+        <table className="board">
+          <tbody>
+            {ranks.map((row) => (
+              <tr key={`row-${row}`}>
+                {files.map((col) => {
+                  const id = col + row
+                  return (
+                    <Square
+                      key={id}
+                      id={id}
+                      onDragOver={allowDrop}
+                      pieceId={boardState[id].piece}
+                      currentColor={currentPlayerColor}
+                      setColor={setCurrentPlayerColor}
+                      currentBoard={boardState}
+                      setBoardState={setBoardState}
+                      movesHistory={movesHistory}
+                      setMoveHistory={setMovesHistory}
+                      capturedPieces={capturedPieces}
+                      setCapturedPiece={setCapturedPiece}
+                      kingSquare={kingSquare}
+                      setKingSquare={setKingSquare}
+                      kingInCheck={kingInCheck}
+                      setKingInCheck={setKingInCheck}
+                      checkMate={checkMate}
+                      setCheckMate={setCheckMate}
+                      staleMate={staleMate}
+                      setStaleMate={setStaleMate}
+                      validMoves={validMoves}
+                      setValidMoves={setValidMoves}
+                      occupiedSquares={occupiedSquares}
+                      setOccupiedSquares={setOccupiedSquares}
+                      fiftyMovesTracker={fiftyMovesTracker}
+                      setFiftyMovesTracker={setFiftyMovesTracker}
+                      openPromotionModal={openPromotionModal}
+                      setOpenPromotionModal={setOpenPromotionModal}
+                      setPromotionSquaresInfo={setPromotionSquaresInfo}
+                      clickedSquare={clickedSquare}
+                      setClickedSquare={setClickedSquare}
+                      movesNotation={movesNotation}
+                      setMovesNotation={setMovesNotation}
+                      postGameTracker={postGameTracker}
+                    />
+                  )
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <CapturedPiecesContainer capturedPieces={postGameTracker === null ? capturedPieces[bottomCapturedPiecesColor] : movesHistory[postGameTracker].capturedPieces[bottomCapturedPiecesColor]}/>
+      </div>
+      {<VideoPlayer initiator={initiator}/>}
     </div>
   )
 }
