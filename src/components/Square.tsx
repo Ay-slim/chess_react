@@ -30,6 +30,7 @@ const Square = (props: SquareProps) => {
     setOccupiedSquares,
     fiftyMovesTracker,
     setFiftyMovesTracker,
+    openPromotionModal,
     setOpenPromotionModal,
     setPromotionSquaresInfo,
     clickedSquare,
@@ -107,6 +108,7 @@ const Square = (props: SquareProps) => {
     setOccupiedSquares,
     fiftyMovesTracker,
     setFiftyMovesTracker,
+    openPromotionModal,
     setOpenPromotionModal,
     setPromotionSquaresInfo,
     multiPlayerColor as PlayerColor,
@@ -128,6 +130,7 @@ const Square = (props: SquareProps) => {
             checkMate={checkMate}
             staleMate={staleMate}
             setClickedSquare={setClickedSquare}
+            openPromotionModal={openPromotionModal}
           />
         ) : (
           ''
