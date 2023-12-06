@@ -715,3 +715,172 @@ th {
 .chatOptionsButtonNo:hover {
   background-color: darkgrey;
 }
+
+
+
+
+/* Landing page */
+.landingPageContainer {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.landingPageNavBar {
+  display: flex;
+  border-bottom: solid 1px;
+  position: relative;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  position: fixed;
+  width: 100%;
+  background-color: lightgrey;
+  height: 100px;
+}
+
+.landingPageNavBarLinks {
+  flex: 20%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: space-evenly;
+  text-align: center;
+  margin: auto;
+}
+
+.landingPageNavBarLinks a img {
+  height: 50px;
+  width: 70px;
+}
+
+.landingPageTitle {
+  flex: 50%;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+}
+
+.landingPageTitle h1 {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.landingPageTitle p {
+  margin-top: 0px;
+  padding-top: 0px;
+  padding-bottom: 5px;
+}
+
+.landingPageCta {
+  flex: 30%;
+  justify-content: left;
+  margin: auto;
+}
+
+.landingPageCta button {
+  width: 70%;
+  height: 50px;
+  background-color: black;
+  color: white;
+  border-radius: 25px;
+  border: 0px;
+  font-size: 25px;
+}
+
+.landingPageCta button:hover {
+  background-color: darkblue;
+}
+
+.landingPageMainImg {
+  margin-top: 150px;
+  max-width: 80%;
+  display: block;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.landingPageImages {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+#landingPageFeatures {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.lPAsingPlayerContainer, .lPAmultiPlayerContainer {
+  display: flex;
+  position: relative;
+  justify-content: space-evenly;
+  margin: 20px;
+}
+
+.lPAsingImg, .lPAsingText {
+  flex: 40%;
+}
+
+
+.lPAsingText {
+  position: relative;
+  text-align: center;
+}
+
+.lPAmultiImg {
+  flex: 40%
+}
+
+.lPAmultiText {
+  position: relative;
+  text-align: center;
+  flex: 40%;
+}
+
+li {
+  text-align: left;
+}
+
+.landingPageFeatures h3 {
+  position: relative;
+  top: 1px;
+  text-align: center;
+}
+
+#landingPageAbout {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+#landingPageAbout img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: auto;
+}
+
+.landingPageContainer h2 {
+  background-color: lightgrey;
+}
+
+.linkStyle {
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+}
