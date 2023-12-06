@@ -214,29 +214,49 @@ th {
 }
 
 /* PromotionModal.css */
-.prom-images-container {
+.prom-images-container-multi {
+  position: fixed;
+  margin: auto;
+  width: 600px;
+  height: 100px;
+  z-index: 900;
   display: flex;
-  justify-content: space-evenly; /* To arrange images with space between them */
-  margin-top: 20px;
+  justify-content: space-evenly;
   text-align: center;
+  top: 49%;
+  left: 20%;
+  background-color: rgba(47, 79, 79, 0.9);
+  border-radius: 5px;
+}
+
+.prom-images-container {
+  position: fixed;
+  margin: auto;
+  width: 620px;
+  height: 100px;
+  z-index: 900;
+  display: flex;
+  justify-content: space-evenly;
+  text-align: center;
+  top: 49%;
+  left: 39%;
+  background-color: rgba(47, 79, 79, 0.9);
+  border-radius: 5px;
 }
 
 .prom-image-item {
-  border: 2px solid;
-  background-color: aliceblue;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 
-.prom-container {
-  margin: auto;
-  margin-top: 200px;
-  width: 75%;
-  text-align: center;
-  z-index: 999;
+.prom-image-item p {
+  margin-top: 0px;
 }
 
-.prom-close-button {
-  margin-top: 50px;
-  background-color: rgb(255, 254, 240);
+.prom-image-item:hover {
+  background-color: lightgrey;
 }
 
 
