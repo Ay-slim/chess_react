@@ -738,6 +738,7 @@ th {
   position: fixed;
   width: 100%;
   background-color: lightgrey;
+  height: 100px;
 }
 
 .landingPageNavBarLinks {
@@ -755,20 +756,35 @@ th {
 }
 
 .landingPageTitle {
-  flex: 60%;
+  flex: 50%;
+  position: relative;
   justify-content: center;
   align-items: center;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-content: space-around;
+}
+
+.landingPageTitle h1 {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+
+.landingPageTitle p {
+  margin-top: 0px;
+  padding-top: 0px;
+  padding-bottom: 5px;
 }
 
 .landingPageCta {
-  flex: 20%;
+  flex: 30%;
   justify-content: left;
   margin: auto;
 }
 
 .landingPageCta button {
-  width: 90%;
+  width: 70%;
   height: 50px;
   background-color: black;
   color: white;
@@ -783,6 +799,11 @@ th {
 
 .landingPageMainImg {
   margin-top: 150px;
+  max-width: 80%;
+  display: block;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .landingPageImages {
@@ -804,17 +825,13 @@ th {
   display: flex;
   position: relative;
   justify-content: space-evenly;
-  margin-top: 20px;
+  margin: 20px;
 }
 
 .lPAsingImg, .lPAsingText {
   flex: 40%;
 }
 
-.lPAsingImg {
-  border: solid 1px;
-  margin-left: 10px;
-}
 
 .lPAsingText {
   position: relative;
@@ -822,8 +839,6 @@ th {
 }
 
 .lPAmultiImg {
-  border: solid 1px;
-  margin-left: 10px;
   flex: 40%
 }
 
@@ -850,7 +865,14 @@ li {
   margin: auto;
   justify-content: center;
   align-items: center;
-  padding-left: 10px;
+  padding: 50px;
+}
+
+#landingPageAbout img {
+  max-width: 80%;
+  height: auto;
+  display: block;
+  margin: auto;
 }
 
 .landingPageContainer h2 {
