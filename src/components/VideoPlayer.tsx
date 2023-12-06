@@ -16,7 +16,7 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
   const [showCanJoinVideoChat, setShowCanJoinVideoChat] = useState<boolean>(false)
   const [initiatorVideoOff, setInitiatorVideoOff] = useState<boolean>(false)
   const [triggeredCallInitiation, setTriggeredCallInitiation] = useState<boolean>(false)
-  const [startShowingVideo, setStartShowingVideo] = useState<boolean>(false)
+  const startShowingVideo = useRef<boolean>(false)
   const localVideo = useRef<HTMLVideoElement>(null);
   const opponentVideo = useRef<HTMLVideoElement>(null);
   const connectionRef = useRef<Peer.Instance>()
@@ -88,7 +88,7 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
   }, [callerSignal])
 
   useEffect(() => {
-    if (opponentVideo && !startShowingVideo)
+    if (opponentVideo && !startShowingVideo.current)
       setShowCanJoinVideoChat(true)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opponentVideo])
@@ -154,18 +154,18 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
 
   const disableVideoCall = () => {
     setShowCanJoinVideoChat(false)
-    setStartShowingVideo(true)
+    startShowingVideo.current = true
     setIsCameraOn(false)
   }
 
   const enableVideoCall = () => {
     setShowCanJoinVideoChat(false)
-    setStartShowingVideo(true)
+    startShowingVideo.current = true
   }
 
   return (
     <div className="videoContainer">
-      <div className="opponentVideoContainer"><video className="opponentVideo" playsInline autoPlay ref={opponentVideo} hidden={!startShowingVideo || initiatorVideoOff}></video></div>
+      <div className="opponentVideoContainer"><video className="opponentVideo" playsInline autoPlay ref={opponentVideo} hidden={!startShowingVideo.current || initiatorVideoOff}></video></div>
       <div className="videoButtonsContainer">
         {showCanJoinVideoChat ? (<div className="videoChatOptions"><div className="chatOptionsCopy"><p><strong>Enable video sharing?</strong></p></div><div className="chatOptionsButtonsContainer"><button onClick={enableVideoCall} className="chatOptionsButtonYes">Yes</button><button onClick={disableVideoCall} className="chatOptionsButtonNo">No</button></div></div>) : null}
         {<div className={isCameraOn ? "videoButtonsIconOn" : "videoButtonsIconOff"} onClick={handleToggleCamera}>{isCameraOn ? <IoVideocam /> : <IoVideocamOff />}</div>}
