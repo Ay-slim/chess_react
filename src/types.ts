@@ -89,6 +89,7 @@ export type SquareProps = {
   setOccupiedSquares: SetOccupiedScaresType
   fiftyMovesTracker: number
   setFiftyMovesTracker: SetFiftyMovesTrackerType
+  openPromotionModal: boolean
   setOpenPromotionModal: SetOpenPromotionModalType
   setPromotionSquaresInfo: SetPromotionSquaresInfoType
   clickedSquare: string
@@ -105,6 +106,7 @@ export type PieceProps = {
   checkMate: CheckMateType
   staleMate: Boolean
   setClickedSquare: GenericStringSetStateType
+  openPromotionModal: boolean
 }
 
 export type PromotionProps = {
