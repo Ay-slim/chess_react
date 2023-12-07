@@ -5,6 +5,7 @@ import { socket } from '../logic/utils'
 import { useEffect, useState } from 'react'
 import { FaCopy } from "react-icons/fa";
 import LoadingSpin from "react-loading-spin";
+import { PlayerColor } from '../types'
 
 const AwaitingOpponent = () => {
   const navigate = useNavigate()
@@ -14,11 +15,16 @@ const AwaitingOpponent = () => {
     playerId: string;
     opponentId: string;
   }>({playerId: uuid(), opponentId: uuid()}) //https://stackoverflow.com/questions/62153510/how-to-prevent-uuid-from-changing-state-when-using-copy-to-clipboard-function
-  sessionStorage.setItem('playerId', gameIds.playerId)
-  sessionStorage.setItem('opponentId', gameIds.opponentId)
-  sessionStorage.setItem('multiPlayerColor', 'w')
-  const gameLink = `${process.env.REACT_APP_BASE_URL}multi/${gameIds.playerId}+${gameIds.opponentId}`
   const [opponentJoined, setOpponentJoined] = useState<string>('')
+
+  const [gameLink, setGameLink] = useState<string>('')
+  const selectColor = (color: PlayerColor) => {
+    sessionStorage.setItem('playerId', gameIds.playerId)
+    sessionStorage.setItem('opponentId', gameIds.opponentId)
+    sessionStorage.setItem('multiPlayerColor', color)
+    setGameLink(`${process.env.REACT_APP_BASE_URL}multi/${gameIds.playerId}+${color}+${gameIds.opponentId}`)
+  }
+
   socket.on(`${gameIds.playerId}-joined`, () => {
     setOpponentJoined('Una papa, I don land!')
   })
@@ -39,6 +45,12 @@ const AwaitingOpponent = () => {
   }
 
   return (
+    <>
+    {!gameLink ? 
+    <div className='colorSelectionModal'>
+      <div className='colorSelectionCopy'><strong>What color would you like to play as?</strong></div>
+      <div className='colorButtonsContainer'><div className='whiteColorButton' onClick={()=>selectColor('w')}>White</div><div className='blackColorButton' onClick={()=>selectColor('b')}>Black</div></div>
+    </div> :
     <div className='awaitingContainer'>
       <div className='awaitingPageTitle'>
         <h1><strong>Video Chess</strong></h1>
@@ -64,6 +76,8 @@ const AwaitingOpponent = () => {
         <div className='spinnerIcon'><LoadingSpin primaryColor='indigo'/></div>
       </div>
     </div>
+    }
+    </>
   )
 }
 

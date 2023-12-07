@@ -28,13 +28,13 @@ import MovesHistory from './MovesHistory'
 import VideoPlayer from './VideoPlayer'
 
 const MultiplayerBoard = () => {
-  const { gameIds } = useParams()
+  const { gameIdsAndColor } = useParams()
   let initiator = true
-  if (gameIds) {
-    const [opponentId, playerId] = gameIds.split('+')
+  if (gameIdsAndColor) {
+    const [opponentId, opponentColor, playerId] = gameIdsAndColor.split('+')
     sessionStorage.setItem('playerId', playerId)
     sessionStorage.setItem('opponentId', opponentId)
-    sessionStorage.setItem('multiPlayerColor', 'b')
+    sessionStorage.setItem('multiPlayerColor', opponentColor === 'w' ? 'b' : 'w')
     socket.emit('joinedGame', opponentId)
     initiator = false
   }

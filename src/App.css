@@ -357,6 +357,62 @@ th {
 
 
 
+/* AwaitingOpponent component */
+.colorSelectionModal {
+  position: fixed;
+  left: 35%;
+  top: 30%;
+  display: flex;
+  flex-direction: column;
+  width: 30%;
+  height: 20%;
+  text-align: center;
+  border: solid 1px;
+  margin: auto;
+  border-radius: 10px;
+}
+
+.colorSelectionCopy {
+  flex: 50%;
+  border-bottom: solid 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+}
+
+.colorButtonsContainer {
+  flex: 50%;
+  display: flex;
+}
+
+.whiteColorButton {
+  flex: 50%;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-left-radius: 10px;
+}
+
+.blackColorButton {
+  flex: 50%;
+  background-color: black;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-right-radius: 10px;
+}
+
+.whiteColorButton:hover {
+  background-color: lightgrey;
+}
+
+.blackColorButton:hover {
+  background-color: darkgrey;
+}
 
 .awaitingContainer {
   height: 100%;
