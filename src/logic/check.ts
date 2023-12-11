@@ -57,9 +57,11 @@ export const evaluateKingInCheck = (
         const currentPiece = boardState[currentSquare].piece
         if (currentPiece) {
           if (
-            currentPiece[0] !== color &&
             ['b', 'q', 'p', 'r'].includes(currentPiece[1])
           ) {
+            if (currentPiece[0] === color || (currentPiece[1] === 'r' && !ROOK_DIR) || (currentPiece[1] === 'b' && !BISHOP_DIR) || (currentPiece[1] === 'p' && !PAWN_DIR)) {
+              break
+            }
             if (currentPiece[1] === 'p') {
               if (i === 1 && PAWN_DIR) {
                 checkedSquaresAndAttackers[currentSquare] = []
@@ -109,7 +111,7 @@ export const evaluateKingInCheck = (
   return checkedSquaresAndAttackers
 }
 
-const piecesAttackingMe = (
+const squaresAttackingMe = (
   squareId: string,
   boardState: BoardState,
   color: PlayerColor
@@ -245,7 +247,7 @@ export const validMovesWhenInCheck = (
       ...checkedSquaresAndAttackers[attackingPieceSquare],
     ]
     attackingSquareAndSquaresToBlock.forEach((intendedSquare) => {
-      const squaresThatCanCaptureOrBlock = piecesAttackingMe(
+      const squaresThatCanCaptureOrBlock = squaresAttackingMe(
         intendedSquare,
         boardState,
         opponentColor
