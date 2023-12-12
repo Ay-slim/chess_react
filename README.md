@@ -1,6 +1,6 @@
 # Chessboard App
 
-This is an implementation of a Chess engine from scratch in React.js. It enforces all currently known chess rules (regular piece movement rules, castling, enpassant, pinned pieces, pawn promotion, stalemate(50 moves without a capture rule, 3 repeated positions, no remaining legal moves for a player not in check.))
+This is an implementation of a Chess engine from scratch in React.js. It enforces basic chess rules (regular piece movement rules, castling, enpassant, pinned pieces, pawn promotion, stalemate(50 moves without a capture rule, no remaining legal moves for a player not in check.))
 
 You can play a game against yourselff in the single player mode.
 

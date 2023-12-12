@@ -100,7 +100,6 @@ export const evaluateOpponentKingAndNextTurn = (
       validOppMoves,
       newOccupiedSquares,
       newBoardState,
-      updatedMovesHistory,
       newFiftyMovesTracker
     )
     if (gameEndsInDraw) {
