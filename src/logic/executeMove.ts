@@ -31,7 +31,7 @@ import { default as generatePinnedSquares } from './pinnedSquares'
 import { updateMovesNotationState } from './utils'
 
 export const evaluateOpponentKingAndNextTurn = (
-  shouldUpdateFiftyMovesTracker: boolean,
+  shouldNotUpdateFiftyMovesTracker: boolean,
   fiftyMovesTracker: number,
   setFiftyMovesTracker: SetFiftyMovesTrackerType,
   updatedKingSquare: KingSquareType,
@@ -53,10 +53,10 @@ export const evaluateOpponentKingAndNextTurn = (
   let newFiftyMovesTracker: number
   let isCheckmateForHistory = undefined
   let isKingInCheckForHistory = undefined
-  if (shouldUpdateFiftyMovesTracker) {
+  if (shouldNotUpdateFiftyMovesTracker) {
     newFiftyMovesTracker = 0
   } else {
-    newFiftyMovesTracker = fiftyMovesTracker + 1
+    newFiftyMovesTracker = fiftyMovesTracker + 0.5
   }
   setFiftyMovesTracker(newFiftyMovesTracker)
   const kingInCheckDetails = evaluateKingInCheck(
@@ -294,7 +294,7 @@ export const executeValidMove = (
   } else {
     updatedKingSquare = kingSquare
   }
-  const shouldUpdateFiftyMovesTracker = pieceId[1] === 'p' || aPieceWasCaptured
+  const shouldNotUpdateFiftyMovesTracker = pieceId[1] === 'p' || aPieceWasCaptured
   const move: MoveHistoryType = {
     srcSquare: srcSquareId,
     destSquare: targetSquareId,
@@ -307,7 +307,7 @@ export const executeValidMove = (
   const updatedMovesHistory = [...movesHistory, move]
   moveNotation = isPromotionMove ? '' : moveNotation
   evaluateOpponentKingAndNextTurn(
-    shouldUpdateFiftyMovesTracker,
+    shouldNotUpdateFiftyMovesTracker,
     fiftyMovesTracker,
     setFiftyMovesTracker,
     updatedKingSquare,
