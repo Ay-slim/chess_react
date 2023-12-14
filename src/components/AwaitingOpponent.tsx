@@ -1,5 +1,4 @@
 import '../App.css'
-import { v4 as uuid } from 'uuid'
 import { useNavigate } from 'react-router-dom'
 import { socket } from '../logic/utils'
 import { useEffect, useState } from 'react'
@@ -11,21 +10,21 @@ const AwaitingOpponent = () => {
   const navigate = useNavigate()
   const navigateToMultiBoard = () => navigate('/multiboard')
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [gameIds, _] = useState<{
-    playerId: string;
-    opponentId: string;
-  }>({playerId: uuid(), opponentId: uuid()}) //https://stackoverflow.com/questions/62153510/how-to-prevent-uuid-from-changing-state-when-using-copy-to-clipboard-function
+  // const [gameIds, _] = useState<{
+  //   playerId: string;
+  //   opponentId: string;
+  // }>({playerId: uuid(), opponentId: uuid()}) //https://stackoverflow.com/questions/62153510/how-to-prevent-uuid-from-changing-state-when-using-copy-to-clipboard-function
   const [opponentJoined, setOpponentJoined] = useState<string>('')
 
   const [gameLink, setGameLink] = useState<string>('')
   const selectColor = (color: PlayerColor) => {
-    sessionStorage.setItem('playerId', gameIds.playerId)
-    sessionStorage.setItem('opponentId', gameIds.opponentId)
+    sessionStorage.setItem('playerId', socket.id)
     sessionStorage.setItem('multiPlayerColor', color)
-    setGameLink(`${process.env.REACT_APP_BASE_URL}multi/${gameIds.playerId}+${color}+${gameIds.opponentId}`)
+    setGameLink(`${process.env.REACT_APP_BASE_URL}multi/${socket.id}+${color}`)
   }
 
-  socket.on(`${gameIds.playerId}-joined`, () => {
+  socket.on(`joinedGame`, (opponentId: string) => {
+    sessionStorage.setItem('opponentId', opponentId)
     setOpponentJoined('Una papa, I don land!')
   })
 
