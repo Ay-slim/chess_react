@@ -7,6 +7,7 @@ import { AiOutlineAudio, AiOutlineAudioMuted } from "react-icons/ai";
 
 const VideoPlayer = (props: VideoPlayerPropType) => {
   const opponentId = sessionStorage.getItem('opponentId')
+  const playerId = sessionStorage.getItem('playerId')
   const { initiator } = props
   const [localStream, setlocalStream] = useState<MediaStream>();
   const [isCameraOn, setIsCameraOn] = useState(true);
@@ -35,7 +36,7 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
   useEffect(() => {
     initializeVideo();
 
-    socket.on(`initiateVideoCall`, (signal) => {
+    socket.on(`${playerId}-initiateVideoCall`, (signal) => {
       setCallerSignal(signal)
     })
             
@@ -117,7 +118,7 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
         opponentVideo.current.srcObject = stream
     })
 
-    socket.on(`joinVideoCall`, (signal) => {
+    socket.on(`${playerId}-joinVideoCall`, (signal) => {
       peer.signal(signal)
 		})
 		connectionRef.current = peer
@@ -143,11 +144,11 @@ const VideoPlayer = (props: VideoPlayerPropType) => {
     connectionRef.current = peer
   }
 
-  socket.on(`initiatorVideoOff`, (()=> {
+  socket.on(`${playerId}-initiatorVideoOff`, (()=> {
     setInitiatorVideoOff((prevState) => !prevState)
   }))
 
-  socket.on(`initiatorVideoOn`, (()=> {
+  socket.on(`${playerId}-initiatorVideoOn`, (()=> {
     setInitiatorVideoOff((prevState) => !prevState)
   }))
 
