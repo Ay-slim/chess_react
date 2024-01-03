@@ -9,11 +9,6 @@ import { PlayerColor } from '../types'
 const AwaitingOpponent = () => {
   const navigate = useNavigate()
   const navigateToMultiBoard = () => navigate('/multiboard')
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  // const [gameIds, _] = useState<{
-  //   playerId: string;
-  //   opponentId: string;
-  // }>({playerId: uuid(), opponentId: uuid()}) //https://stackoverflow.com/questions/62153510/how-to-prevent-uuid-from-changing-state-when-using-copy-to-clipboard-function
   const [opponentJoined, setOpponentJoined] = useState<string>('')
 
   const [gameLink, setGameLink] = useState<string>('')
