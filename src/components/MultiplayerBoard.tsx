@@ -28,17 +28,14 @@ import MovesHistory from './MovesHistory'
 import VideoPlayer from './VideoPlayer'
 
 const MultiplayerBoard = () => {
-  const { oppIdAndColor } = useParams()
+  const { gameIdsAndColor } = useParams()
   let initiator = true
-  if (oppIdAndColor) {
-    const [opponentId, opponentColor] = oppIdAndColor.split('+')
-    sessionStorage.setItem('playerId', socket.id)
+  if (gameIdsAndColor) {
+    const [opponentId, opponentColor, playerId] = gameIdsAndColor.split('+')
+    sessionStorage.setItem('playerId', playerId)
     sessionStorage.setItem('opponentId', opponentId)
     sessionStorage.setItem('multiPlayerColor', opponentColor === 'w' ? 'b' : 'w')
-    socket.emit('joinedGame', {
-      selfId: socket.id,
-      initiatorId: opponentId,
-    })
+    socket.emit('joinedGame', opponentId)
     initiator = false
   }
   const [boardState, setBoardState] = useState<BoardState>({
@@ -189,6 +186,7 @@ const MultiplayerBoard = () => {
   const multiPlayerColor = sessionStorage.getItem('multiPlayerColor')
   const ranks = multiPlayerColor === 'w' ? ['8', '7', '6', '5', '4', '3', '2', '1'] : ['1', '2', '3', '4', '5', '6', '7', '8']
   const files = multiPlayerColor === 'w' ? ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'] : ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']
+  const browserUuid = sessionStorage.getItem('playerId')!
   const [webSocketMessage, setWebSocketMessage] = useState<WebSocketMessageType>({
     srcSquareId: '',
     targetSquareId: '',
@@ -215,7 +213,7 @@ const MultiplayerBoard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [occupiedSquares])
 
-  socket.on("validMove", (opponentMove) => {
+  socket.on(browserUuid, (opponentMove) => {
     setWebSocketMessage(opponentMove)
   })
 
@@ -285,7 +283,7 @@ const MultiplayerBoard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [webSocketMessage])
 
-  socket.on(`resignation`, () => {
+  socket.on(`${browserUuid}-resignation`, () => {
     const quitter = multiPlayerColor === 'w' ? 'b' : 'w'
     setResign(quitter)
     setCheckMate(multiPlayerColor as PlayerColor)
