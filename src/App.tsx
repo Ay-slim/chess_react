@@ -14,7 +14,7 @@ const App = () => {
         <Route path='/single' Component={Board} />
         <Route path='/awaiting' Component={AwaitingOpponent} />
         <Route path='/multiboard' Component={MultiplayerBoard} />
-        <Route path='/multi/:gameIdsAndColor' Component={MultiplayerBoard} />
+        <Route path='/multi/:oppIdAndColor' Component={MultiplayerBoard} />
       </Routes>
       <Analytics/>
     </>
