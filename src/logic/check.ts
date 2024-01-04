@@ -163,8 +163,8 @@ const squaresAttackingMe = (
               break
             }
             if (pieceName === 'p' && [1, 2].includes(i)) {
+              const pieceOnSquareToBlockOrCapture = boardState[squareId].piece
               if (i === 1) {
-                const pieceOnSquareToBlockOrCapture = boardState[squareId].piece
                 if (
                   (pieceOnSquareToBlockOrCapture && PAWN_CAPTURE_DIR) ||
                   (!pieceOnSquareToBlockOrCapture && PAWN_BLOCK_DIR)
@@ -177,7 +177,7 @@ const squaresAttackingMe = (
                 const homePawn =
                   (currentPiece[0] === 'b' && Number(currentSquare[1]) === 7) ||
                   (currentPiece[0] === 'w' && Number(currentSquare[1]) === 2)
-                if (homePawn && PAWN_BLOCK_DIR) {
+                if (homePawn && PAWN_BLOCK_DIR && !pieceOnSquareToBlockOrCapture) {
                   myAttackers.push(currentSquare)
                   break
                 }
